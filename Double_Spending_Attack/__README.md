@@ -4,7 +4,7 @@
 
 2. Double-spend Attack Models with Time Advantange for Bitcoin(C.Pinzon, 2016).pdf
 
-3. Profitable Double-Spending Attacks 1 (J.Jang&H.Lee, 2019).pdf
+3. Profitable Double-Spending Attacks 1(J.Jang&H.Lee, 2019).pdf
 
 4. Revisiting Double-Spending Attacks on the Bitcoin Blockchain -- New Findings(J.Zheng&etal, 2021).pdf
 
