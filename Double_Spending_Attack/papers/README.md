@@ -1,4 +1,4 @@
-# Paper List
+# Papers
 
 1. A Strong Adaptive, Strategic Double-Spending Attack on Blockchains(G.Ramezan&etal, 2018).pdf
 
