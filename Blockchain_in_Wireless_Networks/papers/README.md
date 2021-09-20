@@ -1,6 +1,6 @@
 # Papers
 
-##### 论文中，<font color=Red>红色</font>表示系统模型的假设；<font color = Blue>蓝色</font>表示定义；<font color=Yellow>黄色</font>表示文章的创新点；<font color=Green>绿色</font>表示文章中某些重要内容。
+##### 论文中，<font color=Red>红色荧光</font>表示系统模型的假设；<font color = Blue>蓝色荧光</font>表示定义；<font color=Yellow>黄色荧光</font>表示文章的创新点；<font color=Green>绿色荧光</font>表示文章中某些重要定理。<font color=Red>红色下划线</font>表示文章中写的比较好的英文；<font color=Green>绿色下划线</font>表示文章中仿真结果和结论。
 
 1. BLOWN -- A Blockchain Protocol for Wireless Networks under Adversarial SINR(M.Xu&etal, 2021).pdf
 2. Concordia -- A Streamlined Consensus Protocol for Blockchain Networks(C.Santiago&etal, 2021).pdf
