@@ -16,13 +16,13 @@
 
 文章结构示例如下:
 
-Blockchain/Blockchain_in_Wireless_Networks/README.md
-Blockchain/Blockchain_in_Wireless_Networks/paper/README.md
-Blockchain/Blockchain_in_Wireless_Networks/paper/1. BLOWN -- A Blockchain Protocol for Wireless Networks under Adversarial SINR(M.Xu&etal, 2021).pdf
-Blockchain/Blockchain_in_Wireless_Networks/paper/2. Concordia -- A Streamlined Consensus Protocol for Blockchain Networks(C.Santiago&etal, 2021).pdf
-Blockchain/Blockchain_in_Wireless_Networks/paper/3. How Does CSMA-CA Affect the Performance and Security in Wireless Blockchain Networks(B.Cao&etal, 2020).pdf
-Blockchain/Blockchain_in_Wireless_Networks/notes/README.md
-Blockchain/Blockchain_in_Wireless_Networks/nodes/1.md
-Blockchain/Blockchain_in_Wireless_Networks/notes/2.md
-Blockchain/Blockchain_in_Wireless_Networks/notes/3.md
+* Blockchain/Blockchain_in_Wireless_Networks/README.md
+* Blockchain/Blockchain_in_Wireless_Networks/paper/README.md
+* Blockchain/Blockchain_in_Wireless_Networks/paper/1. BLOWN -- A Blockchain Protocol for Wireless Networks under Adversarial SINR(M.Xu&etal, 2021).pdf
+* Blockchain/Blockchain_in_Wireless_Networks/paper/2. Concordia -- A Streamlined Consensus Protocol for Blockchain Networks(C.Santiago&etal, 2021).pdf
+* Blockchain/Blockchain_in_Wireless_Networks/paper/3. How Does CSMA-CA Affect the Performance and Security in Wireless Blockchain Networks(B.Cao&etal, 2020).pdf
+* Blockchain/Blockchain_in_Wireless_Networks/notes/README.md
+* Blockchain/Blockchain_in_Wireless_Networks/nodes/1.md
+* Blockchain/Blockchain_in_Wireless_Networks/notes/2.md
+* Blockchain/Blockchain_in_Wireless_Networks/notes/3.md
 
