@@ -1,5 +1,15 @@
 # Blockchain
-##### 论文中，<font color=Red>红色荧光</font>表示系统模型的假设；<font color = Blue>蓝色荧光</font>表示定义；<font color=Yellow>黄色荧光</font>表示文章的创新点；<font color=Green>绿色荧光</font>表示文章中某些重要定理。<font color=Red>红色下划线</font>表示文章中写的比较好的英文；<font color=Green>绿色下划线</font>表示文章中仿真结果和结论。详细实例见Blockchain/Example.pdf
+
+##### 论文中
+
+* <font color=Red>红色荧光</font> 表示 系统模型的假设；
+* <font color = Blue>蓝色荧光</font> 表示 定义；
+* <font color=Yellow>黄色荧光</font> 表示 文章的创新点；
+* <font color=Green>绿色荧光</font> 表示 文章中某些重要定理。
+* <font color=Red>红色下划线</font> 表示 文章中写的比较好的英文；
+* <font color=Green>绿色下划线</font> 表示 文章中仿真结果和结论。
+
+详细实例见 Blockchain/Example.pdf
 
 
 本代码仓库（repository）用于存放与区块链论文相关的问题。根据讨论问题，分别建立相应的文件夹（讨论区）。文件夹结构如下(文章列表的编号与笔记列表的编号一一对应)：
