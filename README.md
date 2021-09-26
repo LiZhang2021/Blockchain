@@ -1,18 +1,10 @@
 # Blockchain
 
-##### 论文中
+本代码仓库（repository）用于存放与区块链论文相关的问题。
 
-* <font color=Red>红色荧光</font> 表示 系统模型的假设；
-* <font color = Blue>蓝色荧光</font> 表示 定义；
-* <font color=Yellow>黄色荧光</font> 表示 文章的创新点；
-* <font color=Green>绿色荧光</font> 表示 文章中某些重要定理。
-* <font color=Red>红色下划线</font> 表示 文章中写的比较好的英文；
-* <font color=Green>绿色下划线</font> 表示 文章中仿真结果和结论。
+## 仓库结构
 
-详细实例见 Blockchain/Example.pdf
-
-
-本代码仓库（repository）用于存放与区块链论文相关的问题。根据讨论问题，分别建立相应的文件夹（讨论区）。文件夹结构如下(文章列表的编号与笔记列表的编号一一对应)：
+根据讨论问题，分别建立相应的文件夹（讨论区）。文件夹结构如下(文章列表的编号与笔记列表的编号一一对应)：
 
 * Blockchain/some_topic/README.md
 * Blockchain/some_topic/papers/README.md  （文章列表）
@@ -36,3 +28,50 @@
 * Blockchain/Blockchain_in_Wireless_Networks/notes/2.md
 * Blockchain/Blockchain_in_Wireless_Networks/notes/3.md
 
+
+## 论文标记
+
+在论文中
+
+* <font color=Red>红色荧光</font> 表示 系统模型的假设；
+* <font color = Blue>蓝色荧光</font> 表示 定义；
+* <font color=Yellow>黄色荧光</font> 表示 文章的创新点；
+* <font color=Green>绿色荧光</font> 表示 文章中某些重要定理；
+* <font color=Red>红色下划线</font> 表示 文章中写的比较好的英文；
+* <font color=Green>绿色下划线</font> 表示 文章中仿真结果和结论。
+
+详细实例见 Blockchain/Example.pdf
+
+## 日志 LOG
+
+### 2021/9/26
+
+#### 进展
+1. 进展1 
+2. 进展2
+
+#### 计划
+1. 计划1
+2. 计划2
+
+
+### 2021/9/25
+
+#### 进展
+1. 进展1 
+2. 进展2
+
+#### 计划
+1. 计划1
+2. 计划2
+
+
+### 2021/9/24
+
+#### 进展
+1. 进展1 
+2. 进展2
+
+#### 计划
+1. 计划1
+2. 计划2
