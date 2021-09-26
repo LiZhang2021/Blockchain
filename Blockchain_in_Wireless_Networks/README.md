@@ -10,6 +10,9 @@
 4. Microchain -- A Hybrid Consensus Mechanism for Lightweight Distributed Ledger for IoT(R.Xu&etal, 2019).pdf
 5. SENATE -- A Permissionless Byzantine Consensus Protocol in Wireless Networks for Real-Time Internet-of-Things Applications(Z.Jiang&etal, 2020).pdf
 6. wChain -- A Fast Fault-Tolerant Blockchain Protocol for Multihop Wireless Networks(M.Xu&etal, 2021).pdf
+7. Comparison of single and multiple entry point PBFT for IoT blockchain Systems(J.Misic&etal, 2020).pdf
+8. Adapting PBFT for Use With Blockchain-Enabled IoT Systems(J.Misic&etal, 2021).pdf
+9. Trade-offs in large blockchain-based IoT system design(J.Misic&etal, 2021).pdf
 
 论文详见 [LiZhang2021/Blockchain/Blockchain_in_Wireless_Networks/papers/](LiZhang2021/Blockchain/Blockchain_in_Wireless_Networks/papers/)
 

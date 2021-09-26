@@ -47,12 +47,12 @@
 ### 2021/9/26
 
 #### 进展
-1. 进展1 
-2. 进展2
+1. 将Blockchain_in_Wireless_Network文件中的paper加了三篇新的文章，notes文件夹也添加了三个； 
+2. 读完了Blockchain_in_Wireless_Network/paper/7. Comparison of single and multiple entry point PBFT for IoT blockchain Systems(J.Misic&etal, 2020).pdf那篇文章，在文章中做完了标记。
 
 #### 计划
-1. 计划1
-2. 计划2
+1. 明天完成Blockchain_in_Wireless_Network/notes/7.md文章的编写；
+2. 针对Double_Spengding_Attack/notes/1.md中的问题进行解答，并对文章中的公式进行推导，并将过程加入到对应笔记中。
 
 
 ### 2021/9/25
