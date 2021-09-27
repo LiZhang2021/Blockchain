@@ -4,7 +4,7 @@
 
 在此文件夹中对 Wireless Blockchain Network 进行讨论，主要包括以下几篇论文：
 
-1.  BLOWN -- A Blockchain Protocol for Wireless Networks under Adversarial SINR(M.Xu&etal, 2021).pdf
+1. BLOWN -- A Blockchain Protocol for Wireless Networks under Adversarial SINR(M.Xu&etal, 2021).pdf
 2. Concordia -- A Streamlined Consensus Protocol for Blockchain Networks(C.Santiago&etal, 2021).pdf
 3. How Does CSMA-CA Affect the Performance and Security in Wireless Blockchain Networks(B.Cao&etal, 2020).pdf
 4. Microchain -- A Hybrid Consensus Mechanism for Lightweight Distributed Ledger for IoT(R.Xu&etal, 2019).pdf
@@ -14,6 +14,6 @@
 8. Adapting PBFT for Use With Blockchain-Enabled IoT Systems(J.Misic&etal, 2021).pdf
 9. Trade-offs in large blockchain-based IoT system design(J.Misic&etal, 2021).pdf
 
-论文详见 [LiZhang2021/Blockchain/Blockchain_in_Wireless_Networks/papers/](LiZhang2021/Blockchain/Blockchain_in_Wireless_Networks/papers/)
+论文详见 [LiZhang2021/Blockchain/Blockchain_in_Wireless_Networks/Papers/](LiZhang2021/Blockchain/Blockchain_in_Wireless_Networks/Papers/)
 
-关于每篇文章的笔记详见 [LiZhang2021/Blockchain/Blockchain_in_Wireless_Networks/notes/](LiZhang2021/Blockchain/Blockchain_in_Wireless_Networks/notes/)
+关于每篇文章的笔记详见 [LiZhang2021/Blockchain/Blockchain_in_Wireless_Networks/Notes/](LiZhang2021/Blockchain/Blockchain_in_Wireless_Networks/Notes/)

@@ -10,6 +10,6 @@
 1. Two Bitcoins at the Price of One -- Double-Spending Attacks on Fast Payments in Bitcoin(G.O.Karame&E.Androulaki, 2012).pdf
 
 
-论文详见 [LiZhang2021/Blockchain/Double_Spending_Attack/papers/](LiZhang2021/Blockchain/Double_Spending_Attack/papers/)
+论文详见 [LiZhang2021/Blockchain/Double_Spending_Attack/Papers/](LiZhang2021/Blockchain/Double_Spending_Attack/Papers/)
 
-关于每篇文章的笔记详见 [LiZhang2021/Blockchain/Double_Spending_Attack/notes/](LiZhang2021/Blockchain/Double_Spending_Attack/notes/)
+关于每篇文章的笔记详见 [LiZhang2021/Blockchain/Double_Spending_Attack/Notes/](LiZhang2021/Blockchain/Double_Spending_Attack/Notes/)
