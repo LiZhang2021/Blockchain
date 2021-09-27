@@ -29,16 +29,18 @@
 * Blockchain/Blockchain_in_Wireless_Networks/notes/3.md
 
 
-## 论文标记
+## 论文标识
 
 在论文中
 
-* <font color=Red>红色荧光</font> 表示 系统模型的假设；
-* <font color = Blue>蓝色荧光</font> 表示 定义；
-* <font color=Yellow>黄色荧光</font> 表示 文章的创新点；
-* <font color=Green>绿色荧光</font> 表示 文章中某些重要定理；
-* <font color=Red>红色下划线</font> 表示 文章中写的比较好的英文；
-* <font color=Green>绿色下划线</font> 表示 文章中仿真结果和结论。
+| 标识 | 含义 |
+| ----------- | ----------- |
+| <font style="background: red">红色荧光</font> | 系统模型的假设 |
+| <font style="background: blue">蓝色荧光</font> | 定义 |
+| <font style="background: yellow">黄色荧光</font> | 文章的创新点 |
+| <font style="background: green">绿色荧光</font> | 文章中某些重要定理 |
+| <font color=Red>红色下划线</font> | 文章中写的比较好的英文 |
+| <font color=Green>绿色下划线</font> | 文章中仿真结果和结论 |
 
 详细实例见 Blockchain/Example.pdf
 
