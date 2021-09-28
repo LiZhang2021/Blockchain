@@ -47,6 +47,16 @@
 ## 日志 LOG
 
 
+### 2021/9/28
+
+#### 进展
+1. 完成Blockchain/Double_Spengding_Attacks/Notes/1.md的编辑； 
+2. 开始精读Blockchain/Blockchain_in_Wireless_Networks/Papers/8.pdf，并且做相应的标记。
+
+#### 计划
+1. 完成Blockchain/Blockchain_in_Wireless_Networks/Papers/8.pdf论文的标记，并写关于这篇文章的笔记；
+2. 对Blockchain/Double_Spengding_Attacks/Notes/2.md中的理论推导进行重新梳理；
+
 ### 2021/9/27
 
 #### 进展
@@ -56,7 +66,6 @@
 #### 计划
 1. 明天完成Double-Spending_Attack/Notes/1.md中问题讨论部分加入交易费用后的计算，将计算过程重新完整的写下来；
 2. 开始看文章Blockchain_in_Wireless_Network/Paper/8，并将文章中的内容按照规则进行标记
-
 
 ### 2021/9/26
 
