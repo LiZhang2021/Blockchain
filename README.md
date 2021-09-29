@@ -46,6 +46,25 @@
 
 ## 日志 LOG
 
+### 2021/9/30
+
+#### 进展
+1. 进展1 
+2. 进展2
+
+#### 计划
+1. 计划1
+2. 计划2
+
+### 2021/9/29
+
+#### 进展
+1. 完成Blockchain/Double-Spending_Attacks/Notes/2.md的重新编辑，回答了之前提出的问题，并添加了文章中的核心理论分析； 
+2. 将Blockchain/Blockchain_in_Wireless_Networks/Papers/8.pdf看完了，并在文章中做了相应的标记。
+
+#### 计划
+1. 计划在30号完成Blockchain/Blockchain_in_Wireless_Networks/Notes/8.md的编辑，整理文章的脉络，提出问题并解答提出的问题。
+2. 对于Blockchain/Double-Spending_Attacks/Notes/3.md进行重新编辑，并添加理论分析以及补充回答问题讨论中的相关问题。
 
 ### 2021/9/28
 
