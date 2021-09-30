@@ -49,12 +49,13 @@
 ### 2021/9/30
 
 #### 进展
-1. 进展1 
-2. 进展2
+1. 编辑了部分Double-Spending_Attacks/Notes/3.md 
+2. 重新梳理了Double-Spending_Attacks/Papers/3.pdf
+3. 今天并没有完成昨天的计划，因此需要在明天追赶上来
 
 #### 计划
-1. 计划1
-2. 计划2
+1. 在上午完成Blockchain/Double-Spending_Attacks/Notes/3.md的重新编辑，回答之前提出的问题，并添加文章中的核心理论分析；
+2. 在下午和晚上完成将Blockchain/Blockchain_in_Wireless_Networks/Papers/8.pdf文章的笔记编辑。
 
 ### 2021/9/29
 
