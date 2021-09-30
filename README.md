@@ -56,6 +56,7 @@
 #### 计划
 1. 在上午完成Blockchain/Double-Spending_Attacks/Notes/3.md的重新编辑，回答之前提出的问题，并添加文章中的核心理论分析；
 2. 在下午和晚上完成将Blockchain/Blockchain_in_Wireless_Networks/Papers/8.pdf文章的笔记编辑。
+3. 完成对Blockchain仓库中关于双花攻击和无线区块链中文章依据新的命名规则进行重命名。
 
 ### 2021/9/29
 
