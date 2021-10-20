@@ -68,15 +68,30 @@
 * 当一个节点成功生成一个区块后，其收益主要是挖矿奖励 $R_B$ 和交易费用 $R_b$，但在生成区块的过程中会产生消耗，从而产生一个区块的成本为 $C_b$。在考虑挖矿奖励、交易费用和挖矿成本时，计算双花攻击成功的收益的概率。
 * 假设每一笔交易都支付相同的交易费用 $R_f$，区块 $i$ 中对应的交易数量为 $N_T^i$，因此区块 $i$ 的交易总费用为 $R_T^i = R_f* N_T^i$。记双花攻击一笔交易的收益为 $R_p$，成功生成一个区块的系统奖励为 $R_p$，挖掘一个区块的成本是 $C_b(d)$。因此，每个区块的网络奖励为：
       
-  $R_{net}(R_b, R_f, R_d, C_b)=\left\{
+  $$R_{net}(R_b, R_f, R_d, C_b)=\left\{
   \begin{aligned}
   R_b + R_f* N^b_T - C_b&  & \text{if attack successful}, \\
   -C_b &  & \text{otherwise}.
   \end{aligned}
-  \right.$
+  \right.$$
+  
+  $$R_{net}(R_b, R_f, R_d, C_b)=\left\{
+  \begin{array}{rl}
+  R_b + R_f* N^b_T - C_b, & \text{if attack successful}, \\
+  -C_b, & \text{otherwise}.
+  \end{array}
+  \right.$$
+
+  $$R_{net}(R_b, R_f, R_d, C_b)=
+  \begin{cases}
+  R_b + R_f* N^b_T - C_b, & \text{if attack successful},\\
+  -C_b, & \text{otherwise}.
+  \end{cases}$$
+
+
 * 当双花攻击成功时，奖励的期望为：
 
-  $\mathbb{E}_{(m,n)}(R_{net}+R_p|R_b,R_f,C_b) = (1 - \sum_{m=0}^{n} C_{m+n-1}^m(p^nq^m - p^mq^n))(R_p+\sum_{i=1}^{m}(R_b + R_f*N_T^i-C_b) + (\sum_{m=0}^{n} C_{m+n-1}^m(p^nq^m - p^mq^n))(-C_b\cdot m) $ 
+  $\mathbb{E}_{(m,n)}(R_{net}+R_p|R_b,R_f,C_b) = (1 - \sum_{m=0}^{n} C_{m+n-1}^m(p^nq^m - p^mq^n))(R_p+\sum_{i=1}^{m}(R_b + R_f*N_T^i-C_b) + (\sum_{m=0}^{n} C_{m+n-1}^m(p^nq^m - p^mq^n))(-C_b\cdot m)$ 
 
 
 ### 双花攻击模型（考虑攻击成功时间）
