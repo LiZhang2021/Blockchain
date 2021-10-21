@@ -27,37 +27,37 @@
 2. 定性分析
 上述双花攻击过程可以看成是一个连续时间的[马尔可夫过程](https://baike.baidu.com/item/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B)，当 $z = -1$ 时攻击成功。在<font color = red>不考虑成功的时间</font>的情况下，只关注成功的概率时上述问题可以等价为一个[离散的马尔可夫过程](https://zhuanlan.zhihu.com/p/31411951).
   * 当诚实链领先欺诈链 $z$ 个区块时，双花攻击成功时，下面关系成立：
-    $z^{i + 1}=\left\{
-    \begin{aligned}
-    z^i + 1 &  & \text{概率为 } p, \\
-    z^i -1 &  & \text{概率为 } q.
-    \end{aligned}
-  \right.\\
-  p + q = 1;\\
-  a_z = p*a_{z+1} + q*a_{z-1}；\\
-  a_{-1} = 1, a_0 = \frac{q}{p}.
-  $
+    $$z^{i + 1}=\left\{
+    \begin{array}{rl}
+    z^i + 1 &  \text{概率为 } p, \\
+    z^i -1 & \text{概率为 } q.
+    \end{array}
+    \right.\\
+    p + q = 1;\\
+    a_z = p*a_{z+1} + q*a_{z-1}；\\
+    a_{-1} = 1.$$
 
   其中<font color = blue> $a_z$ 是欺诈链落后于诚实链 $z$ 个区块攻击成功的概率</font>，因此就有 $a_z = a_{z+1}*p + a_{z-1}*q$, 且 $a_{-1} = 1, a_0 = \frac{q}{p}$。最终计算得到 $a_z = (\frac{q}{p})^{z+1}$。最终推导出攻击者双花攻击成功的概率： 
-  $p(z)=\left\{
+  $$p(z)=\left\{
   \begin{aligned}
   1 &  & \text{if } q \geq p, \\
   a_z = (\frac{q}{p})^{z+1} &  & \text{if } q < p.
   \end{aligned}
-  \right.$
+  \right.$$
   * 当 $q > p$ 时，即攻击节点的算力大于诚实节点的总算力，此时无论欺诈链落后诚实链多少个区块，均可攻击成功,最终生成比诚实链长的链。当 $q < p$ 时，攻击者成功的概率随着落后的区块个数而呈现指数型衰减。攻击节点成功的概率与落后区块个数有关，与生成区块的时间间隔大小无关。由此得出结论，交易信息的真实性，往往需要等待若干个区块确认被写入最长链后才得到保障。
-3. 定量分析
+1. 定量分析
 通过进行定量分析，计算双花攻击成功概率的累积分布函数(CDF)。
   *  假设攻击者在一个时期 $T$ 中生成区块的概率为$q$，诚实节点在一个时期 $T$ 中生成区块的概率为$p$，且有 $p + q = 1$；
   *  假设诚实链长度为 $n$，欺诈链长度为 $m$，诚实链分支领先 $z = m - n$ 个区块的长度；
 
-新产生的区块由攻击者节点和诚实节点生成的概率分别为 $q,p(p + q = 1)$。因次一个时期 $T$ 内区块是由谁生成是一个[伯努利试验](https://baike.baidu.com/item/%E4%BC%AF%E5%8A%AA%E5%88%A9%E8%AF%95%E9%AA%8C/238488)。对于总共 $m+n$ 次试验可以看成是一个 $m+n$ 重伯努利试验，攻击节点成功生成新区块数量 $m$ 是一个随机变量，服从负二项分布，并且概率密度函数(pdf)为 $p(m) = C_{m+n-1}^m p^nq^m, q < q$，由此计算出双花攻击成功的概率为 $P(m) = \sum_{m = 0}^{\infty}p(m) = \sum_{m=0}^{n-1} p(m)\cdot \min(a_{n-m-1},1) + \sum_{m=n}^{\infty} p(m) 
+新产生的区块由攻击者节点和诚实节点生成的概率分别为 $q,p(p + q = 1)$。因次一个时期 $T$ 内区块是由谁生成是一个[伯努利试验](https://baike.baidu.com/item/%E4%BC%AF%E5%8A%AA%E5%88%A9%E8%AF%95%E9%AA%8C/238488)。对于总共 $m+n$ 次试验可以看成是一个 $m+n$ 重伯努利试验，攻击节点成功生成新区块数量 $m$ 是一个随机变量，服从负二项分布，并且**概率密度函数(pdf)为 $p(m) = C_{m+n-1}^m p^nq^m, q < q$**，由此计算出双花攻击成功的概率为 
+$$P(m) = \sum_{m = 0}^{\infty}p(m) = \sum_{m=0}^{n-1} p(m)\cdot \min(a_{n-m-1},1) + \sum_{m=n}^{\infty} p(m) \\
 = \left\{
-  \begin{aligned}
-  1 &  & \text{if } q \geq p, \\
-  1 - \sum_{m=0}^{n} C_{m+n-1}^m(p^nq^m - p^mq^n) &  & \text{if } q < p.
-  \end{aligned}
-  \right.$
+  \begin{array}{rl}
+  1 & \text{if } q \geq p, \\
+  1 - \sum_{m=0}^{n} C_{m+n-1}^m(p^nq^m - p^mq^n) & \text{if } q < p.
+  \end{array}
+  \right.$$
 
 根据双花攻击成功的概率分布函数，可以计算出双花攻击成功的概率与攻击者算力、确认区块数量（可以设为 $n$）密切相关。
 
@@ -91,7 +91,7 @@
 
 * 当双花攻击成功时，奖励的期望为：
 
-  $\mathbb{E}_{(m,n)}(R_{net}+R_p|R_b,R_f,C_b) = (1 - \sum_{m=0}^{n} C_{m+n-1}^m(p^nq^m - p^mq^n))(R_p+\sum_{i=1}^{m}(R_b + R_f*N_T^i-C_b) + (\sum_{m=0}^{n} C_{m+n-1}^m(p^nq^m - p^mq^n))(-C_b\cdot m)$ 
+  $\mathbb{E}_{(m,n)}(R_{net}+R_p|R_b,R_f,C_b) = (1 - \sum_{m=0}^{n} C_{m+n-1}^m(p^nq^m - p^mq^n))(R_p+\sum_{i=1}^{m}(R_b + R_f*N_T^i-C_b) + (\sum_{m=0}^{n} C_{m+n-1}^m(p^nq^m - p^mq^n))(-C_b\cdot m)$
 
 
 ### 双花攻击模型（考虑攻击成功时间）
@@ -123,45 +123,45 @@
   * 双花攻击实现时间 $T_{DSA} 的概率密度函数需要两个随机事件的概率
     * 状态进程时间 $T_i$ 服从埃尔朗分布 $f_{T_i}(t) = \frac{\lambda_T(\lambda_T t)^{i-1}e^{-\lambda_T t}}{(i-1)!}$；
     * 给定状态指标 $i$ 满足 $\omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}$。其中集合 $\mathcal{D}_j^{(1)}, \mathcal{D}_{i,j}^{(2)}$ 分别表示满足双花攻击必要条件1和2的双花攻击样本的集合，且有 $j \geq N_{BC}, i \geq j, i,j \in \mathbb{N}$。随机试验的样本 $w$ 同时满足双花攻击成功必要条件的概率为 
-    $p_{DSA,i} = Pr(\exist j\in\mathbb{N}: \omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}) = \sum_{j = N_{BC}}^\infty Pr(\omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}) = \sum_{j = N_{BC}}^{2N_{BC}}Pr(\omega\in\mathcal{D}_j^{(1)})Pr(\omega\in\mathcal{D}_{i,j}^{(2)}) + \sum_{j = 2N_{BC} + 1}^{\infty}Pr(\omega\in\mathcal{D}_i^{(1)}) = \sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1}p_H^{N_{BC}}p_A^{j-N_{BC}}\cdot C_{\frac{i-1-2N_{BC}}{2}, 2N_{BC} - j}p_H^{\frac{i-1-2N_{BC}}{2}}p_A^{\frac{i-1-2N_{BC}}{2} + 2N_{BC}-j +1} + \sum_{j = 2N_{BC} + 1}^\infty C_{i-1}^{N_{BC}-1} p_H^{N_{BC}}p_A^{i-N_{BC}} = \sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1} (C_{i-j-1}^{\frac{i-1-2N_{BC}}{2}}\cdot \frac{2N_{BC}-j+1}{\frac{i+1}{2}+2N_{BC} -j})p_H^{\frac{i-1}{2}}p_A^{\frac{i+1}{2}} + \sum_{j = 2N_{BC} + 1}^\infty C_{i-1}^{N_{BC}-1} p_H^{N_{BC}}p_A^{i-N_{BC}}$ 
+    $$p_{DSA,i} = Pr(\exist j\in\mathbb{N}: \omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}) = \sum_{j = N_{BC}}^\infty Pr(\omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}) \\ = \sum_{j = N_{BC}}^{2N_{BC}}Pr(\omega\in\mathcal{D}_j^{(1)})Pr(\omega\in\mathcal{D}_{i,j}^{(2)}) + \sum_{j = 2N_{BC} + 1}^{\infty}Pr(\omega\in\mathcal{D}_i^{(1)}) \\ =  \sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1}p_H^{N_{BC}}p_A^{j-N_{BC}}\cdot C_{\frac{i-1-2N_{BC}}{2}, 2N_{BC} - j}p_H^{\frac{i-1-2N_{BC}}{2}}p_A^{\frac{i-1-2N_{BC}}{2} + 2N_{BC}-j +1} + \sum_{j = 2N_{BC} + 1}^\infty C_{i-1}^{N_{BC}-1} p_H^{N_{BC}}p_A^{i-N_{BC}} \\ = \sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1} (C_{i-j-1}^{\frac{i-1-2N_{BC}}{2}}\cdot \frac{2N_{BC}-j+1}{\frac{i+1}{2}+2N_{BC} -j})p_H^{\frac{i-1}{2}}p_A^{\frac{i+1}{2}} + \sum_{j = 2N_{BC} + 1}^\infty C_{i-1}^{N_{BC}-1} p_H^{N_{BC}}p_A^{i-N_{BC}}$$
 3. 定量分析
   * 不考虑成功攻击时间（即切割时间 $t_{cut} = \infty$）时，双花攻击成功概率为 
-    $\mathbb{P}_{DSA}=\left\{
-    \begin{aligned}
-    1 &  & \text{if } p_H\leq p_A, \\
-    1-\sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1}(p_H^{N_{BC}}p_H^{j-N_{BC}} - p_H^{j-N_{BC}-1}p_A^{N_{BC}+1}) &  & \text{if }p_H > p_A.
-    \end{aligned}
-    \right.$
+    $$\mathbb{P}_{DSA}=\left\{
+    \begin{array}{rl}
+    1 & \text{if } p_H\leq p_A, \\
+    1-\sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1}(p_H^{N_{BC}}p_H^{j-N_{BC}} - p_H^{j-N_{BC}-1}p_A^{N_{BC}+1}) & \text{if }p_H > p_A.
+    \end{array}
+    \right.$$
   * 因此计算得到双花攻击实现时间 $T_{DSA}$ 的概率密度函数为 
-    $f_{T_{DSA}}(t) = \sum_{i=2N_{BC}+1}^\infty p_{DSA,i}f_{T_i}(t) + (1-\mathbb{P}_{DSA})\delta(t-\infty)$
+    $$f_{T_{DSA}}(t) = \sum_{i=2N_{BC}+1}^\infty p_{DSA,i}f_{T_i}(t) + (1-\mathbb{P}_{DSA})\delta(t-\infty)$$
     其中 $\delta(t)$ 是[狄拉克 $\delta$ 函数](https://wuli.wiki//online/Delta.html)。
   * 双花攻击函数在有限时间内成功的概率为：
-    $\mathbb{P}_{AS}(t_{cut}) = Pr(T_{DSA} < t_{cut})$
+    $$\mathbb{P}_{AS}(t_{cut}) = Pr(T_{DSA} < t_{cut})$$
     当$t_{cut} = \infty$时，$\mathbb{P}_{AS}(t_{cut}) = \mathbb{P}_{DSA}$.
   * 双花攻击成功时间的概率密度函数为
-    $f_{T_{AS}}(t)=\left\{
-    \begin{aligned}
-    f_{T_{DSA}}\cdot\mathbb{P}_{AS}^{-1} &  & \text{for } 0 < t < t_{cut}, \\
-    0 &  & \text{for } t \geq t_{cut}.
-    \end{aligned}
-    \right.$
+    $$f_{T_{AS}}(t)=\left\{
+    \begin{array}{rl}
+    f_{T_{DSA}}\cdot\mathbb{P}_{AS}^{-1} & \text{for } 0 < t < t_{cut}, \\
+    0 & \text{for } t \geq t_{cut}.
+    \end{array}
+    \right.$$
   * 攻击成功时间的期望为 
-    $\mathbb{E}_{T_{AS}}(t_{cut}) = \frac{\int_0^{t_{cut}}tf_{T_{DSA}}(t)dt}{\mathbb{P}_{AS}(t_{cut})}$。
+    $$\mathbb{E}_{T_{AS}}(t_{cut}) = \frac{\int_0^{t_{cut}}tf_{T_{DSA}}(t)dt}{\mathbb{P}_{AS}(t_{cut})}.$$
 
 #### 双花攻击成功收益计算
 
   * 根据攻击时间定义收益函数为 
-    $P=\left\{
+    $$P=\left\{
     \begin{aligned}
     C+R(\lambda_A, T_{AS})-X(\lambda_A, T_{AS})&  & \text{if } T_{DSA} < t_{cut}, \\
     -X(\lambda_A, T_{AS}) &  & \text{otherwise}.
     \end{aligned}
-    \right.$
+    \right.$$
     其中 $C$ 是欺诈交易的收益，$R(\lambda_A, T_{AS})$ 是攻击节点生成区块处理交易的奖励函数，$X(\lambda_A, T_{AS})$ 是攻击节点算力租赁费用函数。
   * 攻击者总收益函数的期望为 
-    $\mathbb{E}_P = \mathbb{P}_{AS}(t_{cut})\cdot (C + \mathbb{E}[R(\lambda_A, T_{AS})] - \mathbb{E}[X(\lambda_A, T_{AS})]) - (1- \mathbb{P}_{AS}(t_{cut}))\cdot X(\lambda_A, T_{AS})$。
+    $$\mathbb{E}_P = \mathbb{P}_{AS}(t_{cut})\cdot (C + \mathbb{E}[R(\lambda_A, T_{AS})] - \mathbb{E}[X(\lambda_A, T_{AS})]) - (1- \mathbb{P}_{AS}(t_{cut}))\cdot X(\lambda_A, T_{AS})$$
     攻击者租赁费用函数的期望
-    $\mathbb{E}_X = \mathbb{P}_{AS}(t_{cut})\cdot \mathbb{E}[X(\lambda_A, T_{AS})]) + (1- \mathbb{P}_{AS}(t_{cut}))\cdot X(\lambda_A, T_{AS})$。
+    $$\mathbb{E}_X = \mathbb{P}_{AS}(t_{cut})\cdot \mathbb{E}[X(\lambda_A, T_{AS})]) + (1- \mathbb{P}_{AS}(t_{cut}))\cdot X(\lambda_A, T_{AS})$$
 #### 讨论分析
   * 当 $\mathbb{E}_P > 0$ 时，双花攻击是有收益的。根据收益函数的定义可知，欺诈交易的价值 $C$ 是影响收益的主要因素。目标交易的需求价值可计算为 $C_{req} = \frac{\mathbb{E}_X - \mathbb{P}_{AS}(t_{cut})\cdot \mathbb{E}[R(\lambda_A, T_{AS})]}{\mathbb{P}_{AS}(t_{cut})}$。因此当 $C > C_{req}$ 时攻击者是有收益的。
   * 影响攻击成功的概率 $\mathbb{P}_{AS}$ 、成功攻击时间的期望 $\mathbb{E}_{T_{AS}}$ 、租赁费用的期望 $\mathbb{E}_X$ 、目标交易的需求值 $C_{req}$ 的主要因素有区块确认时间 $N_{BC}$ 和攻击者算力 $p_A$。
@@ -203,27 +203,26 @@
   * 当 $m_1 < k$ 时，攻击节点会停止攻击，并且复制前 $k-1$ 个诚实分支上的区块后再次发起攻击，双花攻击成功要满足 $m_2 > z$。
   * 不考虑攻击时间的情况下，双花攻击的过程时一个离散的马尔可夫过程。
   * 当诚实链领先欺诈链 $z$ 个区块时，双花攻击成功时，下面关系成立：
-    $z^{i + 1}=\left\{
-    \begin{aligned}
-    z^i + 1 &  & \text{概率为 } p, \\
-    z^i -1 &  & \text{概率为 } q.
-    \end{aligned}
+    $$z^{i + 1}=\left\{
+    \begin{array}{rl}
+    z^i + 1 & \text{概率为 } p, \\
+    z^i -1 & \text{概率为 } q.
+    \end{array}
   \right.\\
   p + q = 1;\\
   a_z = p*a_{z+1} + q*a_{z-1}；\\
-  a_{-1} = 1.
-  $
+  a_{-1} = 1.$$
   其中<font color = blue> $a_z$ 是欺诈链落后于诚实链 $z$ 个区块攻击成功的概率</font>，因此就有 $a_z = a_{z+1}*p + a_{z-1}*q$, 且 $a_{-1} = 1$。最终计算得到在诚实链领先欺诈链 $z$ 个区块长度时攻击成功的概率为 $a_z = (\frac{q}{p})^{z+1}$，即有： 
-  $p(z)=\left\{
-  \begin{aligned}
-  1 &  & \text{if } q \geq p, \\
-  a_z = (\frac{q}{p})^{z+1} &  & \text{if } q < p.
-  \end{aligned}
-  \right.$
+  $$p(z)=\left\{
+  \begin{array}{rl}
+  1 &  \text{if } q \geq p, \\
+  a_z = (\frac{q}{p})^{z+1} &  \text{if } q < p.
+  \end{array}
+  \right.$$
 
 1. 定量分析
 根据自适应策略双花攻击模型可知，双花攻击成功的概率为 
-  $P_{V}(k, z) = P(m_1\geq k-1, m_1+m_2>k+z) + P(m_1<k-1, m_2>z)$
+  $$P_{V}(k, z) = P(m_1\geq k-1, m_1+m_2>k+z) + P(m_1<k-1, m_2>z)$$
   * 新产生的区块由攻击者节点和诚实节点生成的概率分别为 $q,p(p + q = 1)$。因次一个时期 $T$ 内区块是由谁生成是一个[伯努利试验](https://baike.baidu.com/item/%E4%BC%AF%E5%8A%AA%E5%88%A9%E8%AF%95%E9%AA%8C/238488)。对于总共 $m+n$ 次试验可以看成是一个 $m+n$ 重伯努利试验，攻击节点成功生成新区块数量 $m$ 是一个随机变量，服从负二项分布，并且概率密度函数(pdf)为 $p(m,n) = C_{m+n-1}^m p^nq^m, q < q$；
   * 给定确认区块数量为 $z$ 时，双花攻击成功的概率为 
     $P_V(k,z) = \sum_{m_1 = k-1}^\infty\sum_{m_2 = 0}^\infty p(m_1, k)p(m_2, z)a_{((k+z)-(m_1 +m_2))} + \sum_{m_1 = 0}^{k-2}\sum_{m_2 = 0}^\infty p(m_1, k)p(m_2, z)a_{(z-m_2)}$
@@ -232,12 +231,12 @@
   * 记节点生成一个区块的成本为 $C_d$，其中 $d$ 表示区块的挖矿难度。当难度越高，则成本越高；
   * 记节点生成一个区块的的奖励为 $R_b$，该奖励主要由挖矿奖励和交易费用构成；
   * 攻击者每个区块获得网络收益是:
-    $R_{net}(R_b, C_h, d)=\left\{
-    \begin{aligned}
-    R_b - C_b(d) &  & \text{if attack successful}, \\
-    -C_b(d) &  & \text{otherwise}.
-    \end{aligned}
-    \right.$
+    $$R_{net}(R_b, C_h, d)=\left\{
+    \begin{array}{rl}
+    R_b - C_b(d) & \text{if attack successful}, \\
+    -C_b(d) &  \text{otherwise}.
+    \end{array}
+    \right.$$
   * 记目标交易的价值为 $C_t$；
   * 攻击者双花攻击成功的概率为 $P_V(k,z)$ 可以计算得到奖励的期望:
   $\mathbb{E}_{(m_1,m_2)}(R_{net}|z,k,R_b,C_d) = \sum_{m_1 = k-1}^\infty\sum_{m_2 = 0}^\infty p(m_1, k)p(m_2, z)a_{((k+z)-(m_1 +m_2))}(C_t + (R_b-C_b(d)(m_1+m_2)) + \sum_{m_1 = 0}^{k-2}\sum_{m_2 = 0}^\infty p(m_1, k)p(m_2, z)a_{(z-m_2)}(C_t + R_bm_2-C_b(d)(m_1 +m_2)) + \sum_{m_1 = k-1}^\infty\sum_{m_2 = 0}^\infty p(m_1, k)p(m_2, z)(1-a_{((k+z)-(m_1 +m_2))})((-C_b(d))(m_1+m_2) + \sum_{m_1 = 0}^{k-2}\sum_{m_2 = 0}^\infty p(m_1, k)p(m_2, z)(1- a_{(z-m_2)})(-C_b(d)(m_1 +m_2))$
@@ -261,10 +260,69 @@
 
 ## 基于DAG结构区块链的双花攻击分析
 
+典型的基于DAG的区块链系统就是Tangle，交易的确认与链式结构通过确认区块数量确认交易的机制不同，Tangle中交易根据交易的权重大小来确认交易。在设计此类区块链系统时，会给定一个交易权重的阈值，一旦交易权重超过这个阈值就被确认。
+1. 系统假设
+  * 假设在Tangle中有 $n$ 个用户，其中有一个攻击者，其余 $n-1$ 个都是诚实的；
+  * 每个用户的交易到达都遵从[泊松点过程](https://www.cnblogs.com/jwmeng/p/7698651.html)。
+  * 根据双花攻击成功的定义，攻击者在发起一笔目标交易之后会立即私密生成一条新的分支，使得欺诈交易所在分支最终被确定在区块链主链上时公布该分支，从而攻击成功。Tangle中双花攻击的过程如下：
+   ![](./../Blockchain_in_Wireless_Networks/Notes/pics3/Figure_3.png)
+     * 在 $t_0$ 时刻攻击者广播一笔目标交易，诚实用户将会支持这笔交易；
+     * 在 $t_1$ 时刻，攻击者以离线的方式建造一条欺诈链来支持攻击交易，并将该链秘密附加到tips。并且 $t_1$ 时在 $t_0$ 交易的适应期结束时刻；
+     * 在 $t_2$ 时刻，交目标易的累积权重达到 $w$ 被确认，随后受害者会发送产品给攻击者；
+     * 在 $t_1$ 时刻之后，攻击者利用其自身的算力持续产生交易来提升攻击交易的累计权重；
+     * 只要攻击交易的累计权重超过 $t_2$ 时刻实现支付的权重，攻击者就会向整个无线区块链网络广播离线分支；
+     * 攻击者广播离线分支立即更新Tangle，并且由于较高的累积权重，区块链网络中的其他诚实用户将接受欺诈交易。最后，目标交易将会在Tangle中被孤立，即使提供了产品，也无法收到付款（将被取消）。此时，双重支出攻击成功。
+  * 上述攻击过程可以看作是一个[马尔科夫链](https://baike.baidu.com/item/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/6171383)。假设在 $t_1$ 到 $t_2$ 时间内，诚实用户和攻击者生成的交易数量分别是 $i_h, i_a$。记 $\lambda, \mu$ 分别是诚实用户和攻击者的新交易到达速率，且每个交易的权重为 $1$。
 
 #### 双花攻击成功概率计算
 
+1. 问题描述
+  * 假设在一个时隙中系统只能生成一个交易，交易由诚实用户和攻击者生成的概率为 $p_H = \frac{(n-1)\lambda}{(n-1)\lambda + \mu}, p_A = \frac{\mu}{(n-1)\lambda + \mu}$，且有 $p_A + p_H = 1$。
+  * 假设在 $t_2$ 时刻目标交易的权重达到系统设定确认的阈值；
+  * <font color = red>求解攻击者生成的欺诈交易最终被切人到链上的概率。（即双花攻击成功的概率）</font>
+
+2. 定性分析
+  * 攻击者在 $[t_1,t_2]$ 时间段内产生的交易数量可以看作是一个服从负二项分布的随机过程，是一个 $i_a + i_h$ 的伯努利试验，并且最后一次试验必然是诚实用户生成交易。因此攻击者生成交易数量的概率密度函数为 
+    $$p(i_a) = C_{i_a + i_h -1}^{i_h - 1} p_H^{i_h}p_A^{i_a}.$$
+  * 当目标交易领先于欺诈交易时，攻击者需要追赶落后的交易数量才能最终双花攻击成功。但是目标交易与欺诈交易的权重之差是一个随机游走的过程，因此当目标交易领先欺诈交易 $z$ 个权重双花攻击成功时，下面的状态转化关系成立：
+    $$z^{i + 1}=\left\{
+    \begin{array}{rl}
+    z^i + 1 & \text{概率为 } p_H, \\
+    z^i -1 & \text{概率为 } p_A.
+    \end{array}
+    \right.\\
+    p_H + p_A = 1;\\
+    a_z = p_H*a_{z+1} + p_A*a_{z-1}；\\
+    a_{-1} = 1.$$
+
+  其中<font color = blue> $a_z$ 是欺诈交易落后于目标交易 $z$ 个权重攻击成功的概率</font>，因此根据 $a_z = a_{z+1}*p_H + a_{z-1}*p_A$ 和 $a_{-1} = 1$ 计算得到 $a_z = (\frac{p_A}{p_H})^{z+1}$。最终推导出攻击者双花攻击成功的概率： 
+  $$p(z)=\left\{
+  \begin{array}{rl}
+  1 & \text{if } p_A \geq p_H, \\
+  a_z = (\frac{q}{p})^{z+1} & \text{if } p_A < p_H.
+  \end{array}
+  \right.$$
+
+3. 定量分析
+
+双花攻击成功时分为以下两种情况下：
+  * 双花攻击在 $t_2$ 时刻成功。此时目标交易达到确认权重，但欺诈交易的权重早已经超过阈值。因此攻击者会公布欺诈链，并且欺诈交易被全网接受；
+  * 双花攻击在 $t_2$ 时刻之后成功。在目标交易达到确认权重的时刻，欺诈交易的权重还未达到确认阈值。在此之后，攻击者会努力追赶权重差额，直到欺诈交易的权重超过目标交易，就公布欺诈链被全网接受。
+
+针对这两种情况，可以计算出双花攻击成功的概率为 
+   $$P\{\text{attack succeed}\} = P_1(t_2) + P_0(t_2)P_{01} = \sum_{i_a = i_h + 1}^\infty C_{i_a + i_h -1}^{i_h-1}\alpha^{i_h}\beta^{i_a} + \sum_{i_a = 0}^{i_h} C_{i_a + i_h -1}^{i_h-1}\alpha^{i_h}\beta^{i_a}(\min(\beta/\alpha, 1))^{i_h - i_a +1} \\
+   = \left\{ 
+    \begin{array}{rl}
+    1 - \sum_{i_a = 0}^{i_h} C_{i_a + i_h -1}^{i_h-1}(\alpha^{i_h}\beta^{i_a} - \alpha^{i_a - 1}\beta^{i_h + 1}) & \text{if } \alpha > \beta, \\
+    1 & \text{if } \alpha \leq \beta
+    \end{array}
+    \right.$$
 
 #### 双花攻击成功收益计算
 
+基于DAG结构的区块链暂时还未又具体的奖励机制，生成交易不需要给任何人支付报酬。因此，当攻击成功后主要的收益来源于目标交易的价值 $C_t$。在设计此类区块链系统时，交易的价值应该设置一个上界，否则交易价值过大容易引诱攻击者对交易发起攻击。
+
+#### 讨论分析
+  * 双花攻击成功的概率受到受到攻击者与诚实用户的交易到达率 $\mu, \lambda$ 的影响。当攻击者的交易到达率增加时，在一个时隙中攻击者生成交易的概率会增加，同时在目标交易领先欺诈交易一定权重后攻击成功的概率也会增加。因此，最终双花攻击成功的概率也会增加；
+  * 双花攻击成功的概率会受到确认权重阈值的影响。假设目标交易在 $t_1$ 时刻的累积权重为 $W(t_1) - 1$。因此在 $t_2$ 时刻就有 $i_h = w - W(t_1) +1$。根据双花攻击成功概率的公式可知，当确认权重 $w$ 变大时，在 $t_2$ 时刻的 $i_h$ 会随之变大，由此双花攻击成功的概率会降低。当确认权重变大而交易到达速率不变时，需要等待确认的时间会增加，攻击者需要等待更长的时间才能使得攻击成功，此时双花攻击成功的概率会降低。
 
