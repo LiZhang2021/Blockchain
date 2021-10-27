@@ -120,8 +120,8 @@ $$P(m) = \sum_{m = 0}^{\infty}p(m) = \sum_{m=0}^{n-1} p(m)\cdot \min(a_{n-m-1},1
   * <font color = red>求解双花攻击实现时间小于切割时间的概率。</font>
 2. 定性分析
 双花攻击过程可以看成是一个选取样本 $\omega\in\Omega$ 的随机试验，其中 $\omega = ((T_1,\Delta_1), (T_2,\Delta_2), \dots, (T_\infty,\Delta_\infty))$，集合 $\Omega = \{\omega\in\{\mathbb{R}^+\times\{\pm1\}\}^\infty\}$。对于给定的 $DS$ 样本 $\omega$以及状态指标$i$，投影表示 $\pi_{T_i}(\omega) = T_i, \pi_{\Delta_i}(\omega) = \Delta_i$。
-  * 双花攻击实现时间 $T_{DSA} 的概率密度函数需要两个随机事件的概率
-    * 状态进程时间 $T_i$ 服从埃尔朗分布 $f_{T_i}(t) = \frac{\lambda_T(\lambda_T t)^{i-1}e^{-\lambda_T t}}{(i-1)!}$；
+  * 双花攻击实现时间 $T_{DSA}$ 的概率密度函数需要两个随机事件的概率
+    * 状态进程时间 $T_i$ 服从[埃尔朗分布](https://baike.baidu.com/item/%E5%9F%83%E5%B0%94%E6%9C%97%E5%88%86%E5%B8%83/19127136) $f_{T_i}(t) = \frac{\lambda_T(\lambda_T t)^{i-1}e^{-\lambda_T t}}{(i-1)!}$；
     * 给定状态指标 $i$ 满足 $\omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}$。其中集合 $\mathcal{D}_j^{(1)}, \mathcal{D}_{i,j}^{(2)}$ 分别表示满足双花攻击必要条件1和2的双花攻击样本的集合，且有 $j \geq N_{BC}, i \geq j, i,j \in \mathbb{N}$。随机试验的样本 $w$ 同时满足双花攻击成功必要条件的概率为 
     $$p_{DSA,i} = Pr(\exist j\in\mathbb{N}: \omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}) = \sum_{j = N_{BC}}^\infty Pr(\omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}) \\ = \sum_{j = N_{BC}}^{2N_{BC}}Pr(\omega\in\mathcal{D}_j^{(1)})Pr(\omega\in\mathcal{D}_{i,j}^{(2)}) + \sum_{j = 2N_{BC} + 1}^{\infty}Pr(\omega\in\mathcal{D}_i^{(1)}) \\ =  \sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1}p_H^{N_{BC}}p_A^{j-N_{BC}}\cdot C_{\frac{i-1-2N_{BC}}{2}, 2N_{BC} - j}p_H^{\frac{i-1-2N_{BC}}{2}}p_A^{\frac{i-1-2N_{BC}}{2} + 2N_{BC}-j +1} + \sum_{j = 2N_{BC} + 1}^\infty C_{i-1}^{N_{BC}-1} p_H^{N_{BC}}p_A^{i-N_{BC}} \\ = \sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1} (C_{i-j-1}^{\frac{i-1-2N_{BC}}{2}}\cdot \frac{2N_{BC}-j+1}{\frac{i+1}{2}+2N_{BC} -j})p_H^{\frac{i-1}{2}}p_A^{\frac{i+1}{2}} + \sum_{j = 2N_{BC} + 1}^\infty C_{i-1}^{N_{BC}-1} p_H^{N_{BC}}p_A^{i-N_{BC}}$$
 3. 定量分析
