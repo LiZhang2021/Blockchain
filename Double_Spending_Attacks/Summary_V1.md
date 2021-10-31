@@ -131,42 +131,38 @@ $$P(m,n,q) = \sum_{m=0}^{n-1} p(m)\cdot a_{n-m-1} + \sum_{m=n}^{\infty} p(m)\cdo
 
 ### 1.2 基于时间的攻击模型
 
-攻击者不会无限期的等待攻击成功，因为如果在较长时间攻击成功后，攻击者也无法获得收益。因此引入了一个切割时间 $t_{cut}\in \mathbb{R}^+$。攻击者会计算双花攻击实现时间 $T_{DSA}$ 的概率分布，根据切割时间为 $t_{cut}$ 的双花攻击成功概率计算出 $T_{DSA} < t_{cut}$ 的概率，由此估计出攻击的收益。当收益较小或者无收益时，理性的攻击者会选择停止攻击。因此，可以以此为切入点，分析双花攻击在有限时间内成功所需要的资源，从而在设计区块链时将这些影响参数设置在安全线以内去日报区块链系统的安全性。
+攻击者不会无限期的等待攻击成功，如果在较长时间攻击成功后，攻击者也无法获得收益。因此引入了一个切割时间 $t_{cut}\in \mathbb{R}^+$。攻击者会计算双花攻击实现时间 $T_{DSA}$ 的概率分布，根据切割时间为 $t_{cut}$ 的双花攻击成功概率计算出 $T_{DSA} < t_{cut}$ 的概率，由此估计出攻击的收益。当收益较小或者无收益时，理性的攻击者会选择停止攻击。因此，可以以此为切入点，分析双花攻击在有限时间内成功所需要的资源，从而在设计区块链时将这些影响参数设置在阈值界限内确保区块链系统的安全性。
 
-1. 双花攻击的必要条件：
+
+1. 假设攻击者观察到目标交易出现在区块中，将会在目标交易所在区块的前面发起双花攻击。双花攻击成功的必要条件：
   <font color = blue>定义1. 双花攻击是成功的，如果存在一个双花攻击实现(DSA)时间 $T_{DSA}$ 使得下面两个条件成立：
      * 区块确认 $\mathcal{G}^{(1)}$：诚实链在 $T_{DSA}$ 时间段内增长的长度要远远长于最长确认区块数量 $N_{BC}$；
      * PoW竞争成功 $\mathcal{G}^{(2)}$：欺诈链在 $T_{DSA}$ 时间段内增长的比诚实链更长。</font>
 
 2. 双花攻击模型假设
-  区块生成过程可以看作是随机模型中一个给定区块生成速率为 $\lambda$ 的泊松计数过程。因此，诚实链和欺诈链的长度在时间 $t\in(0, \infty]$ 内的增长是两个泊松计数过程，记作 $H(t)$ 的区块生成速率为 $\lambda_H$ 以及 $A(t)$ 的区块生成速率为 $\lambda_A$。初始时间 $t=0$ 时有 $H(0)=A(0)=0$。在一个时间点上，整个系统只能生成一个区块，要么是诚实挖矿者生成要么是攻击者生成。在一个离散时间域中，$H(t)$与$A(t)$的差可以表示一个[一维随机游走过程](https://www.zhihu.com/question/21354595)。
-  * 随机过程 $M(t) = H(t)+A(t)$ 是生成率为 $\lambda$ 的泊松计数过程；
-  * 随机过程 $S(t) = H(t)-A(t)$ 连续时间内的类随机游走过程。令 $T_i = \inf\{t\in\mathbb{R}^+, M(t) = i\}$ 是状态发展时间，则 $S_i = S(T_i)$ 是 $T_i$ 时刻诚实链和欺诈链的差。随机游走 $S_i$ 是初始 $S_0 = 0$ 的稳定[马尔科夫链](https://baike.baidu.com/item/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/6171383)。
-  * 状态转换的概率分别为 $p_A = Pr(S_i = n-1|S_{i-1} = n) = \frac{\lambda_A}{\lambda_T}, p_H = Pr(S_i = n+1|S_{i-1} = n) = \frac{\lambda_H}{\lambda_T}$。
+  区块生成过程可以看作是随机模型中一个给定区块生成速率为 $\lambda$ 的泊松计数过程。因此，诚实链和欺诈链的长度在时间 $t\in(0, \infty]$ 内的增长是两个泊松计数过程，记作 $H(t)$ 的区块生成速率为 $\lambda_H$ 以及 $A(t)$ 的区块生成速率为 $\lambda_A$（<font color = red>在实际中，这个速率应该与诚实节点和攻击者掌握的系统资源有关系</font>）。记攻击者发起攻击的初始时间为 $t = 0$，此时诚实链分支和欺诈链分支的初始长度为 $H(0) = A(0) = 0$。假设每一个区块要么是诚实节点生成要么是攻击者节点生成。在一个离散时间域中，$H(t)$与$A(t)$ 的和是一个泊松计数过程，$H(t)$与$A(t)$ 的差则是一个[一维随机游走过程](https://www.zhihu.com/question/21354595)：
+  * 随机过程 $M(t) = H(t)+A(t)$ 是生成率为 $\lambda = \lambda_H + \lambda_A$ 的泊松计数过程；
+  * 随机过程 $S(t) = H(t)-A(t)$ 连续时间内的类随机游走过程。记 $T_i = \inf\{t\in\mathbb{R}^+, M(t) = i\}$ 是状态发展时间，则 $S_i = S(T_i)$ 是 $T_i$ 时刻诚实链和欺诈链的差。随机游走 $S_i$ 是初始状态为 $S_0 = 0$ 的稳定[马尔科夫链](https://baike.baidu.com/item/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/6171383)。
+  * 状态转换与区块是由哪类节点生成的直接相关，因此攻击节点和诚实节点在一个区块生成时间内状态变换的概率分别为 $p_A = Pr(S_i = n-1|S_{i-1} = n) = \frac{\lambda_A}{\lambda_T}, p_H = Pr(S_i = n+1|S_{i-1} = n) = \frac{\lambda_H}{\lambda_T}$。
   * 因此，可以定义一个独立同分布状态变换随机变量服从[伯努利分布](https://baike.baidu.com/item/%E4%BC%AF%E5%8A%AA%E5%88%A9%E5%88%86%E5%B8%83/7167021) $\Delta_i = S_i-S_{i-1}\in\{\pm1\}\sim Bernoulli(p_H)$，且 $S_i = \sum_{k=0}^i\Delta_k$
 
-#### 1.2.1 双花攻击成功概率计算
+#### 1.2.1 双花攻击成功概率
 
 1. 问题描述
   * 假设系统区块生成速率 $\lambda$；
   * 攻击者在一个时期中生成区块的概率为 $p_A = Pr(S_i = n-1|S_{i-1} = n) = \frac{\lambda_A}{\lambda_T}$，诚实节点在一个时期中生成区块的概率为 $p_H = Pr(S_i = n+1|S_{i-1} = n) = \frac{\lambda_H}{\lambda_T}$，且有 $p_A + q_H = 1$；
   *  假设 $t$ 时刻诚实链长度为 $H(t)$，欺诈链长度为 $A(t)$；
   * <font color = red>求解双花攻击实现时间小于切割时间的概率。</font>
-2. 定性分析
+2. 定量分析
 双花攻击过程可以看成是一个选取样本 $\omega\in\Omega$ 的随机试验，其中 $\omega = ((T_1,\Delta_1), (T_2,\Delta_2), \dots, (T_\infty,\Delta_\infty))$，集合 $\Omega = \{\omega\in\{\mathbb{R}^+\times\{\pm1\}\}^\infty\}$。对于给定的 $DS$ 样本 $\omega$以及状态指标$i$，投影表示 $\pi_{T_i}(\omega) = T_i, \pi_{\Delta_i}(\omega) = \Delta_i$。
   * 双花攻击实现时间 $T_{DSA}$ 的概率密度函数需要两个随机事件的概率
     * 状态进程时间 $T_i$ 服从[埃尔朗分布](https://baike.baidu.com/item/%E5%9F%83%E5%B0%94%E6%9C%97%E5%88%86%E5%B8%83/19127136) $f_{T_i}(t) = \frac{\lambda_T(\lambda_T t)^{i-1}e^{-\lambda_T t}}{(i-1)!}$；
     * 给定状态指标 $i$ 满足 $\omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}$。其中集合 $\mathcal{D}_j^{(1)}, \mathcal{D}_{i,j}^{(2)}$ 分别表示满足双花攻击必要条件1和2的双花攻击样本的集合，且有 $j \geq N_{BC}, i \geq j, i,j \in \mathbb{N}$。随机试验的样本 $w$ 同时满足双花攻击成功必要条件的概率为 
     $$p_{DSA,i} = Pr(\exist j\in\mathbb{N}: \omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}) = \sum_{j = N_{BC}}^\infty Pr(\omega\in\mathcal{D}_j^{(1)}\cap\mathcal{D}_{i,j}^{(2)}) \\ = \sum_{j = N_{BC}}^{2N_{BC}}Pr(\omega\in\mathcal{D}_j^{(1)})Pr(\omega\in\mathcal{D}_{i,j}^{(2)}) + \sum_{j = 2N_{BC} + 1}^{\infty}Pr(\omega\in\mathcal{D}_i^{(1)}) \\ =  \sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1}p_H^{N_{BC}}p_A^{j-N_{BC}}\cdot C_{\frac{i-1-2N_{BC}}{2}, 2N_{BC} - j}p_H^{\frac{i-1-2N_{BC}}{2}}p_A^{\frac{i-1-2N_{BC}}{2} + 2N_{BC}-j +1} + \sum_{j = 2N_{BC} + 1}^\infty C_{i-1}^{N_{BC}-1} p_H^{N_{BC}}p_A^{i-N_{BC}} \\ = \sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1} (C_{i-j-1}^{\frac{i-1-2N_{BC}}{2}}\cdot \frac{2N_{BC}-j+1}{\frac{i+1}{2}+2N_{BC} -j})p_H^{\frac{i-1}{2}}p_A^{\frac{i+1}{2}} + \sum_{j = 2N_{BC} + 1}^\infty C_{i-1}^{N_{BC}-1} p_H^{N_{BC}}p_A^{i-N_{BC}}$$
-3. 定量分析
-  * 不考虑成功攻击时间（即切割时间 $t_{cut} = \infty$）时，双花攻击成功概率为 
-    $$\mathbb{P}_{DSA}=\left\{
-    \begin{array}{rl}
-    1 & \text{if } p_H\leq p_A, \\
-    1-\sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1}(p_H^{N_{BC}}p_H^{j-N_{BC}} - p_H^{j-N_{BC}-1}p_A^{N_{BC}+1}) & \text{if }p_H > p_A.
-    \end{array}
-    \right.$$
-  * 因此计算得到双花攻击实现时间 $T_{DSA}$ 的概率密度函数为 
+  
+  不考虑成功攻击时间（即切割时间 $t_{cut} = \infty$）时，假设系统满足 $p_H > p_A$ 时，双花攻击成功概率为 
+    $$\mathbb{P}_{DSA} = 1-\sum_{j=N_{BC}}^{2N_{BC}}C_{j-1}^{N_{BC}-1}(p_H^{N_{BC}}p_H^{j-N_{BC}} - p_H^{j-N_{BC}-1}p_A^{N_{BC}+1}) .$$
+  * 计算得到双花攻击实现时间 $T_{DSA}$ 的概率密度函数为 
     $$f_{T_{DSA}}(t) = \sum_{i=2N_{BC}+1}^\infty p_{DSA,i}f_{T_i}(t) + (1-\mathbb{P}_{DSA})\delta(t-\infty)$$
     其中 $\delta(t)$ 是[狄拉克 $\delta$ 函数](https://wuli.wiki//online/Delta.html)。
   * 双花攻击函数在有限时间内成功的概率为：
