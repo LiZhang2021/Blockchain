@@ -10,3 +10,5 @@
 4. Revisiting Double-Spending Attacks on the Bitcoin Blockchain -- New Findings(J.Zheng&etal, 2021).pdf
 
 5. Two Bitcoins at the Price of One -- Double-Spending Attacks on Fast Payments in Bitcoin(G.O.Karame&E.Androulaki, 2012).pdf
+
+6. Direct Acyclic Graph-based Blockchain for Internet of Things_Performance and Security Analysis(Y.Li&etal, Aug.2020).pdf
