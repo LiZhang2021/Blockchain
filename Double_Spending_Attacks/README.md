@@ -8,7 +8,7 @@
 3. Profitable Double-Spending Attacks(J.Jang&H.Lee, Mar.2019).pdf
 4. Revisiting Double-Spending Attacks on the Bitcoin Blockchain_New Findings(J.Zheng&etal, Jun.2021).pdf
 5. Two Bitcoins at the Price of One_Double-Spending Attacks on Fast Payments in Bitcoin(G.O.Karame&E.Androulaki, May.2012).pdf
-
+6. Direct Acyclic Graph-based Blockchain for Internet of Things_Performance and Security Analysis(Y.Li&etal, Aug.2020).pdf
 
 论文详见 [LiZhang2021/Blockchain/Double_Spending_Attacks/Papers/](LiZhang2021/Blockchain/Double_Spending_Attacks/Papers/)
 
