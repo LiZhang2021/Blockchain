@@ -35,12 +35,42 @@
     * High-to-Low Load: 
       * A regime is defined as High-to-Low load when the transaction arrival rate changes frome $\lambda_h$ to $\lambda_l$ suddenly. 
       * The initial state of an observed transaction under H2LR is that cumulative weight $W(0) = 1$ and the number of tips id $L(0) = 2\lambda_hh_r$. And the transaction arrival rate in this regime changes to $\lambda_l$.
-      * When a new transaction arriving, two tips in $L(k)$ will be chosen to approval. An observed transaction's cumulative weight either increase $1$ or not change. The probability to select the observed transaction for $W(k+1) = W(k) + 1$
+      * When a new transaction arriving, two tips in $L(k)$ will be chosen to approval. An observed transaction's cumulative weight either increase $1$ or not change. The probability to select the observed transaction for $W(k+1) = W(k) + 1$ is $\frac{2}{L(k)}$. And the probability of  $W(k + 1) = W(k)$ is $1 - \frac{2}{L(k)} = \frac{L(k) - 2}{L(k)}$.
+      * 每一步不同的状态的概率：
+         $$\left\{
+          \begin{aligned}
+          P\{i+1,j-1 | i,j\} = \frac{2}{j}, &  & i = 1, 2, \cdots, L_h - 1, j = 2,3,\cdots, L_h, \\
+          P\{i,j-1 |i,j\} = 1 - \frac{2}{j}, &  & i = 1, 2, \cdots, L_h - 1, j = 2,3,\cdots, L_h, \\
+          P\{i+1, 1 | i,j\} = 1, & & i = 2, \cdots, \infty, j = 1.
+          \end{aligned}
+          \right.$$
+      * The best case of upper performance bound in H2LR is that transaction arrival rate changes from $\lambda_h$ to $\lambda_l$ when $W(0) = m$. In this case, the consensus process is similar to HR regime. The worst case for lower performance bound in H2LR is that transaction arrival rate changes from $\lambda_h$ to $\lambda_l$ when $W(0) = 1$.
     * Low-to-High Load:
-      * A regime is defined as Low-to-High load when the transaction arrival rate changes frome $\lambda_l$ to $\lambda_h$ suddenly.
-      * 
+      * A regime is defined as Low-to-High load when the transaction arrival rate changes frome $\lambda_l$ to $\lambda_h$ suddenly. The number of tips will increase to $2\lambda_h h_r$ gradually.
+      * The initial state of an observed transaction under L2HR is that cumulative weight $L(0) = 1$ and the transaction will be covered by all new transactions that are directly or indirectly approve the observed transaction. In this case, the cumulative weight of the observed transaction $W(k)$ will increase linearly with speed $\lambda_h$. The transition probabilityies under L2HR are $$P\{W(k+1) = i+1 | W(k) = i\} = 1.$$
+      * The best case of upper performance bound in L2HR is that transaction arrival rate changes from $\lambda_l$ to $\lambda_h$ when $W(0) = 1$. The worst case for lower performance bound in L2HR is that transaction arrival rate changes from $\lambda_l$ to $\lambda_h$ when $W(0) = m$.
 
 ## Consensus Process
+
+The main procedures that a node wants to issue a new transaction and let other nodes accept it are shown as follows:
+* A node finds a nonce to solve a cryptographic puzzle to meet the difficult target;
+* The node issues a new transaction and stores in a created storage unit;
+* The node select two collision-free tips according to tips selcetion algorithm, and adds the hash of the two selected tips into thr transaction's storage units;
+* The node uses it private key to sign the new transaction and broadcasts to other nodes;
+* Other nodes will check the legal of the new transaction (based on the digital signature and nonce) when receiving it.
+
+
+## Performance Ananlysis
+
+When analyzing the performance of DAG-based blockchain, we usually discuss two metrics: transaction confirmation delay and transaction cumulative weight.
+
+### Transaction Confirmation Delay
+
+In order to confirm a new transaction, two periods of delay may happens in both queuing in communication network and blockchain weight accumulatingin consensus process. Weight 
+
+### Cumulative Weight
+
+
 
 
 
