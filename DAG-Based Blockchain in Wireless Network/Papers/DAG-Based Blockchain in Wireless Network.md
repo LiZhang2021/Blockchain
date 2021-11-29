@@ -59,6 +59,40 @@ The main procedures that a node wants to issue a new transaction and let other n
 * The node uses it private key to sign the new transaction and broadcasts to other nodes;
 * Other nodes will check the legal of the new transaction (based on the digital signature and nonce) when receiving it.
 
+The main procedures that consensus process in wireless network are as follows:
+* When a new transaction comes at a user, it should select two nonconflicting tips to approval based on ocal information;
+* The user uses its private key to sign this new transaction. The new transaction will enter into cache waiting for broadcasting through wireless cahnnel;
+* The user competes for wireless channel following CSMA/CA while the new transaction queues in cache foloowing first in first out(FIFO);
+* The user either broadcasts the transaction successfully or rebroadcasts with backoff;
+* Other users receive the new transaction and check it to confirm legality. If the new transaction is legal, then it will become a new tip and wait for the direct or indirect approvement for confirmation. 
+
+As we can see that communication may cause a serious delay when user competes for wireless channel to broadcast the new transaction. Thid delay is depends on the network trasffic load.
+
+## System Model 
+
+**Wireless Blockchain Network**
+
+We can divide the consensus process of a new transaction in wireless blockchain network into two periods: **the queueing period**(based on CSMA/CA network communication protocol) and **the weight accumulating preiod**(based on DAG-based blockchain consensus protocol).
+* Assuming that there are $n$ users running tangle, and communicating with each other directly throught wireless channel;
+* Assuming that the transaction arrical of each user follows the Poisson point process;
+* Assuming that the transaction arrival rate of honest user is $\lambda$, and the transaction arrival rate of malicious attacker is $\mu$;
+* Assuming that each transaction should have same own weigh, that is one;
+* The average transmission delay to broadcast a packet through CSMA/CA is denoted as $h$. That is the time interval between two broadcasted transactions. We can caculate $h$ by the correspongding setting of wireless network. Therefore, $h$ is the reveal time to update the new transactions;
+* Assuming that the max number of transactions at one broadcast is $m$. Due to the constrain of broadcast capacity, each user can broadcast a maximum packet of $m$ transactions in each time;
+* Assuming that the cache lenth of each user is $Q = km$, and the cumulative weight of  an observed transaction at time $t$ is $W(t)$, the total number of tips at time $t$ is $L(t)$.
+
+**General Network**
+
+* The consensus process is ddivided into two stages: reveal stage and weight accumulating stage.
+  * **Reveal Stage:** appending the observed transaction to the DAG-based blockchain, that is all nodes can see the transaction.
+  * **Weight Accumulating Stage:** the cumulative weight of the observed transaction increases from its own weight to confirmation threshold gradually.
+* Assuming that the average duration time in reveal stage $h$ is determined by the computation and transmission time;
+* Assuming that the average own weight of each transaction is setted to  $1$. And the cumulative weight of the observed transaction is its own weight plus the overall number of transactions that directly or indirectly approve it;
+* Assuming that the nodes of a DAG-based blockchain are roughly
+independently distributed in a large scale IoT network;
+* Assuming that the new transaction arrival follows Poisson process.;
+* Assuming that the new transactions' arrival rate of honest nodes is denoted as $\lambda$;
+* The new transaction selects two tips according to MCMC algorithm. 
 
 ## Performance Ananlysis
 
@@ -66,7 +100,10 @@ When analyzing the performance of DAG-based blockchain, we usually discuss two m
 
 ### Transaction Confirmation Delay
 
-In order to confirm a new transaction, two periods of delay may happens in both queuing in communication network and blockchain weight accumulatingin consensus process. Weight 
+In order to confirm a new transaction, two periods of delay may happens in both **queuing in communication network** and **blockchain weight accumulating in consensus process**. Weight accumulating of a new transaction is composed of two subperiods: **adaptation subperiod** and **linear increasing subperiod**. Therefore, transaction confirmation delay consists of the queuing delay(counting  from the time that the transaction arrives into cache to the time that it is broadcast) and the weight accumulating delay(adaptive duration time and linear incrase duration time). In this case, we can express the confirmation delay $T_d$ as follows:
+$$T_d = T_q + T_a + T_l.$$
+where $T_q, T_a, T_l$ are transaction queuing delay, cumulative weight adapting delay and cumulative weight linear increasing delay respectively.
+
 
 ### Cumulative Weight
 
