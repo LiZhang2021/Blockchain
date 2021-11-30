@@ -88,8 +88,7 @@ We can divide the consensus process of a new transaction in wireless blockchain 
   * **Weight Accumulating Stage:** the cumulative weight of the observed transaction increases from its own weight to confirmation threshold gradually.
 * Assuming that the average duration time in reveal stage $h$ is determined by the computation and transmission time;
 * Assuming that the average own weight of each transaction is setted to  $1$. And the cumulative weight of the observed transaction is its own weight plus the overall number of transactions that directly or indirectly approve it;
-* Assuming that the nodes of a DAG-based blockchain are roughly
-independently distributed in a large scale IoT network;
+* Assuming that the nodes of a DAG-based blockchain are roughly independently distributed in a large scale IoT network;
 * Assuming that the new transaction arrival follows Poisson process.;
 * Assuming that the new transactions' arrival rate of honest nodes is denoted as $\lambda$;
 * The new transaction selects two tips according to MCMC algorithm. 
@@ -102,8 +101,26 @@ When analyzing the performance of DAG-based blockchain, we usually discuss two m
 
 In order to confirm a new transaction, two periods of delay may happens in both **queuing in communication network** and **blockchain weight accumulating in consensus process**. Weight accumulating of a new transaction is composed of two subperiods: **adaptation subperiod** and **linear increasing subperiod**. Therefore, transaction confirmation delay consists of the queuing delay(counting  from the time that the transaction arrives into cache to the time that it is broadcast) and the weight accumulating delay(adaptive duration time and linear incrase duration time). In this case, we can express the confirmation delay $T_d$ as follows:
 $$T_d = T_q + T_a + T_l.$$
-where $T_q, T_a, T_l$ are transaction queuing delay, cumulative weight adapting delay and cumulative weight linear increasing delay respectively.
+where $T_q, T_a, T_l$ are transaction queuing delay, cumulative weight adapting delay and cumulative weight linear increasing delay respectively. Both transaction queuing delay and weight accumulating delay are closely related to the during time between two neiboring transactions $h$. 
 
+**The Average Transmission Delay $h$**
+
+In CSMA/CA, all nodes will compete to send messages. We always split time into multiple slots, and let the probability of each node sending messages in a slot be $\tau$. If there are $n$ nodes in wireless blockchain network, the probability of at least one node broadcasting in a slot time  is 
+$$P_{tr} = 1 - (1 - \tau)^{n}.$$
+
+The probability of one node broadcasts successfully in a slot time is 
+$$P_s = C_n^1 \tau(1 - \tau)^{n-1} = n\cdot\tau\cdot(1 - \tau)^{n-1}$$
+ 
+ The probability of broadcast collision occuring in a slot time is 
+ $$P_c = 1 - (1 - \tau)^{n} - P_s.$$
+
+Let $T_s$ be the average time that channel is detected busy due to a successful broadcasting, and its probability is $P_s$. Denoting $T_c$ is the average time that channel is collision, the probability of broadcast collision is $P_c$. Besides, when the channel is free that no node broadcast in a slot time, let $\sigma$ be the duration time of the empty slot time, the probability of this regime is $1 - P_{tr}$. Therefore, the average transmission delay $h$ is the expected value of the above three situations:
+$$h = (1 - P_{tr})\cdot\sigma + P_s\cdot T_s + P_c\cdot T_c.$$
+
+The RTS/CTS exchange in the CSMA/CA protocol are shown as follows:
+<font color = red>绘图待补充</font>
+
+In order to  ensure the fairness of CSMA/CA, each node has same probability $\tau$ to access the wireless channel to broadcast. When the network load is light(such as LR), the cache on each node may has less than $m$ transactions(where $m$ is the maximum number of transaction that one packet containning). 
 
 ### Cumulative Weight
 
