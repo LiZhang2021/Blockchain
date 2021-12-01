@@ -120,7 +120,32 @@ $$h = (1 - P_{tr})\cdot\sigma + P_s\cdot T_s + P_c\cdot T_c.$$
 The RTS/CTS exchange in the CSMA/CA protocol are shown as follows:
 <font color = red>绘图待补充</font>
 
-In order to  ensure the fairness of CSMA/CA, each node has same probability $\tau$ to access the wireless channel to broadcast. When the network load is light(such as LR), the cache on each node may has less than $m$ transactions(where $m$ is the maximum number of transaction that one packet containning). 
+In order to  ensure the fairness of CSMA/CA, each node has same probability $\tau$ to access the wireless channel to broadcast. We first analyze the average queuing time of a new transaction in different network load regimes.
+* **Light Regime:** When the network load is light, the cache on each node may has less than $m$ transactions(where $m$ is the maximum number of transaction that one packet containning). In this case, the average queuing delay of a transaction is 
+  $$T_q = \frac{n\lambda_lh}{2\lambda_l} = \frac{nh}{2}.$$
+* **Heavy Regime:** When the network load is heavy, the cache on each node is always full. If a node compete successfully, it will broadcast $m$ transactions, and $m$ new transactions can be stored in cache accordingly. In this case, the average queuing time for new transaction in HR is 
+  $$T_q = \frac{kn\lambda_hh - m}{2\lambda_h} = knh - \frac{m}{2\lambda_h}$$
+* **Light to Heavy Regime:** The initial state for the cache of a node may less than $m$ transaction. Because the transaction arrival rate is increasing from $\lambda_l$ to $\lambda_h$ suddenly, the cache of a node can quickly be full. Thus, the average queuing time in L2HR is same with HR regime, i.e. $T_q = knh - \frac{m}{2\lambda_h}$
+* **Heavy to Light Regime:** The initial state for the cache of a node is full. Because the transaction arrival rate is decreasing from $\lambda_h$ to $\lambda_l$ suddenly, the cache of the node will decrease gradually, and finally less than $m$ transctions. Thus, the average queuing time in H2LR is $T_q = knh - \frac{m}{2\lambda_l}$
+
+When discussing the transaction confirmation delay, we also require to analyze weight accumulating delay. The weight accumulating delay in DAG-based blockchain consists of adaptation duration time and linear increasing duration time. In adaption during period, the cumulative weight of a new transaction grows with $W_a(t) = 2\exp(\frac{0.352t}{h})$. We assume that DAG-based blockchain in wreless blockchain network updates with $h$ periodly. Thus, consensus process can be thought as a discrete-time stochastic process. The adaption duration time in different regimes are shown as follows:
+* **Light Regime:** Let the transaction arrival rate in light load regime is $\lambda_l$. If the initiate value of tips is $1$, then the cumulative weight at time $t$ is $W_a(t) = 1 + n\lambda_l t$. Let $w$ be the confirmation threshold of weight. In this case, the weight accumulating delay is the adaption delay $T_a = \frac{w-1}{n\lambda_l}$. When the initiate value of tip in DAG-bsed blockchain is larger that one, we analyze as follows. If a transaction is confirmed in adaption period, the weight accumulating delay is the adaption delay $T_a = \frac{h}{0.352}\cdot \ln(\frac{w}{2})$. If a transaction cannot be confirmed in adaption period, the cumulative weight of a new transaction grows with $W_a(t) = 2\exp(\frac{0.352t}{h})$. Therefore, the duration time of adaption period in light load is $T_a = \frac{h}{0.352}\cdot\ln(\frac{n\lambda_lh}{0.704})$. The cumulative weight of the transaction at the end of adaption period is $w_a = 2\exp(\frac{0.352}{h}\cdot\frac{h}{0.352}\cdot\ln(\frac{n\lambda_lh}{0.704}))$. When the transaction is confirmed in linear increasing period, we can compute the linear increasing duration time is $T_l = \frac{w - w_a}{\lambda_l}$. Thus, we summarize that the transaction confirmation delay in light network load is
+  $$T_d = \left\{
+  \begin{aligned}
+    \frac{nh}{2} + \frac{h}{0.352}\cdot\ln(\frac{n\lambda_lh}{0.704}) + \frac{w - w_a}{\lambda_l}, &  & w > w_a\\
+   \frac{nh}{2} + \frac{h}{0.352}\cdot\ln(\frac{w}{2}), & & w \leq w_a.
+    \end{aligned}
+  \right.$$
+
+* **Heavy Regime:** We can calculate the adaption duration time of heavy regime, which is similar to light regime. The cumulative growth rate in adaption period is defined as $\lambda_h$. Therefore, we have $\frac{dW_a(t)}{dt} = n\lambda_h$. The adapton during time is $T_a = \frac{h}{0.352}\cdot\ln(\frac{w}{2})$ when transaction is confirmed in adaption period, where $w$ is the transaction confirmation weight threshold. When the transaction is confirmed during linear increasing period, the adaption delay in heavy load should be $T_a = \frac{h}{0.352}\cdot\ln(\frac{n\lambda_hh}{0.704})$. The cumulative weight of the transaction at the end of adaption period is $w_a = 2\exp(\frac{0.352}{h}\cdot\frac{h}{0.352}\cdot\ln(\frac{n\lambda_hh}{0.704}))$. When the transaction is confirmed in linear increasing period, we can compute the linear increasing duration time is $T_l = \frac{w - w_a}{\lambda_h}$. Thus, we summarize that the transaction confirmation delay in heavy network load is
+  $$T_d = \left\{
+  \begin{aligned}
+    knh - \frac{m}{2\lambda_h} + \frac{h}{0.352}\cdot\ln(\frac{n\lambda_hh}{0.704}) + \frac{w - w_a}{\lambda_h}, &  & w > w_a\\
+   knh - \frac{m}{2\lambda_h} + \frac{h}{0.352}\cdot\ln(\frac{w}{2}), & & w \leq w_a.
+    \end{aligned}
+  \right.$$
+* **Light to Heavy Regime:** 
+* **Heavy to Light Regime:**
 
 ### Cumulative Weight
 
