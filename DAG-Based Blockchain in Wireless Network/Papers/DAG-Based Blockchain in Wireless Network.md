@@ -144,8 +144,20 @@ When discussing the transaction confirmation delay, we also require to analyze w
    knh - \frac{m}{2\lambda_h} + \frac{h}{0.352}\cdot\ln(\frac{w}{2}), & & w \leq w_a.
     \end{aligned}
   \right.$$
-* **Light to Heavy Regime:** 
-* **Heavy to Light Regime:**
+* **Light to Heavy Regime:** In this regime, transaction arrival rate will increase from $\lambda_l$ to $\lambda_h$. The weight accumulate at time $t$ can be expressed as $W_a(t) = 2\exp(\frac{0.352t}{h}$. If transaction is confirmed in adaption period, the average adaption delay is $T_a = \frac{h}{0.352}\cdot\ln(\frac{w}{2})$. If transaction is confirmed in linear increasing period, the adaption delay is $T_a = \frac{h}{0.352}\cdot\ln(\frac{n\lambda_hh}{0.704})$. The cumulative weight of the transaction at the end of adaption period is $w_a = 2\exp(\frac{0.352}{h}\cdot\frac{h}{0.352}\cdot\ln(\frac{n\lambda_hh}{0.704}))$. When the transaction is confirmed in linear increasing period, we can compute the linear increasing duration time is $T_l = \frac{w - w_a}{\lambda_h}$. Thus, we summarize that the transaction confirmation delay in heavy network load is
+  $$T_d = \left\{
+  \begin{aligned}
+    knh - \frac{m}{2\lambda_h} + \frac{h}{0.352}\cdot\ln(\frac{n\lambda_hh}{0.704}) + \frac{w - w_a}{\lambda_h}, &  & w > w_a\\
+   knh - \frac{m}{2\lambda_h} + \frac{h}{0.352}\cdot\ln(\frac{w}{2}), & & w \leq w_a.
+    \end{aligned}
+  \right.$$
+* **Heavy to Light Regime:** In this regime, transaction arrival rate will decrease from $\lambda_h$ to $\lambda_l$. The weight accumulate at time $t$ can be expressed as $W_a(t) = 2\exp(\frac{0.352t}{h}$. If transaction is confirmed in adaption period, the average adaption delay is $T_a = \frac{h}{0.352}\cdot\ln(\frac{w}{2})$. If transaction is confirmed in linear increasing period, the adaption delay is $T_a = \frac{h}{0.352}\cdot\ln(\frac{n\lambda_lh}{0.704})$. The cumulative weight of the transaction at the end of adaption period is $w_a = 2\exp(\frac{0.352}{h}\cdot\frac{h}{0.352}\cdot\ln(\frac{n\lambda_lh}{0.704}))$. When the transaction is confirmed in linear increasing period, we can compute the linear increasing duration time is $T_l = \frac{w - w_a}{\lambda_l}$. Thus, we summarize that the transaction confirmation delay in heavy network load is
+  $$T_d = \left\{
+  \begin{aligned}
+    knh - \frac{m}{2\lambda_l} + \frac{h}{0.352}\cdot\ln(\frac{n\lambda_lh}{0.704}) + \frac{w - w_a}{\lambda_l}, &  & w > w_a\\
+   knh - \frac{m}{2\lambda_l} + \frac{h}{0.352}\cdot\ln(\frac{w}{2}), & & w \leq w_a.
+    \end{aligned}
+  \right.$$
 
 ### Cumulative Weight
 
