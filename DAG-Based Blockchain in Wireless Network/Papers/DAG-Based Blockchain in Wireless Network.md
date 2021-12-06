@@ -175,8 +175,8 @@ In these regimes, the transaction arrival rate keeps steady. Let $\lambda_l, \la
   * Let $L_h = 2n\lambda_hh$ be the number of tips in DAG-based blockchain at any time, and $t_0$ is the duration time of adaption period. The cumulative weight in adaption period increases exponentially, while in linear increasing period increasing linearly. Thus, the gradient at the end of adaption period is same with the gradient in linear increasing period, i.e. $\frac{dW_h(t)}{dt} = \lambda_h$. We can compute the value of $t_0 = \frac{h}{0.352}\cdot\ln(\frac{n\lambda_hh}{0.704}), W_h(t_0) = \frac{n\lambda_hh}{0.704}$. The cumulative weight of an observed transaction in high load is 
   $$W_h(t)) = \left\{
   \begin{aligned}
-    2\exp(\frac{0.352t}{h}, &  & t \leq t_0\\
-   \frac{n\lambda_hh}{704} + \lambda_h(t-t_0), & & t > t_0.
+    2\exp(\frac{0.352t}{h}), &  & t \leq t_0\\
+   \frac{n\lambda_hh}{0.704} + \lambda_h(t-t_0), & & t > t_0.
     \end{aligned}
   \right.$$
 
@@ -184,6 +184,16 @@ In these regimes, the transaction arrival rate keeps steady. Let $\lambda_l, \la
 
 In unsteady regimes, transction arrival rate will be changed suddenly. We will discuss two special unsteady regimes: light-to-high load and high-to-light load.
 
-* **Light-to-High Load Regime:**
-* **High-to-Light Load Regime:**
+* **Light-to-High Load Regime:** 
+  Due to $L_0 = 2n\lambda_lh \approx 1$, we can thought that all new incoming transctions will approve an observed transction. However, the time of the transaction that has been observed will impact the weight accumulation. 
+  * If the transaction is observed in LR phase, the cumulative weight of the transaction at time $t$ should be $$W_{l2h}(t) = 1 + \lambda_lt(\text{ or } W_{l2h}(t) = 1 + \frac{1}{h}t).$$
+  * If transaction is observed after the network load is modified, then the cumulative weight of the transaction is
+  $$W_{l2h}(t)) = \left\{
+  \begin{aligned}
+    2\exp(\frac{0.352t}{h}), &  & t \leq t_0\\
+   \frac{n\lambda_hh}{0.704} + \lambda_h(t-t_0), & & t > t_0.
+    \end{aligned}
+  \right.$$
 
+* **High-to-Light Load Regime:**
+  Due to DAG-based blockchain is a Markov chain, the weight accumulating process of an observed transaction is a stochastic process. We require to analyze the state transition of the transaction in each step.
