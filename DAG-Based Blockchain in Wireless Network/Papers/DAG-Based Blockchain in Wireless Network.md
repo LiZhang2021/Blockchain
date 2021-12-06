@@ -161,7 +161,29 @@ When discussing the transaction confirmation delay, we also require to analyze w
 
 ### Cumulative Weight
 
+In this section, we discuss the weight accumulating of an observed transaction in different regimes. 
 
+#### Steady Regime
 
+In these regimes, the transaction arrival rate keeps steady. Let $\lambda_l, \lambda_h$ be the transaction arrival rates in low network load and high network load, and $h$ is the during time between two transactions.
 
+* **Light Load Regime:** In this regime, the earlier transaction is revealed to the DAG-based blockchain before a new transaction arriving. The total number of tips is denoted as $L = 2\lambda_lh$, and will gradually decrease to $1$. Thus, it is available to represent the number of tips in LR as $L = 2\lambda_lh \approx 1$. When the $L_0 > 1$, the cumulative weight of of an observed will grow with speed $\lambda_l$ after it getting approved seral times. Therefore, we can roughly thought that the weight of an abserved transaction should be increased linearly. More over, all newcoming transactions will approve this observed transaction. We can define the weight accumulating function with variable time $t$ as $$W_\ell(t) = 1 + \lambda_lt.$$
+
+* **High Load Regime:** As analyzed in [The Tangle](../References/33.%20The%20Tangle(S.Popov,%20Apr.2018).pdf), the weight accumulation in HR consists with two periods: adaption priod and linear increasing period.
+  * Adaption period: The time from observed transaction is rwveal to DAG-based blockchain to the time that almost all tips become the indirected approval of the transaction. Thus, the weight grows with $W_h(t) = 2\exp(\frac{0.352t}{h})$. 
+  * Linear increasing period: All incoming trancsactions are indirectly approve the observed transaction. The weight grows with speed $\lambda_h$.
+  * Let $L_h = 2n\lambda_hh$ be the number of tips in DAG-based blockchain at any time, and $t_0$ is the duration time of adaption period. The cumulative weight in adaption period increases exponentially, while in linear increasing period increasing linearly. Thus, the gradient at the end of adaption period is same with the gradient in linear increasing period, i.e. $\frac{dW_h(t)}{dt} = \lambda_h$. We can compute the value of $t_0 = \frac{h}{0.352}\cdot\ln(\frac{n\lambda_hh}{0.704}), W_h(t_0) = \frac{n\lambda_hh}{0.704}$. The cumulative weight of an observed transaction in high load is 
+  $$W_h(t)) = \left\{
+  \begin{aligned}
+    2\exp(\frac{0.352t}{h}, &  & t \leq t_0\\
+   \frac{n\lambda_hh}{704} + \lambda_h(t-t_0), & & t > t_0.
+    \end{aligned}
+  \right.$$
+
+#### Unsteady Regime
+
+In unsteady regimes, transction arrival rate will be changed suddenly. We will discuss two special unsteady regimes: light-to-high load and high-to-light load.
+
+* **Light-to-High Load Regime:**
+* **High-to-Light Load Regime:**
 
