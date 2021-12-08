@@ -246,7 +246,7 @@ Tangle中双花攻击过程可以看作是一个[马尔科夫链](https://baike.
 
 针对这两种情况，可以计算出双花攻击成功的概率为 
    $$\begin{align*}
-P\{\text{attack succeed}\} &= P_1(t_2) + P_0(t_2)P_{01} \\
+    P\{\text{attack succeed}\} &= P_1(t_2) + P_0(t_2)P_{01} \\
    &= \sum_{i_a = i_h + 1}^\infty C_{i_a + i_h -1}^{i_h-1}p_H^{i_h}p_A^{i_a} + \sum_{i_a = 0}^{i_h} C_{i_a + i_h -1}^{i_h-1}p_H^{i_h}p_A^{i_a}(\frac{p_A}{p_H})^{i_h - i_a +1} \\
    &= 1 - \sum_{i_a = 0}^{i_h} C_{i_a + i_h -1}^{i_h-1}(p_H^{i_h}p_A^{i_a} - p_H^{i_a - 1}p_A^{i_h + 1}).
    \end{align*}$$
