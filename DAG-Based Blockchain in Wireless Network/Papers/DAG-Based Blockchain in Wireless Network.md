@@ -164,7 +164,7 @@ Let $T_s$ be the average time that channel is detected busy due to a successful 
 $$h = (1 - P_{tr})\cdot\sigma + P_s\cdot T_s + P_c\cdot T_c.$$
 
 The RTS/CTS exchange in the CSMA/CA protocol are shown as follows:
-<font color = red>绘图待补充</font>
+![](./../pics/Figure_1.png)
 
 In order to  ensure the fairness of CSMA/CA, each node has same probability $\tau$ to access the wireless channel to broadcast. We first analyze the average queuing time of a new transaction in different network load regimes.
 * **Light Regime:** When the network load is light, the cache on each node may has less than $m$ transactions(where $m$ is the maximum number of transaction that one packet containning). 
@@ -284,13 +284,15 @@ In this section, we introduce the most typical double-spending attack model in D
 
 ### Attack Process and Model
 
-The typical way that a malicious attacker lunches double spending attack is to construct a fraud chain in blockchain system, the main procedures are shown as follows:
+![](./../pics/Figure_2.png)
+
+The typical way that a malicious attacker lunches double spending attack is to construct a fraudulent chain in blockchain system, the main procedures are shown as follows:
 * At time $t_0$, attacker broadcasts an honest transaction, and honest nodes will approve it.
-* At time $t_1$, the attacker builds a fraud chain in offchain to approve a fraud transaction that is conflicted with the honest transaction. Note that $t_1$ should be earlier than the end time of adaption period of the honest transaction. Because in linear increasing period, all new incoming transactions will indirectly approve the honest transaction.
-* After time $t_1$, the attacker will continually issue trasnactions to grow the cumulative weight of the fraud transaction.
+* At time $t_1$, the attacker builds a fraud chain in offchain to approve a fraudulent transaction that is conflicted with the honest transaction.
+* After time $t_1$, the attacker will continually issue trasnactions to grow the cumulative weight of the fraudulent transaction. The time $t_1$ should be earlier than the end of adaption periof of the honest transaction.
 * At time $t_2$, the honest transaction has been confirmed while its cumulative weight attaches $w$. In this case, the victim will send goods or services to the attacker.
-* While the cumulative weight of the fraud transaction overweights the confirmed honest transaction after time $t_2$, the attacker will broadcast the fraud chain to the whole wireless blockchain network.
-* Once the attacker contending for wireless channel to broadcast fraud branch updating the DAG-based blockchain, the fraud transaction will be accepted by other honest nodes based on the MCMC algorithm due to the higher cumulative weight. The confirmed honest transaction will be orphened in DAG-based blockchain, the victim cannot receive the payment even though it has provided goods or services. In this case, the attacker issues double-spending attack successfully.
+* While the cumulative weight of the fraudulent transaction overweights the confirmed honest transaction after time $t_2$, the attacker will broadcast the fraudulent chain to the whole wireless blockchain network.
+* Once the attacker contending for wireless channel to broadcast fraudulent branch updating the DAG-based blockchain, the fraud transaction will be accepted by other honest nodes based on the MCMC algorithm due to the higher cumulative weight. The confirmed honest transaction will be orphened in DAG-based blockchain, the victim cannot receive the payment even though it has provided goods or services. In this case, the attacker issues double-spending attack successfully.
 
 We now present some assumptions for double-spending attack analysis.
 * Assuming that there are $n-1$ honest nodes and one attacker;
@@ -299,7 +301,7 @@ We now present some assumptions for double-spending attack analysis.
 
 ### Successfull Attack Probability
 
-In this subsection, we analyze the successful attack probability from the perspective of wireless communication. In this case, attacker should win the transaction competition and broadcast the fraud chain successfully. I CSMA/CA, the maximum number of broadcast transactions is limited to $m$, thus, the maximum new transaction arrival rate is $\frac{m}{nh}$. 
+In this subsection, we analyze the successful attack probability from the perspective of wireless communication. In this case, attacker should win the transaction competition and broadcast the fraudulent chain successfully. I CSMA/CA, the maximum number of broadcast transactions is limited to $m$, thus, the maximum new transaction arrival rate is $\frac{m}{nh}$. 
 
 Recall that we assume there are $n-1$ honest nodes and $1$ attacker in a one-hop wireless blockchain network, the arrival rates of new trasnactions on a honest node and a malicious attacker shold be 
 $$\left\{
@@ -320,13 +322,13 @@ We can describe the abovementioned attack process as a Markov chain. Let $N_h, N
 
 $$P\{N_a = n\} = C_{n + N_h - 1}^{N_h - 1}p^{N_h}q^n.$$ 
 
-If $N_a > N_h$, the attacker issues the souble-spending attack successfully at time $t_2$. Otherwise, attacker requires to catch up the difference of transactions that issued by honest node and attacker until the cumulative weight of fraud transaction outnumbers that of honest transaction after time $t_2$. This process can be thought as a Gambler’s Ruin problem, and The attacker needs to catch up the difference of $N_h - N_a + 1$ transactions at least. If $p \leq q$, the attacker will eventually catch up successfully with probability $1$. Otherwise, the attacker will catch up successfully with probability 
+If $N_a > N_h$, the attacker issues the double-spending attack successfully at time $t_2$. Otherwise, the attacker requires to catch up the difference of transactions that issued by honest node and attacker until the cumulative weight of fraudulent transaction outnumbers that of honest transaction after time $t_2$. This process can be thought as a Gambler’s Ruin problem, and The attacker needs to catch up the difference of $N_h - N_a + 1$ transactions at least. If $p \leq q$, the attacker will eventually catch up successfully with probability $1$. Otherwise, the attacker will catch up successfully with probability 
 
-$$P_c(N_h - N_a + 1) = (\frac{q}{0})^{N_h - N_a + 1}.$$
+$$P_c(N_h - N_a) = (\frac{q}{p})^{N_h - N_a + 1}.$$
 
 Thus, the successful attack probability is
 $$\begin{align*}
-  P\{\text{attack succeed}\} &= P\{N_a > N_h\}\cdot 1 + P\{N_a \leq N_h\}\cdot P_c(N_h - N_a + 1) \\
+  P\{\text{attack succeed}\} &= P\{N_a > N_h\}\cdot 1 + P\{N_a \leq N_h\}\cdot P_c(N_h - N_a) \\
    &= \sum_{N_a = N_h + 1}^\infty C_{N_a + N_h -1}^{N_h-1}p^{N_h}p^{N_a} + \sum_{N_a = 0}^{N_h} C_{N_a + N_h -1}^{N_h-1}p^{N_h}p^{N_a}(\frac{p}{p})^{N_h - N_a +1} \\
    &= 1 - \sum_{N_a = 0}^{N_h} C_{N_a + N_h -1}^{N_h-1}(p^{N_h}p^{N_a} - p^{N_a - 1}p^{N_h + 1}), p > q.
    \end{align*}$$
@@ -336,11 +338,24 @@ $$P\{\text{attack succeed}\} =  1 - \sum_{N_a = 0}^{w - W(t_1) + 1} C_{N_a + w -
 where $W(t_1)$ is the cumulative weight of the honest transaction at the end of adaption period. And $p = \frac{(n-1)\lambda'}{(n-1)\lambda' + \mu'}, q = \frac{\mu'}{(n-1)\lambda' + \mu'}$, where $\lambda' = \min\{\lambda, \frac{m}{nh}\},
    \mu' = \min\{\mu, \frac{m}{nh}\}$.
 
-We use $\lambda, \mu$ representing the trasnaction arrival rates of honest nodes and attacker to model double-spending attack. Besides, our analysis depends on wireless communication protoco, we use $m$ presenting the number of broadcast trasnactions in wireless blockchain network.
+We use $\lambda, \mu$ representing the transaction arrival rates of honest nodes and attacker to model double-spending attack. Besides, our analysis depends on wireless communication protocol, we use $m$ presenting the number of broadcast trasnactions in wireless blockchain network.
 
 ### Attack Strategy
 
+In this subsection, we analyze the strategy that can increase the successful attack probability on the perspective of attacker. Because the probability of a successful attack is identically equal to $1$ when $p\leq q$, we only need to analyze the case that $p > q$.
 
-### Attack Strategy in Different Load Regimes
+In order to increase successful attack probability, attacker can construct the fraudulent branch before broadcasting the honest transaction. 
+
+### Successful Attack Probability in Different Load Regimes
+
+In this paper, we consisder four network load regimes: heavy load regime, light load regime, heavy to light load regime and light to heavy load regime. According to the mentioned analysis of double-spending attack, We will discuss the successful attack probability in different network load. To distinguish the impact of network load on $p, q$, we denote $p_h, q_h$ in heavy load and $p_l, q_l$ in light load. Because the successful attack propability 
+
+* **Heavy Load Regime:** 
+
+* **Light Load Regime:**
+
+* **Heavy to Light Load Regime:**
+
+* **Light to Heavy Load Regime:**
 
 
