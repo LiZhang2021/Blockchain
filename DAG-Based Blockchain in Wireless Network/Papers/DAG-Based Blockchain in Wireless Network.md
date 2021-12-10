@@ -334,7 +334,7 @@ $$\begin{align*}
    \end{align*}$$
 
 At time $t_1$, the number of transactions approcving the honest trasnactionis $W(t_1) - 1$. Therefore, we can have $N_h = w - W(t_1) + 1$ transactions from $t_1$ to $t_2$. The successful attack probability can be expressed as 
-$$P\{\text{attack succeed}\} =  1 - \sum_{N_a = 0}^{w - W(t_1) + 1} C_{N_a + w - W(t_1)}^{w - W(t_1)}(p^{w - W(t_1) + 1}p^{N_a} - p^{N_a - 1}p^{w - W(t_1) + 2}), p > q,$$
+$$P\{\text{attack succeed}\} =  1 - \sum_{N_a = 0}^{w - W(t_1) + 1} C_{N_a + w - W(t_1)}^{w - W(t_1)}(p^{w - W(t_1) + 1}q^{N_a} - p^{N_a - 1}q^{w - W(t_1) + 2}), p > q,$$
 where $W(t_1)$ is the cumulative weight of the honest transaction at the end of adaption period. And $p = \frac{(n-1)\lambda'}{(n-1)\lambda' + \mu'}, q = \frac{\mu'}{(n-1)\lambda' + \mu'}$, where $\lambda' = \min\{\lambda, \frac{m}{nh}\},
    \mu' = \min\{\mu, \frac{m}{nh}\}$.
 
@@ -344,18 +344,41 @@ We use $\lambda, \mu$ representing the transaction arrival rates of honest nodes
 
 In this subsection, we analyze the strategy that can increase the successful attack probability on the perspective of attacker. Because the probability of a successful attack is identically equal to $1$ when $p\leq q$, we only need to analyze the case that $p > q$.
 
-In order to increase successful attack probability, attacker can construct the fraudulent branch before broadcasting the honest transaction. 
+![](./../pics/Figure_3.png)
+In order to increase successful attack probability, attacker can adopt a strategy that constructing the fraudulent branch before broadcasting the honest transaction. In this case, there are $N_p$ transactions belongs to honest chain from time $t_1$ to $t_0$. To ensure the success of attack, the number of transactions issued by attacker $N_a$ should be bigger than the number of transactions issued by honest nodes $N_h + N_p$. If $N_a > N_p + N_h$ at time $t_2$, attacker will broadcast fraudulent chain due to attack successfully. Otherwise, attacker should catch up the difference of $N_h + N_p - N_a$. If $p > q$, the successful attack probability of this situation is 
+$$P_c(N_h + N_p - N_a) = 1 - \sum_{N_a = 0}^{N_h + N_p}C_{N_h + N_a - 1}^{N_h - 1}(p^{N_h}q^{N_a}-p^{N_a - N_p - 1}q^{N_h + N_p + 1}).$$
+<font color = red>随后可以通过试验来分析$N_p, N_h$对于双花攻击成功概率的影响。最后得出结论攻击者想要提高攻击成功的概率就要最小化$N_p, N_h$的值。攻击者无法影响诚实链上的tips选择过程，但是攻击者可以在诚实交易的权重累积过程处于适应期结束之前选择tips创建欺诈链分支。否则一旦诚实交易的权重累积过程进入线性增长时期，所有的tips都将是诚实交易的间接支持，此时发起攻击必定失败。攻击者发起攻击时生成的欺诈交易选择的tips不能直接或者间接支持诚实交易，这样攻击将会无效，最终必然是诚实交易被确认，欺诈交易被孤立。</font>
 
 ### Successful Attack Probability in Different Load Regimes
 
-In this paper, we consisder four network load regimes: heavy load regime, light load regime, heavy to light load regime and light to heavy load regime. According to the mentioned analysis of double-spending attack, We will discuss the successful attack probability in different network load. To distinguish the impact of network load on $p, q$, we denote $p_h, q_h$ in heavy load and $p_l, q_l$ in light load. Because the successful attack propability 
+In this paper, we consider four network load regimes: heavy load regime, light load regime, heavy to light load regime and light to heavy load regime. According to the mentioned analysis of double-spending attack, We will discuss the successful attack probability in different network load. To distinguish the impact of network load on $p, q$, we denote $p_h, q_h$ in heavy load and $p_l, q_l$ in light load. Assume that attacker issues attack immediately after broadcasting honest transaction.
 
-* **Heavy Load Regime:** 
+* **Heavy Load Regime:** In this regime, transaction arrival rate is very high, and a transaction may be confirmed in adaption period or in linear increasing period. Due to the attacker issuing attack before the end of adaptive period, the cumulative weight of the honest transaction should be $W(t_1)$. Thus, the number of transactions approving the honest transaction at time $t_1$ is $W(t_1) - 1$. At time $t_2$, we have $N_h = w - W(t_1) + 1$, where $w$ is the transaction confirmation weight threshold. Therefore, the successfull attack probability in heavy load can be expressed as 
+  $$P_h\{\text{Attack Succeeds}\} = 1 - \sum_{N_a = 0}^{w - W(t_1) + 1} C_{N_a + w - W(t_1)}^{w - W(t_1)}(p_h^{w - W(t_1) + 1}q_h^{N_a} - p_h^{N_a - 1}q_h^{w - W(t_1) + 2})$$
+  where $p_h = \frac{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\} + \min\{\mu_h, \frac{m}{nh}\}}, q_h = \frac{\min\{\mu_h, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\} + \min\{\mu_h, \frac{m}{nh}\}}$.
 
-* **Light Load Regime:**
+* **Light Load Regime:** In this regime, the DAG-based blockchain can be considered as a single chain since $L_0 = 1$.The honest transaction is indirectly approved by all tips at time $t_0$. Attacker issues attack immediately after broadcasting the honest transaction. Because the own weight of the honest transaction is $1$, we can know that $N_h = w-1$. The successful attack probability in light load regime is 
+  $$P_l\{\text{Attack Succeeds}\} = 1 - \sum_{N_a = 0}^{w} C_{N_a + w - 2}^{w - 2)}(p_l^{w - 1}q_l^{N_a} - p_l^{N_a - 2}q_l^{w + 1})$$
+  where $p_l = \frac{(n-1)\cdot\min\{\lambda_l, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_l, \frac{m}{nh}\} + \min\{\mu_l, \frac{m}{nh}\}}, q_l = \frac{\min\{\mu_l, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_l, \frac{m}{nh}\} + \min\{\mu_l, \frac{m}{nh}\}}$.
 
-* **Heavy to Light Load Regime:**
+* **Heavy to Light Load Regime:** In this regime, transaction arrival rate would decrease from $\lambda_h$ to $\lambda_l$ suddenly, which will result the number of tips $L_0 = 2n\lambda_hh$ reducing to $L_0 = 1$.
+  * If the honest transaction is confirmed before network change, the attack process in this regime is same with heavy load regime. The probability that attacker launches double-spending attack successfully is 
+    $$P_{h2l}\{\text{Attack Succeeds}\} = 1 - \sum_{N_a = 0}^{w - W(t_1) + 1} C_{N_a + w - W(t_1)}^{w - W(t_1)}(p_h^{w - W(t_1) + 1}q_h^{N_a} - p_h^{N_a - 1}q_h^{w - W(t_1) + 2})$$
+  where $p_h = \frac{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\} + \min\{\mu_h, \frac{m}{nh}\}}, q_h = \frac{\min\{\mu_h, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\} + \min\{\mu_h, \frac{m}{nh}\}}$.
+  * If network load is changed while revealing the honest transaction, DAG-based blockchain will quickly be a single chain. The probability that attacker launches double-spending attack successfully is 
+    $$P_{h2l}\{\text{Attack Succeeds}\} = 1 - \sum_{N_a = 0}^{w - W(t_1) + 1} C_{N_a + w - W(t_1)}^{w - W(t_1)}(p_l^{w - W(t_1) + 1}q_l^{N_a} - p_l^{N_a - 1}q_l^{w - W(t_1) + 2})$$
+    where $p_l = \frac{(n-1)\cdot\min\{\lambda_l, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_l, \frac{m}{nh}\} + \min\{\mu_l, \frac{m}{nh}\}}, q_l = \frac{\min\{\mu_l, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_l, \frac{m}{nh}\} + \min\{\mu_l, \frac{m}{nh}\}}$.
+  * If the honest transaction is revealed after modifying network load, the probability of successful attack in this case is same with light load regime. Therefore, the successfull attack probability in heavy to light load regime can be expressed as 
+  $$P_{h2l}\{\text{Attack Succeeds}\} = 1 - \sum_{N_a = 0}^{w} C_{N_a + w - 2}^{w - 2}(p_l^{w - 1}q_l^{N_a} - p_l^{N_a - 2}q_l^{w + 1})$$
+  where $p_h = \frac{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\} + \min\{\mu_h, \frac{m}{nh}\}}, q_h = \frac{\min\{\mu_h, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\} + \min\{\mu_h, \frac{m}{nh}\}}$.
 
-* **Light to Heavy Load Regime:**
-
-
+* **Light to Heavy Load Regime:** 
+  * If the honest transaction is confirmed before network change, all new incoming transactions will indirectly approve the honest transaction. The probability that attacker launches double-spending attack successfully is 
+    $$P_{l2h}\{\text{Attack Succeeds}\} = 1 - \sum_{N_a = 0}^{w} C_{N_a + w - 2}^{w - 2}(p_l^{w - 1}q_l^{N_a} - p_l^{N_a - 2}q_l^{w + 1})$$
+    where $p_l = \frac{(n-1)\cdot\min\{\lambda_l, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_l, \frac{m}{nh}\} + \min\{\mu_l, \frac{m}{nh}\}}, q_l = \frac{\min\{\mu_l, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_l, \frac{m}{nh}\} + \min\{\mu_l, \frac{m}{nh}\}}$.
+  * If network load is changed while revealing the honest transaction, all new incoming transactions will indirectly approve the honest transaction. The probability that attacker launches double-spending attack successfully is 
+    $$P_{l2h}\{\text{Attack Succeeds}\} = 1 - \sum_{N_a = 0}^{w} C_{N_a + w - 2}^{w - 2}(p_h^{w - 1}q_h^{N_a} - p_h^{N_a - 2}q_h^{w + 1})$$
+    where $p_h = \frac{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\} + \min\{\mu_h, \frac{m}{nh}\}}, q_h = \frac{\min\{\mu_h, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\} + \min\{\mu_h, \frac{m}{nh}\}}$.
+  * If the honest transaction is revealed after modifying network load, the probability of successful attack in this case is same with heavy load regime. Therefore, the successfull attack probability in light to heavy load regime can be expressed as 
+  $$P_{l2h}\{\text{Attack Succeeds}\} = 1 - \sum_{N_a = 0}^{w - W(t_1) + 1} C_{N_a + w - W(t_1)}^{w - W(t_1)}(p_h^{w - W(t_1) + 1}q_h^{N_a} - p_h^{N_a - 1}q_h^{w - W(t_1) + 2})$$
+  where $p_h = \frac{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\} + \min\{\mu_h, \frac{m}{nh}\}}, q_h = \frac{\min\{\mu_h, \frac{m}{nh}\}}{(n-1)\cdot\min\{\lambda_h, \frac{m}{nh}\} + \min\{\mu_h, \frac{m}{nh}\}}$.
