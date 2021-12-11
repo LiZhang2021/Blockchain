@@ -87,37 +87,30 @@ According to the state of network load, we can divide the network load into Stea
         * The first case is that transaction arrival rate increase from $\lambda_l$ to $\lambda_h$ when the cumulative weight of an observed transction is $W(t) = w$. In this case, the weight accumulating process should satisfy $W(t) = n\lambda_lt, L(t) = L(0) = 1$.
         * The second case is that transaction arrival rate increase from $\lambda_l$ to $\lambda_h$ when the cumulative weight of an observed transction is $W(0) = 1$. In this case, the weight accumulating process should satisfy $W(t) = n\lambda_ht, L(t)\in(1, 2n\lambda_hh_h]$. 
         * The third case is that transaction arrival rate increase from $\lambda_l$ to $\lambda_h$ when the number of tips is $L(0) = 2n\lambda_hh_h$. In this case, the consensus process of an observed transaction under L2HR is same with HR.
-        * The forth case is that an trasnaction is observed while $1 < L(0) < 2n\lambda_hh_h$ under L2HR. In this case, the number of tips in DAG-based blockchain will gradually increase. We have that the probability that new trasnaction approves the observed transaction should be:
+        * The forth case is that an trasnaction is observed while $1 < L(0) < 2n\lambda_hh_h$ under L2HR. In this case, the number of tips in DAG-based blockchain will gradually increase. <font color = yellow>We have that the probability that new trasnaction approves the observed transaction should be:
         $$\left\{
           \begin{aligned}
           P\{i+1,j-1 | i,j\} = \frac{2}{j}, &  & i = 1, 2, \cdots, L_h - 1, j = 2,3,\cdots, L_h, \\
           P\{i,j-1 |i,j\} = 1 - \frac{2}{j}, &  & i = 1, 2, \cdots, L_h - 1, j = 2,3,\cdots, L_h.
           \end{aligned}
-        \right.$$
+        \right.$$</font>
 
 ## Consensus Process
 
-The consensus process of an issued transaction is ddivided into two stages: reveal stage and weight accumulating stage.
-  * **Reveal Stage:** appending the observed transaction to the DAG-based blockchain, that is all nodes can see the transaction.
+The consensus process of an issued transaction is divided into two stages: reveal stage and weight accumulating stage.
+  * **Reveal Stage:** The observed transaction ia appended to the DAG-based blockchain, that is all nodes can see the transaction.
   * **Weight Accumulating Stage:** the cumulative weight of the observed transaction increases from its own weight to confirmation threshold gradually.
-  * 
-The main procedures that a node wants to issue a new transaction and let other nodes accept it are shown as follows:
-* A node finds a nonce to solve a cryptographic puzzle to meet the difficult target;
-* The node issues a new transaction and stores in a created storage unit;
-* The node select two collision-free tips according to tips selcetion algorithm, and adds the hash of the two selected tips into thr transaction's storage units;
-* The node uses it private key to sign the new transaction and broadcasts to other nodes;
-* Other nodes will check the legal of the new transaction (based on the digital signature and nonce) when receiving it.
 
 The main procedures that consensus process in wireless network are as follows:
-* When a new transaction comes at a user, it should select two nonconflicting tips to approval based on ocal information;
-* The user uses its private key to sign this new transaction. The new transaction will enter into cache waiting for broadcasting through wireless cahnnel;
-* The user competes for wireless channel following CSMA/CA while the new transaction queues in cache foloowing first in first out(FIFO);
-* The user either broadcasts the transaction successfully or rebroadcasts with backoff;
-* Other users receive the new transaction and check it to confirm legality. If the new transaction is legal, then it will become a new tip and wait for the direct or indirect approvement for confirmation. 
-
-As we can see that communication may cause a serious delay when user competes for wireless channel to broadcast the new transaction. Thid delay is depends on the network trasffic load.
-
-
+<font color = pink>
+* A node finds a nonce to solve a cryptographic puzzle to meet the difficult target.
+* The node issues a new transaction which will select two nonconflicting tips to approve based on local information;
+* The node uses its private key to sign this new transaction. The new transaction will enter into cache waiting for broadcasting through wireless channel;
+* The node competes for wireless channel following CSMA/CA while the new transaction queues in cache following first in first out(FIFO) rule;
+* The node either broadcasts the transaction successfully or rebroadcasts with backoff;
+* Other nodes receive the new transaction and check it to confirm legality. If the new transaction is legal, then it will become a new tip and wait for the direct or indirect approvement for confirmation. 
+</font>
+As we can see that communication may cause a serious delay when user competes for wireless channel to broadcast the new transaction. This delay is depends on the network traffic load.
 
 ## Performance Ananlysis
 
@@ -125,22 +118,25 @@ When analyzing the performance of DAG-based blockchain, we usually discuss two m
 
 ### Cumulative Weight
 
-In this section, we discuss the weight accumulating of an observed transaction in different regimes. 
+In this section, we discuss the weight accumulating process of an observed transaction in different network load regimes. 
 
 #### Steady Regime
 
-In these regimes, the transaction arrival rate keeps steady. Let $\lambda_l, \lambda_h$ be the transaction arrival rates in low network load and high network load, and $h$ is the during time between two transactions.
+In these regimes, the transaction arrival rate keeps steady. Let $\lambda_l, \lambda_h$ be the transaction arrival rates in light network load and heavy network load, and $h_l, h_h$ be the during time between two transactions.
 
-* **Light Load Regime:** In this regime, the earlier transaction is revealed to the DAG-based blockchain before a new transaction arriving. The total number of tips is denoted as $L = 2\lambda_lh$, and will gradually decrease to $1$. Thus, it is available to represent the number of tips in LR as $L = 2\lambda_lh \approx 1$. When the $L_0 > 1$, the cumulative weight of of an observed will grow with speed $\lambda_l$ after it getting approved seral times. Therefore, we can roughly thought that the weight of an abserved transaction should be increased linearly. More over, all newcoming transactions will approve this observed transaction. We can define the weight accumulating function with variable time $t$ as $$W_\ell(t) = 1 + \lambda_lt.$$
+* **Light Load Regime:** In this regime, the earlier transaction is revealed to the DAG-based blockchain before a new transaction arriving. The total number of tips will gradually decrease to $1$. Thus, it is available to represent the number of tips in LR as $L_l = 2n\lambda_lh_l \approx 1$. When $L_l(0) = 1$, the DAG-based blockchain should be a single chain. And the cumulative weight of an observed transaction will grow with speed $\lambda_l$, which means that the weight of the observed transaction should be increased linearly. More over, all newcoming transactions will approve this transaction. We can define the weight accumulating function with variable time $t$ under light load regime as 
+  $$W_\ell(t) = 1 + \lambda_lt.$$
 
-* **High Load Regime:** As analyzed in [The Tangle](../References/33.%20The%20Tangle(S.Popov,%20Apr.2018).pdf), the weight accumulation in HR consists with two periods: adaption priod and linear increasing period.
-  * Adaption period: The time from observed transaction is rwveal to DAG-based blockchain to the time that almost all tips become the indirected approval of the transaction. Thus, the weight grows with $W_h(t) = 2\exp(\frac{0.352t}{h})$. 
-  * Linear increasing period: All incoming trancsactions are indirectly approve the observed transaction. The weight grows with speed $\lambda_h$.
-  * Let $L_h = 2n\lambda_hh$ be the number of tips in DAG-based blockchain at any time, and $t_0$ is the duration time of adaption period. The cumulative weight in adaption period increases exponentially, while in linear increasing period increasing linearly. Thus, the gradient at the end of adaption period is same with the gradient in linear increasing period, i.e. $\frac{dW_h(t)}{dt} = \lambda_h$. We can compute the value of $t_0 = \frac{h}{0.352}\cdot\ln(\frac{n\lambda_hh}{0.704}), W_h(t_0) = \frac{n\lambda_hh}{0.704}$. The cumulative weight of an observed transaction in high load is 
+* **Heavy Load Regime:** As analyzed in [The Tangle](../References/33.%20The%20Tangle(S.Popov,%20Apr.2018).pdf), the weight accumulation in HR consists of two periods: adaption priod and linear increasing period.
+<font color = blue>
+  * **Adaption period:** The time from observed transaction is reveal to DAG-based blockchain to the time that almost all tips become the indirected approval of the transaction. Thus, the weight grows with $W_h(t) = 2\exp(\frac{0.352t}{h})$. 
+  * **Linear increasing period:** All incoming trancsactions are indirectly approve the observed transaction. The weight grows with speed $\lambda_h$.
+</font>
+  * Let $L_h = 2n\lambda_hh_h$ be the number of tips in DAG-based blockchain at time $t$, and $t_0$ is the end time of adaption period. The cumulative weight in adaption period increases exponentially, while in linear increasing period increasing linearly. Thus, the gradient at the end of adaption period is same with the gradient in linear increasing period, i.e. $\frac{dW_h(t)}{dt} = \lambda_h$. We can compute the value of $t_0 = \frac{nh_h}{0.352}\cdot\ln(\frac{n\lambda_hh_h}{0.704}), W_h(t_0) = \frac{n\lambda_hh_h}{0.704}$. The cumulative weight of an observed transaction in high load is 
   $$W_h(t)) = \left\{
   \begin{aligned}
-    2\exp(\frac{0.352t}{h}), &  & t \leq t_0\\
-   \frac{n\lambda_hh}{0.704} + \lambda_h(t-t_0), & & t > t_0.
+    2\exp(\frac{0.352t}{nh_h}), &  & t \leq t_0\\
+   \frac{n\lambda_hh_h}{0.704} + \lambda_h(t-t_0), & & t > t_0.
     \end{aligned}
   \right.$$
 
@@ -148,26 +144,45 @@ In these regimes, the transaction arrival rate keeps steady. Let $\lambda_l, \la
 
 In unsteady regimes, transction arrival rate will be changed suddenly. We will discuss two special unsteady regimes: light-to-high load and high-to-light load.
 
-* **Light-to-High Load Regime:** 
-  Due to $L_0 = 2n\lambda_lh \approx 1$, we can thought that all new incoming transctions will approve an observed transction. However, the time of the transaction that has been observed will impact the weight accumulation. 
-  * If the transaction is observed in LR phase, the cumulative weight of the transaction at time $t$ should be $$W_{l2h}(t) = 1 + \lambda_ht.$$
-  * If transaction is observed after the network load is modified, then the cumulative weight of the transaction is
+* **Heavy-to-Light Load Regime:**
+  The initial tips of H2L regime is $L_{h2l}(0) = 2n\lambda_hh_h$. After modifying the network load, Before the network load is changed, the time of the transaction that has been observed will impact the weight accumulation.
+  * If a transaction is confirmed before transaction arrival rate decreasing to $\lambda_l$, then the transaction weight accumulating of H2L regime should same with HR: 
+  $$W_{h2l}(t)) = \left\{
+  \begin{aligned}
+    2\exp(\frac{0.352t}{nh_h}), &  & t \leq t_0\\
+   \frac{n\lambda_hh_h}{0.704} + \lambda_h(t-t_0), & & t > t_0.
+    \end{aligned}
+  \right.$$
+  * If a transaction is observed after the time that transaction arrival from $\lambda_h$ to $\lambda_l$, we have $L_{h2l} \in (2n\lambda_hh_h, 1), W_{h2l}(0) = 1$ for the observed transaction. The transition probability of the trasnaction in a time interval $h_l$ should be
+  $$\left\{
+    \begin{aligned}
+     P\{i+1,j-1 | i,j\} = \frac{2}{j}, &  & i = 1, 2, \cdots, L_h - 1, j = 2,3,\cdots, L_h, \\
+      P\{i,j-1 |i,j\} = 1 - \frac{2}{j}, &  & i = 1, 2, \cdots, L_h - 1, j = 2,3,\cdots, L_h.
+    \end{aligned}
+  \right.$$
+  Thus,we obtain the weight accumulation of this transction under H2L regime is 
+  $$W_{h2l}(t)) = \left\{
+  \begin{aligned}
+    2\exp(\frac{0.352t}{nh_l}), &  & t \leq t_0\\
+   \frac{n\lambda_lh_l}{0.704} + \lambda_l(t-t_0), & & t > t_0.
+    \end{aligned}
+  \right.$$
+  * If a transaction is observer while $L_{h2l}(0) = 1$ under H2L regime, all new incoming transactions would become the approvement of the transaction. In this case, the cumulative weight of the observed transaction is similar to LR
+  $$W_{h2l}(t) = 1 + \lambda_lt.$$
+
+
+* **Light-to-Heavy Load Regime:** 
+  Due to $L_{l2h}(0) = 2n\lambda_lh \approx 1$ before network load is changed, we thought that all new incoming transctions will approve an observed transction. However, the time of the transaction that has been observed will impact the weight accumulation. 
+  * If a transaction is confirmed before the time that transaction arrival rate increases from $\lambda_l$ to $\lambda_h$, the cumulative weight of the transaction at time $t$ should be $$W_{l2h}(t) = 1 + \lambda_lt.$$
+  * If a transaction is revealed before the time that transaction arrival rate increases from $\lambda_l$ to $\lambda_h$, which means that the number of tips is $L_{l2h}(t) = 1$, all new incoming transaction with speed $\lambda_h$ will approve the transaction. Thus, the cumulative weight of the transaction at time $t$ should be $$W_{l2h}(t) = 1 + \lambda_ht.$$
+  * If transaction is observed after the network load is modified, which means that the number of tips in DAG-based blockchain is $L_{l2h}(t) > 1$, then the cumulative weight of the transaction is
   $$W_{l2h}(t)) = \left\{
   \begin{aligned}
-    2\exp(\frac{0.352t}{h}), &  & t \leq t_0\\
-   \frac{n\lambda_hh}{0.704} + \lambda_h(t-t_0), & & t > t_0.
+    2\exp(\frac{0.352t}{nh_h}), &  & t \leq t_0\\
+   \frac{n\lambda_hh_h}{0.704} + \lambda_h(t-t_0), & & t > t_0.
     \end{aligned}
   \right.$$
 
-* **High-to-Light Load Regime:**
-  The initial tips of H2L regime is $L_0 = 2n\lambda_hh > 1$. Before the network load is changed, the weight accumulation of an observed transaction is same with high load regime. While transaction arrival rate decreasing to $\lambda_l$, transaction weight accumulating of H2L regime should be 
-  $$W_{h2l}(t)) = \left\{
-  \begin{aligned}
-    2\exp(\frac{0.352t}{h}), &  & t \leq t_0\\
-   \frac{n\lambda_lh}{0.704} + \lambda_l(t-t_0), & & t > t_0.
-    \end{aligned}
-  \right.$$
-  while the number of tips for an observed transaction is $L_0 = 2n\lambda_lh \approx 1$, all new incoming transactions would become the approvement of the transaction. In this case, the cumulative weight of the observed transaction is $W_{h2l}(t) = 1 + \lambda_lt$.
 
 ### Transaction Confirmation Delay
 
