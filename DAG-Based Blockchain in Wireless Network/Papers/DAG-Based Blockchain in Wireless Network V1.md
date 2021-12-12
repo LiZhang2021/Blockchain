@@ -30,12 +30,15 @@ In this subsection, we give some assumptions of Network Model and the definition
 **Definitions:**<font color = blue>
   * Let $\lambda$ be the arrival rate of the node in network.
   * Let the average duration time in reveal stage be $h$, which is determined by the computation and transsmission time.
-  * Let $L(t) = 2n\lambda h$ be the number of tips in DAG-based blockchain at time $t$ when considering CSMA/CA protocol. Let $W(t)$ be the cumulative weight of an observed transaction at time $t$ in CSMA/CA.</font>
+  * Let $L(t)$ be the number of tips in DAG-based blockchain at time $t$ when considering CSMA/CA protocol. 
+  * Let $W(t)$ be the cumulative weight of an observed transaction at time $t$ in CSMA/CA.</font>
+
+**Proposition** $L(t)=constant=2n\lambda h$.
       
 <font color = blue>The network load is stable if $L(t) = L(t-h) = L$, where $L$ is a consistant value.</font> There are $n\lambda h$ new transactions between $t - h$ and $t$ on average. Therefore, we can write $L(t) = r + n\lambda h$, where $r$ is the number of old tips and $n\lambda h$ is the number of tips chosen by new transactions during $t-h$ to $t$ (they are not tips anymore, but other nodes do not know). <font color = green>When a new transaction arrives at time $t$, two tips from $L(t)$ will be chonsen randomly by the transaction.</font> Since $\lambda h$ are not tips anymore, tips selection from $r$ or $\lambda h$ will affect the value of $L(t)$. 
 * If new transaction selects two tips both from $n\lambda h$, then $L(t)$ will increase by $1$; 
 * If it selects one tip from $r$ and $n\lambda h$, $L(t)$ will unchange; 
-* If it selects two tips from $r$, then $L(t)$ will decrease by $1$. 
+* If it selects two tips from $r$, then $L(t)$ will decrease by $1$.
 
 The expected number of selected tips in $r$ can be computed as $$\frac{n\lambda h(n\lambda h - 1)}{(r + n\lambda h)(r + n\lambda h -1)}\times 0 + \frac{2rn\lambda h}{(r + n\lambda h)(r + n\lambda h - 1)}\times 1 + \frac{r(r - 1)}{(r + n\lambda h)(r + n\lambda h - 1)} \times 2 = \frac{2r}{r + n\lambda h}$$
 
