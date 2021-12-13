@@ -12,14 +12,14 @@ In this section, we introduce the characteristics of wireless network and the co
 
 ### Wireless Network 
 
-Wireless Local Area Networks(WLANs)[1-2] with high flexibility and convenience can provide high quality services for users in limited geographical area. Currently, as the de facto standard of WLANs, IEEE 802.11[1] has been wirdly used in wireless network. This standard include Distributed Coordination Function(DCF)[3] as Medium Access Control(MAC)[1] mechanism.
+Wireless Local Area Networks(WLANs)[1-2] with high flexibility and convenience can provide high quality services for users in limited geographical area. Currently, as the de facto standard of WLANs, IEEE 802.11[1] has been wirdly used in wireless network. This standard include Distributed Coordination Function(DCF)[3] as Medium Access Control(MAC)[1] mechanism. The DCF, which based on Carrier Sense Multiple Access with Collision Avoidance(CSMA/CA) and binary slotted exponential backoff, can support asynchronous data transfer on a best effort basis. In this paper, we consider that any node broacasts a packe competely by using CSMA/CA for media access wireless channel.
 
 ### DAG-based Blockchain
 
 ### Consensus process of DAG-Based Blockchain under Wireless Network
 
 
-## Double-Spending Attack 
+## Double-Spending Attack
 
 ### System Model
 
