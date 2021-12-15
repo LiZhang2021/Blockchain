@@ -324,7 +324,7 @@ In order to measure the quality of service of the DAG-based blockchain, we defin
 
 ## Security Analysis
 
-In this section, we introduce the most typical double-spending attack model in DAG-based blockchain. Then, we analyze the successful attack probability for double-spending considering CSMA/CA protocols in qireless blockchain network.
+In this section, we introduce the most typical double-spending attack model in DAG-based blockchain. Then, we analyze the successful attack probability for double-spending considering CSMA/CA protocols in wireless blockchain network.
 
 ### Attack Process and Model
 

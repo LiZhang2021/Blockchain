@@ -49,23 +49,62 @@ The consensus process of an issued transaction is divided into two stages: revea
 
 In order to simplify later analysis, we can define the second to five procedures as reveal stage, and procedure six as the weight accumulating stage of new transaction. As we can see that communication in network may cause a serious delay when nodes compete for wireless channel to broadcast the new transaction.
 
-## System Model
+## Double-Spending Attack in Wireless Blockchain Network
 
-In this section, we briefly 
+In this section, we first introduce the double-spending attack of DAG-based blockchain. And then we analyze the successfull attack probability of double-spending under wireless network with imperfect CSMA/CA protocol.
 
-## Double-Spending Attack
+### System Model
 
-In this section, we 
+ We now present some assumptions for double-spending attack analysis.
+* Assume that  there are $n$ nodes running Tangle, they communicate with each other directly throught wireless channel.
+* Assume that there are $n-1$ honest nodes and one attacker;
+* Assume that each node selects two tips with no-conflict by Markov Chain Monte Carlo(MCMC) tips selection algorithm[4].
+* The transaction arrival rate of each node follows the Poisson process[5]. Let $\lambda, \mu$ be the arrival rate of new trasnactions on a honest node and a malicious attacker respectively.
+* Let the own weight of each transaction be one.
+* Let $h$ be the average transmission delay to broadcast a packet through CSMA/CA protocol. In addition, $h$ is also the reveal time to update the new transaction discussed in Tangle. 
+* Let $m$ be the maximum number of transactions at one broadcast.
+
+**The Average Transmission Delay $h$**
+
+In CSMA/CA, all nodes will compete to send messages. We always split time into multiple slots, and let the probability of each node sending messages in a slot be $\tau = \frac{1}{n}$. If there are $n$ nodes in wireless blockchain network, the probability of at least one node broadcasting in a slot time  is 
+$$P_{tr} = 1 - (1 - \tau)^{n}.$$
+
+The probability of one node broadcasts successfully in a slot time is 
+$$P_s = C_n^1 \tau(1 - \tau)^{n-1} = n\cdot\tau\cdot(1 - \tau)^{n-1}$$
+ 
+ The probability of broadcast collision occuring in a slot time is 
+ $$P_c = 1 - (1 - \tau)^{n} - P_s.$$
+
+Let $T_s$ be the average time that channel is detected busy due to a successful broadcasting, and its probability is $P_s$. Denoting $T_c$ is the average time that channel is collision, the probability of broadcast collision is $P_c$. Besides, when the channel is free that no node broadcast in a slot time, let $\sigma$ be the duration time of the empty slot time, the probability of this regime is $1 - P_{tr}$. Therefore, the average transmission delay $h$ is the expected value of the above three situations:
+$$h = (1 - P_{tr})\cdot\sigma + P_s\cdot T_s + P_c\cdot T_c.$$
+
+In order to  ensure the fairness of CSMA/CA, each node has same probability $\tau$ to access the wireless channel to broadcast. In order to describe the queuing state, we divide the network network load into two regimes.
+<font color = red> 待补充</font>
+
+### Attack Model
+
+ A transaction is confirmed in DAG-based blockchain when its cumulative weight reaches to the confirmation weight threshold(large weight). When an attacker wants to tamper this confirmed transaction, it should create a fraudulent subtangle, such that the subtangle that containing the original transaction be orphaned. In this case, we say that the attacker launches double-spending attack successfully, and the attacker can steal the money residing in the original transaction. 
+![](pics/Figure_3.png)
+
+As shown in Fig. 3, the typical way that a malicious attacker lunches double spending attack is to construct a fraudulent chain in blockchain system, the main procedures are shown as follows:
+<font color = purple>
+* At time $t_0$, attacker broadcasts an honest transaction, and honest nodes will approve it.
+* At time $t_1$, the attacker builds a fraud chain in offchain to approve a fraudulent transaction that is conflicted with the honest transaction.
+* After time $t_1$, the attacker will continually issue trasnactions to grow the cumulative weight of the fraudulent transaction. The time $t_1$ should be earlier than the end of adaption periof of the honest transaction.
+* At time $t_2$, the honest transaction has been confirmed while its cumulative weight attaches $w$. In this case, the victim will send goods or services to the attacker.
+* While the cumulative weight of the fraudulent transaction overweights the confirmed honest transaction after time $t_2$, the attacker will broadcast the fraudulent chain to the whole wireless blockchain network.
+* Once the attacker contending for wireless channel to broadcast fraudulent branch updating the DAG-based blockchain, the fraud transaction will be accepted by other honest nodes based on the MCMC algorithm due to the higher cumulative weight. The confirmed honest transaction will be orphened in DAG-based blockchain, the victim cannot receive the payment even though it has provided goods or services. In this case, the attacker issues double-spending attack successfully.
+</font>
+
+### Success Probability of Attack
 
 
 
-### Attack Analysis
+### Security Goal
 
-#### Attack Model
+### Probability of a Successful Attack
 
-#### Security Goal
 
-#### Probability of a Successful Attack
 
 ## Simulation and Discussion
 
@@ -77,8 +116,9 @@ In this section, we
 
 ## References
 
-[1] L.S.Committee, "ANSI/IEEE Std 802.11: Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications". IEEE Computer Society, 1999.
-[2] B.P. Crow, J.G. Kim, "IEEE 802.11 Wireless Local Area  Networks", IEEE Communications magazine, Sept. 1997.
+[1] L. S. Committee, "ANSI/IEEE Std 802.11: Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications". IEEE Computer Society, 1999.
+[2] B. P. Crow, J.G. Kim, "IEEE 802.11 Wireless Local Area  Networks", IEEE Communications magazine, Sept. 1997.
 [3] H. Wu, S. Cheng, Y. Peng, K. Long and J. Ma, "IEEE 802.11 Distributed Coordination Function (DCF): Analysis and Enhancement," 2002 IEEE International Conference on Communications. Conference Proceedings. ICC 2002 (Cat. No.02CH37333), 2002, pp. 605-609 vol.1, doi: 10.1109/ICC.2002.996924.
 [4] S. Popov, "The tangle", White paper, 2018. [Online]. Available:
 https://www.iota.org/research/academic-papers.
+[5] R. G. Gallager, "Discrete Stochastic Processes". Kluwer Academic Publishers, 1996.
