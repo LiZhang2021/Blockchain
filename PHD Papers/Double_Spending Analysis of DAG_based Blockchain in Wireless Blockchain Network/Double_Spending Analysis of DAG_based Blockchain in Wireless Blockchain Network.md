@@ -56,15 +56,14 @@ In this section, we first introduce the double-spending attack of DAG-based bloc
 ### System Model
 
  We now present some assumptions for double-spending attack analysis.
-* Assume that  there are $n$ nodes running Tangle, they communicate with each other directly throught wireless channel.
-* Assume that there are $n-1$ honest nodes and one attacker;
+* Assume that there are $n$ nodes running Tangle, they communicate with each other directly throught wireless channel.
+* Let $m$ be the maximum number of transactions at one broadcast.
 * Assume that each node selects two tips with no-conflict by Markov Chain Monte Carlo(MCMC) tips selection algorithm[4].
-* The transaction arrival rate of each node follows the Poisson process[5]. Let $\lambda, \mu$ be the arrival rate of new trasnactions on a honest node and a malicious attacker respectively.
 * Let the own weight of each transaction be one.
 * Let $h$ be the average transmission delay to broadcast a packet through CSMA/CA protocol. In addition, $h$ is also the reveal time to update the new transaction discussed in Tangle. 
-* Let $m$ be the maximum number of transactions at one broadcast.
-
-**The Average Transmission Delay $h$**
+* let $\lambda$ be the transaction arrival rate of each node in wireless blockchain network.
+* Let $L(t)$ be the number of tips in DAG-based blockchain at time $t$ when considering CSMA/CA protocol. 
+* Let $W(t)$ be the cumulative weight of an observed transaction at time $t$ in CSMA/CA.
 
 In CSMA/CA, all nodes will compete to send messages. We always split time into multiple slots, and let the probability of each node sending messages in a slot be $\tau = \frac{1}{n}$. If there are $n$ nodes in wireless blockchain network, the probability of at least one node broadcasting in a slot time  is 
 $$P_{tr} = 1 - (1 - \tau)^{n}.$$
@@ -78,11 +77,31 @@ $$P_s = C_n^1 \tau(1 - \tau)^{n-1} = n\cdot\tau\cdot(1 - \tau)^{n-1}$$
 Let $T_s$ be the average time that channel is detected busy due to a successful broadcasting, and its probability is $P_s$. Denoting $T_c$ is the average time that channel is collision, the probability of broadcast collision is $P_c$. Besides, when the channel is free that no node broadcast in a slot time, let $\sigma$ be the duration time of the empty slot time, the probability of this regime is $1 - P_{tr}$. Therefore, the average transmission delay $h$ is the expected value of the above three situations:
 $$h = (1 - P_{tr})\cdot\sigma + P_s\cdot T_s + P_c\cdot T_c.$$
 
-In order to  ensure the fairness of CSMA/CA, each node has same probability $\tau$ to access the wireless channel to broadcast. In order to describe the queuing state, we divide the network network load into two regimes.
-<font color = red> 待补充</font>
+**Proposition** Condidering wireless network that all nodes communicate with each other according to CSMA/CA protocol consists of $n$ independent nodes. If the during time of two neighbor transactions is $h$, and the transaction arrival rate of each node is $\lambda$, then the number of tips in DAG-based blockchain is $L(t)=2n\lambda h$.
+<font color = orange>
+**Proof:** Due to the faireness of CSMA/CA, the average time to compete the broadcasting  on each node is $nh$. When the network load is stable, $L(t) = L(t-nh) = L$ for any time $t$, where $L$ is a constant value. There are $n\lambda h$ new transactions between $t - nh$ and $t$ on average. Therefore, we can write $L(t) = r + n\lambda h$, where $r$ is the number of old tips and $n\lambda h$ is the number of tips chosen by new transactions during $t-nh$ to $t$ (they are not tips anymore, but other nodes do not know). When a new transaction arrives at time $t$, two tips from $L(t)$ will be chonsen randomly by the transaction. Since $n\lambda h$ are not tips anymore, tips selection from $r$ or $n\lambda h$ will affect the value of $L(t)$. 
+* If new transaction selects two tips both from $n\lambda h$, then $L(t)$ will increase by $1$; 
+* If it selects one tip from $r$ and $n\lambda h$, $L(t)$ will unchange; 
+* If it selects two tips from $r$, then $L(t)$ will decrease by $1$.
+
+The expected number of selected tips in $r$ can be computed as $\frac{n\lambda h(n\lambda h - 1)}{(r + n\lambda h)(r + n\lambda h -1)}\times 0 + \frac{2rn\lambda h}{(r + n\lambda h)(r + n\lambda h - 1)}\times 1 + \frac{r(r - 1)}{(r + n\lambda h)(r + n\lambda h - 1)} \times 2 = \frac{2r}{r + n\lambda h}$.
+
+Because of the stability of $L(t)$, we have $\frac{2r}{r + n\lambda h} = 1$. Therefore, $r = n\lambda h, L = L(t) = 2n\lambda h$.
+</font>
+
+#### Network Load
+
+Because of the fairness of CSMA/CA, each node has same probability $\tau$ to compete broadcasting in wireless channel. In order to describe the queuing state in detail, we divide the network network load into two regimes.
+
+* **Light Regime:** When the network load is light, the cache on each node may be less than $m$ transactions, where $m$ is the maximum number of transaction containing in a packet. Let $\lambda_l$ be the the transaction arrival rate of light load regime, and we have $n\lambda_lh \leq m$. In this case, all the waited transactions in cache can be broadcasted immediately when the node successfully competes for wireless channel. And the number of tips in the DAG-based blockchain should be $L(t) = 2n\lambda_lh$. While the value of $\lambda_l$ is very small, then we have $L(t) = 2n\lambda_lh \approx 1$, and the DAG-based blockchain will be convert to a single chain. 
+* **Heavy Regime:** When the network load is heavy, the cache on each node is always full.  Let $\lambda_h$ be the the transaction arrival rate of heavy load regime, The cumulative transaction on each node is $n\lambda_hh$, which satisfies $n\lambda_hh > m$. If a node compete successfully, it will broadcast at most $m$ transactions, and $m$ new transactions can be stored in cache accordingly. Based on the steady characteristic, the number of tips in DAG-based blockchain should be $L(t) = 2m$ at any time.
+
 
 ### Attack Model
 
+* Assume that there are $n-1$ honest nodes and one attacker;
+* The transaction arrival rate of each node follows the Poisson process[5]. Let $\lambda, \mu$ be the arrival rate of new trasnactions on a honest node and a malicious attacker respectively.
+ 
  A transaction is confirmed in DAG-based blockchain when its cumulative weight reaches to the confirmation weight threshold(large weight). When an attacker wants to tamper this confirmed transaction, it should create a fraudulent subtangle, such that the subtangle that containing the original transaction be orphaned. In this case, we say that the attacker launches double-spending attack successfully, and the attacker can steal the money residing in the original transaction. 
 ![](pics/Figure_3.png)
 
