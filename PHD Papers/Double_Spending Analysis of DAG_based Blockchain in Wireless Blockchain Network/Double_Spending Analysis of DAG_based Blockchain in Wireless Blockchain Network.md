@@ -99,13 +99,13 @@ Because of the fairness of CSMA/CA, each node has same probability $\tau$ to com
 
 ### Attack Model
 
-* Assume that there are $n-1$ honest nodes and one attacker;
-* The transaction arrival rate of each node follows the Poisson process[5]. Let $\lambda, \mu$ be the arrival rate of new trasnactions on a honest node and a malicious attacker respectively.
+In order to discuss double-spending attack in DAG-based blockchain, we assume that there are $n-1$ honest nodes and one attacker. Besides, the transaction arrival rate of each node follows the Poisson process[5]. Let $\lambda, \mu$ be the arrival rate of new trasnactions on a honest node and a malicious attacker respectively.
+
+In Tangle[4], S.Popov proposed two approaches for double-spending attack, one is large weight attack and another is parasite chain attack. Due to the assumption that all transactions have same own weight, we don't consider the large weight attack in this paper. Parasite chain attack is defined that an attacker privately builds a subtangle that occasionally references the main tangle to gain a higher cumulative weight. A transaction is confirmed in Tangle when its cumulative weight reaches to the confirmation weight threshold(large weight). When an attacker wants to tamper this confirmed transaction, it should create a fraudulent subtangle, such that the subtangle that containing the original transaction be orphaned. In this case, we say that the attacker launches double-spending attack successfully, and the attacker can steal the money residing in the original transaction. 
  
- A transaction is confirmed in DAG-based blockchain when its cumulative weight reaches to the confirmation weight threshold(large weight). When an attacker wants to tamper this confirmed transaction, it should create a fraudulent subtangle, such that the subtangle that containing the original transaction be orphaned. In this case, we say that the attacker launches double-spending attack successfully, and the attacker can steal the money residing in the original transaction. 
 ![](pics/Figure_3.png)
 
-As shown in Fig. 3, the typical way that a malicious attacker lunches double spending attack is to construct a fraudulent chain in blockchain system, the main procedures are shown as follows:
+Under wireless network, the process of double spending attack is a little different to that under perfect network. As shown in Fig. 3, the typical way that a malicious attacker lunches double spending attack is to construct a fraudulent chain in blockchain system, the main procedures are shown as follows:
 <font color = purple>
 * At time $t_0$, attacker broadcasts an honest transaction, and honest nodes will approve it.
 * At time $t_1$, the attacker builds a fraud chain in offchain to approve a fraudulent transaction that is conflicted with the honest transaction.
@@ -115,6 +115,7 @@ As shown in Fig. 3, the typical way that a malicious attacker lunches double spe
 * Once the attacker contending for wireless channel to broadcast fraudulent branch updating the DAG-based blockchain, the fraud transaction will be accepted by other honest nodes based on the MCMC algorithm due to the higher cumulative weight. The confirmed honest transaction will be orphened in DAG-based blockchain, the victim cannot receive the payment even though it has provided goods or services. In this case, the attacker issues double-spending attack successfully.
 </font>
 
+<font color = red>待补充</font>
 ### Success Probability of Attack
 
 
