@@ -99,6 +99,8 @@ Because of the fairness of CSMA/CA, each node has same probability $\tau$ to com
 
 ### Attack Model
 
+In this subsection, we analyze the successful attack probability from the perspective of wireless communication. In this case, attacker should win the transaction competition and broadcast the fraudulent chain successfully. In CSMA/CA, the maximum number of broadcast transactions is limited to $m$, thus, the maximum new transaction arrival rate is $\frac{m}{nh}$. 
+
 In order to discuss double-spending attack in DAG-based blockchain, we assume that there are $n-1$ honest nodes and one attacker. Besides, the transaction arrival rate of each node follows the Poisson process[5]. Let $\lambda, \mu$ be the arrival rate of new trasnactions on a honest node and a malicious attacker respectively.
 
 In Tangle[4], S.Popov proposed two approaches for double-spending attack, one is large weight attack and another is parasite chain attack. Due to the assumption that all transactions have same own weight, we don't consider the large weight attack in this paper. Parasite chain attack is defined that an attacker privately builds a subtangle that occasionally references the main tangle to gain a higher cumulative weight. A transaction is confirmed in Tangle when its cumulative weight reaches to the confirmation weight threshold(large weight). When an attacker wants to tamper this confirmed transaction, it should create a fraudulent subtangle, such that the subtangle that containing the original transaction be orphaned. In this case, we say that the attacker launches double-spending attack successfully, and the attacker can steal the money residing in the original transaction. 
@@ -115,11 +117,39 @@ Under wireless network, the process of double spending attack is a little differ
 * Once the attacker contending for wireless channel to broadcast fraudulent branch updating the DAG-based blockchain, the fraud transaction will be accepted by other honest nodes based on the MCMC algorithm due to the higher cumulative weight. The confirmed honest transaction will be orphened in DAG-based blockchain, the victim cannot receive the payment even though it has provided goods or services. In this case, the attacker issues double-spending attack successfully.
 </font>
 
+Before providing goods or services to the attacker, honest nodes will choose to wait for some transactions on the honest subtangle  to ensure the cumulative weight of honest transaction reaches threshold. The cumulative weight threshold is defined as $N_{cw}$, which includes the own weight of the honest transaction. The attacker will publish the parasite chain if his/her attack was successful. In Tangle, an attack is successful if the fraudulent subtangle is heavier than the honest subtangle after the honest transaction confirmation is satisfied. Therefore, we can define two necessary conditions for double-spending attack as follows:
+<font color = blue>
+**Definition** A double-spending attack succeeds if the follwing two conditions satisfied:
+* **Transaction Confirmation:** the cumulative weight of the honest transaction is greater than or equal to $N_{cw}$, and
+* **Success in competition:** the number of tips in fraudulend subtangle is greater than that in honest subtangle.
+</font>
+
+### Stochastic Model
+
+In this paper, we fit the transaction arrival process of each node using Poisson Process with transaction arrival rate $\lambda$(transactions per second). We denote the weight of the honest subtangle and raudulent subtangle by two independent Poisson counting processes[]. Let $H(t)$ be the weight of honest subtangle with transaction arrival rate $\lambda$ at time $t$ and $A(t)$ be the weight of fraudulent subtangle with transaction arrival rate $\mu$ at time $t$. Assume that attacker launches double-spending attack at time $t = 0$ at which both subtangles have same initial state, i.e. $H(0) = A(0) = 1$. 
+
+Due to the characteristics of CSMA/CA, the time interval between two new transactions should be $nh$, where $n$ is the number of nodes and $h$ is the transimission delay of a packet under wireless blockchain network. Recall that we assume there are $n-1$ honest nodes and $1$ attacker in a one-hop wireless blockchain network, the arrival rates of new trasnactions on a honest node and a malicious attacker shold be 
+$$\left\{
+  \begin{aligned}
+   \lambda' = \min\{\lambda, \frac{m}{nh}\},\\
+   \mu' = \min\{\mu, \frac{m}{nh}\}.
+    \end{aligned}
+  \right.$$ 
+where $m$ is the maximum number of transactions of a packet that can be broadcast in wireless channel at once. In each time interval, the propabilities that a new transaction is issued by honest node and attacker are as follows:
+$$\left\{
+  \begin{aligned}
+   p = \frac{(n-1)\lambda'}{(n-1)\lambda' + \mu'},\\
+   q = \frac{\mu'}{(n-1)\lambda' + \mu'}.
+    \end{aligned}
+  \right.$$ 
+
+The attacker can take control of the DAG-based blockchain as soon as it create a fraudulent subtangle heavier than the valid one. When discussing the successfull probability of double-spending attack, we should consider two scenarios:
+* When the honest transaction is 
 
 <font color = red>待补充</font>
 ### Success Probability of Attack
+<font color = red>计算出双花攻击成功的概率</font>
 
-In this subsection, we analyze the successful attack probability from the perspective of wireless communication. In this case, attacker should win the transaction competition and broadcast the fraudulent chain successfully. I CSMA/CA, the maximum number of broadcast transactions is limited to $m$, thus, the maximum new transaction arrival rate is $\frac{m}{nh}$. 
 
 ### Security Goal
 
@@ -143,3 +173,4 @@ In this subsection, we analyze the successful attack probability from the perspe
 [4] S. Popov, "The tangle", White paper, 2018. [Online]. Available:
 https://www.iota.org/research/academic-papers.
 [5] R. G. Gallager, "Discrete Stochastic Processes". Kluwer Academic Publishers, 1996.
+[6] A. Papoulis and S. U. Pillai, “Random walks and other applications,” in Probability, Random Variables and Stochastic Processes, 4th edition., Boston, Mass.: McGraw-Hill Europe, 2002.
