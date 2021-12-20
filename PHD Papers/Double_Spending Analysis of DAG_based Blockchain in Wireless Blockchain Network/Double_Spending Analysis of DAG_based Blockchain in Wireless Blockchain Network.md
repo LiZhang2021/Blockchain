@@ -144,7 +144,8 @@ $$\left\{
   \right.$$ 
 
 The attacker can take control of the DAG-based blockchain as soon as it create a fraudulent subtangle heavier than the valid one. When discussing the successfull probability of double-spending attack, we should consider two scenarios:
-* When the honest transaction is 
+* When confirming the honest transaction, the weight of the fraudulent subtangle is greater than that of the honest subtangle. In this case, attacker will publish the  fraudulent subtangle, which indicates attacker launches double-spending attack successfully;
+* When confirming the honest transaction,  the weight of the fraudulent subtangle is smaller than or equal to that of the honest subtangle. In this case,instead of publishing the fraudulent subtangle immediately, attacker will catch up the difference between thw two subtangle. Once the weight of the fraudulent subtangle is greater than that of the honest subtangle, attacker will reveal its subtangle to ensure attack successfully.
 
 <font color = red>待补充</font>
 ### Success Probability of Attack
