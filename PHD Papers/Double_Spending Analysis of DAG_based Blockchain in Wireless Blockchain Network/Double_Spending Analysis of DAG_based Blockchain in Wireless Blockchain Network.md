@@ -101,13 +101,25 @@ Because of the fairness of CSMA/CA, each node has same probability $\tau$ to com
 
 In this subsection, we analyze the successful attack probability from the perspective of wireless communication. In this case, attacker should win the transaction competition and broadcast the fraudulent chain successfully. In CSMA/CA, the maximum number of broadcast transactions is limited to $m$, thus, the maximum new transaction arrival rate is $\frac{m}{nh}$. 
 
-In order to discuss double-spending attack in DAG-based blockchain, we assume that there are $n-1$ honest nodes and one attacker. Besides, the transaction arrival rate of each node follows the Poisson process[5]. Let $\lambda, \mu$ be the arrival rate of new trasnactions on a honest node and a malicious attacker respectively.
+In Tangle[4], S.Popov proposed two approaches for double-spending attack, one is large weight attack and another is parasite chain attack. Due to the assumption that all transactions have same own weight, we only consider the parasite chain attack that an attacker privately builds a fraudulent subtangle which occasionally references the main tangle to gain higher cumulative weight. 
 
-In Tangle[4], S.Popov proposed two approaches for double-spending attack, one is large weight attack and another is parasite chain attack. Due to the assumption that all transactions have same own weight, we only consider the parasite chain attack that an attacker privately builds a fraudulent subtangle which occasionally references the main tangle to gain higher cumulative weight. A transaction is confirmed in Tangle when its cumulative weight reaches to the confirmation weight threshold(large weight). When an attacker wants to tamper this confirmed transaction, it should create a fraudulent subtangle, such that the subtangle that containing the original transaction be orphaned. In this case, we say that the attacker launches double-spending attack successfully, and the attacker can steal the money residing in the original transaction. 
- 
-![](pics/Figure_3.png)
+#### MCMC Selection Algorithm
 
-Under wireless network, the process of double spending attack is a little different to that under perfect network. As shown in Fig. 3, the typical way that a malicious attacker lunches double spending attack is to construct a fraudulent chain in blockchain system, the main procedures are shown as follows:
+In order to analyze attack process, we should know the details of MCMC tips selection algorithm.  Recall the assumption that all own weights are equal to $1$, the cumulative weight of a tip should be $1$. In Tangle, the standard of main chain is cumuleitive computational power. The greater the cumulative computational power of the link approved by tips, the more worthy the link to be approved. The idea is to place some random walkers on transactions with at least $2$ cumulative weight of Tangle, and let them randomly walk towards tips. The seceltion algorithm is shown in the following way:
+* Consider all transactions whose cumulative weight on the interval $[N_{cw}, 2N_{cw}]$, where $N_{cw}$ is the cumulative weight confirmation threshold;
+*  Randomly select $N$ transactions from the transactions in step 1 as walkers. 
+*  They will perform independent discrete-time random walks "from transaction with high cumulative weight towards the tips", meaning that a path from $x$ to $y$ is possible if and only if $y$ approves $x$;
+*  The two random walkers that reach the tip set first will stand on the two tips that will be approved by new transaction. To defend "lazy tips", the algorithm will discard those random walkers that reach the tips too fast.
+
+The path probability of a walker is defined as follows: let $W_x$ be the cumulative weight of transaction $x$. If transaction $y$ approves transaction $x$, then the path probability should be 
+$$P_{xy} = \frac{\exp(-\alpha(W_x - W_y))}{\sum_{z:\text{z approves x}}\exp(-\alpha(W_x - W_z))}$$
+where $\alpha$ is a parameter that determines the amplification degree of the difference of between $W_x$ and $W_y$.
+
+Based on the MCMC selection algorithm, random walker would like to choose the paththat with higher cumulative weight transaction. For example, If $W_{y_1} > W_{y_2}$, then $W_x - W_{y_1} < W_x - W_{y_2}$, i.e. $P_{xy_1} \gg P_{xy_2}$. Therefore, the tip with higher cumulative weight is easier to be chosen. 
+ <font color = red>上面一小段部分可以作为一个命题，之后给出相应的证明</font>
+ #### Attack Process Analysis
+
+The double-spending attack process of  DAG-based blockchain in wireless network is different to that in perfect network. As shown in Fig. 3, the typical way that a malicious attacker lunches double spending attack is to construct a fraudulent chain in blockchain system, the main procedures are shown as follows:
 <font color = purple>
 * At time $t_0$, attacker broadcasts an honest transaction, and honest nodes will approve it.
 * At time $t_1$, the attacker builds a fraud chain in offchain to approve a fraudulent transaction that is conflicted with the honest transaction.
@@ -117,16 +129,20 @@ Under wireless network, the process of double spending attack is a little differ
 * Once the attacker contending for wireless channel to broadcast fraudulent branch updating the DAG-based blockchain, the fraud transaction will be accepted by other honest nodes based on the MCMC algorithm due to the higher cumulative weight. The confirmed honest transaction will be orphened in DAG-based blockchain, the victim cannot receive the payment even though it has provided goods or services. In this case, the attacker issues double-spending attack successfully.
 </font>
 
-Before providing goods or services to the attacker, honest nodes will choose to wait for some transactions on the honest subtangle  to ensure the cumulative weight of honest transaction reaches threshold. The cumulative weight threshold is defined as $N_{cw}$, which includes the own weight of the honest transaction. The attacker will publish the parasite chain if his/her attack was successful. In Tangle, an attack is successful if the fraudulent subtangle is heavier than the honest subtangle after the honest transaction confirmation is satisfied. Therefore, we can define two necessary conditions for double-spending attack as follows:
+![](pics/Figure_3.png)
+
+Before providing goods or services to the attacker, honest nodes will choose to wait for some transactions on the honest subtangle  to ensure the cumulative weight of honest transaction reaches threshold $N_{cw}$, which includes the own weight of the honest transaction. The attacker will publish the parasite chain if his/her attack was successful. Therefore, we can define two necessary conditions for double-spending attack as follows:
 <font color = blue>
 **Definition** A double-spending attack succeeds if the follwing two conditions satisfied:
 * **Transaction Confirmation:** the cumulative weight of the honest transaction is greater than or equal to $N_{cw}$, and
 * **Success in competition:** the number of tips in fraudulend subtangle is greater than that in honest subtangle.
 </font>
+<font color = red>12月22日再继续分析</font>
+#### The Attack Probability
 
-### The Attack Probability
+We can describe the abovementioned attack process as a Markov chain. In this paper, we fit the transaction arrival process of each node using Poisson Process[5] with transaction arrival rate $\lambda$(transactions per second). Recall that assuming there are $n-1$ honest nodes and one attacker. 
 
-We can describe the abovementioned attack process as a Markov chain. In this paper, we fit the transaction arrival process of each node using Poisson Process with transaction arrival rate $\lambda$(transactions per second). We denote the weight of the honest subtangle and fraudulent subtangle by two independent Poisson counting processes[6]. <font color = red>Let $H(t)$ be the weight of honest subtangle with transaction arrival rate $\lambda$ at time $t$ and $A(t)$ be the weight of fraudulent subtangle with transaction arrival rate $\mu$ at time $t$. Assume that attacker launches double-spending attack at time $t = 0$ at which both subtangles have same initial state, i.e. $H(0) = A(0) = 1$. </font>
+We denote the weight of the honest subtangle and fraudulent subtangle by two independent Poisson counting processes[6]. <font color = red>Let $H(t)$ be the weight of honest subtangle with transaction arrival rate $\lambda$ at time $t$ and $A(t)$ be the weight of fraudulent subtangle with transaction arrival rate $\mu$ at time $t$. Assume that attacker launches double-spending attack at time $t = 0$ at which both subtangles have same initial state, i.e. $H(0) = A(0) = 1$. </font>
 
 Due to the characteristics of CSMA/CA, the time interval between two new transactions should be $nh$, where $n$ is the number of nodes and $h$ is the transimission delay of a packet under wireless blockchain network. Recall that we assume there are $n-1$ honest nodes and $1$ attacker in a one-hop wireless blockchain network, the arrival rates of new trasnactions on a honest node and a malicious attacker shold be 
 $$\left\{
