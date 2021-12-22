@@ -116,7 +116,7 @@ $$P_{xy} = \frac{\exp(-\alpha(W_x - W_y))}{\sum_{z:\text{z approves x}}\exp(-\al
 where $\alpha$ is a parameter that determines the amplification degree of the difference of between $W_x$ and $W_y$.
 
 Based on the MCMC selection algorithm, random walker would like to choose the path that with higher cumulative weight transaction. 
-**Propotion:** Let $x$ be the transaction whose weight in interval $N_{cw}, 2N_{cw}]$, where $N_{cw}$ is the cumulative weight confirmation threshold. Let $W_{h}$ and $W_{c}$ be the weights of an honest trasnaction $h$ and corresponding conflict transaction $c$ respectively. If $W_c > W_h$, then the walker will choose the path from $x$ to $c$ with high probability. 
+**Proposition:** Let $x$ be the transaction whose weight in interval $N_{cw}, 2N_{cw}]$, where $N_{cw}$ is the cumulative weight confirmation threshold. Let $W_{h}$ and $W_{c}$ be the weights of an honest trasnaction $h$ and corresponding conflict transaction $c$ respectively. If $W_c > W_h$, then the walker will choose the path from $x$ to $c$ with high probability. 
 **Proof:** The path probabilities from $x$ to $h$ and from $x$ to $c$ can be computed respectively:
 $$\left\{
   \begin{aligned}
@@ -146,7 +146,7 @@ Before providing goods or services to the attacker, honest nodes will choose to 
 * **Transaction Confirmation:** the cumulative weight of the honest transaction is greater than or equal to $N_{cw}$, and
 * **Success in competition:** the number of tips in fraudulend subtangle is greater than that in honest subtangle.
 </font>
-<font color = red>12月22日再继续分析</font>
+
 #### The Attack Probability
 
 We can describe the abovementioned attack process as a Markov chain. In this paper, we fit the transaction arrival process of each node using Poisson Process[5] with transaction arrival rate $\lambda$(transactions per second). 
@@ -160,7 +160,7 @@ $$\left\{
    \mu' = \min\{\mu, \frac{m}{nh}\}.
     \end{aligned}
   \right.$$ 
-where $m$ is the maximum number of transactions of a packet that can be broadcast in wireless channel at once. In each time interval, the propabilities that a new transaction is issued by honest node and attacker are as follows:
+where $m$ is the maximum number of transactions of a packet that can be broadcast in wireless channel at once. In each time interval, the propabilities that a new transaction is issued by honest nodes and attacker are as follows:
 $$\left\{
   \begin{aligned}
    p = \frac{(n-1)\lambda'}{(n-1)\lambda' + \mu'},\\
@@ -168,41 +168,58 @@ $$\left\{
     \end{aligned}
   \right.$$ 
 
+Assume that the time slot is sufficiently small that no two new transactions from the attacker and honest nodes can arrive simultaneously. The number of transactions issued by attacker in interval $[t_1, t_2]$ can be regarded as a random process obying negative binomial distribution[]. 
+
+Let $N_h$ be the number of transactions issued by honest nodes from time $t_1$ to time $t_2$, and $N_a$ be the possible number of trasnactions issued by the attacker. Thus, potential progress function corresponds to a negative binomial distribution given by
+$$P_R(p, q, N_h, N_a) = C_{N_a + N_h - 1}^{N_a}p^{N_h}q^{N_a},$$ 
+Where $p, q$ are the propabilities that a new transaction is issued by honest nodes and attacker respectively.
+
 The attacker can take control of the DAG-based blockchain as soon as it create a fraudulent subtangle heavier than the honest one. When discussing the successfull probability of double-spending attack, we should consider two scenarios:
 * When confirming the honest transaction, the weight of the fraudulent subtangle is greater than that of the honest subtangle. In this case, attacker will publish the  fraudulent subtangle, which indicates attacker launches double-spending attack successfully;
 * When confirming the honest transaction,  the weight of the fraudulent subtangle is smaller than or equal to that of the honest subtangle. In this case,instead of publishing the fraudulent subtangle immediately, attacker will catch up the difference between thw two subtangle. Once the weight of the fraudulent subtangle is greater than that of the honest subtangle, attacker will reveal its subtangle to ensure attack successfully.  
 
-Assume that the time slot is sufficiently small that no two new transactions from the attacker and honest nodes can arrive simultaneously. Let $N_h, N_a$ be the number of transactions issued by honest nodes and attacker from time $t_1$ to time $t_2$. The number of transactions issued by attacker in interval $[t_1, t_2]$ can be regarded as a random process obying negative binomial distribution[]. 
+When $N_a > N_h$, the attacker launches double-spending attack successfully at time $t_2$. Otherwise, the attacker requires to catch up the difference of transactions that issued by honest node and attacker until the cumulative weight of fraudulent transaction outnumbers that of honest transaction after time $t_2$. This process can be thought as a Gambler’s Ruin problem[]. The attacker needs to catch up the difference of $N_h - N_a + 1$ transactions at least. If $p \leq q$, the attacker will eventually catch up successfully with probability $1$. If $p > q$, the attacker will catch up successfully with probability $a_g$. Thus, the probability that an attacker constructs a fraudulent subtangle which is heavier than the honest one at any time is denoted
+$$p(g) = \left\{
+  \begin{aligned}
+   1, & & p \leq q,\\
+   a_g, & & p > q, 
+    \end{aligned}
+  \right.$$ 
+where $g$ is the number of transactions that fraudulent subtangle falls behind the honest subtangle.
 
-Because the number of trasnactions that issued by attacker follows negative binomial distribution, the propability mass function of $N_a$ is 
+**Proposition:** Let the probabilities with which an attacker and honest nodes issue a new transaction be $q$ and $p = 1-q$ respectively. Assume that the current fraudulent subtangle constructed by the attaclker is smaller than the honest subtangle made by honest nodes $g$ transactions. Then, the probability that the fraudulent subtangle can outweigh the honest subtangle is $a_g = (\frac{q}{p})^{g+1}$.
 
-$$P\{N_a = n\} = C_{n + N_h - 1}^{N_h - 1}p^{N_h}q^n.$$ 
+**Proof:** $a_g = a_{g+1}p + a_{g-1}q, g = 0, 1,2$
 
-If $N_a > N_h$, the attacker issues the double-spending attack successfully at time $t_2$. Otherwise, the attacker requires to catch up the difference of transactions that issued by honest node and attacker until the cumulative weight of fraudulent transaction outnumbers that of honest transaction after time $t_2$. This process can be thought as a Gambler’s Ruin problem, and The attacker needs to catch up the difference of $N_h - N_a + 1$ transactions at least. If $p \leq q$, the attacker will eventually catch up successfully with probability $1$. Otherwise, the attacker will catch up successfully with probability 
+Thus, the catch up function should be given by 
+$$C(p, q, g) = \left\{
+  \begin{aligned}
+   1, & & p \leq q,\\
+    (\frac{q}{p})^{g+1}, & & p > q, 
+    \end{aligned}
+  \right.$$ 
 
-$$P_c(N_h - N_a) = (\frac{q}{p})^{N_h - N_a + 1}.$$
-
-Thus, the successful attack probability is
+**Proposition:** Let $p,q$ be the probabilities with which an attacker and honest nodes issue a new transaction respectively, and $p > q, p + q = 1$. When an attacker launches double-spending attak, the probability of a successful attack under $z-$ confirmation transaction validation is given by 
 $$\begin{align*}
-  P\{\text{attack succeed}\} &= P\{N_a > N_h\}\cdot 1 + P\{N_a \leq N_h\}\cdot P_c(N_h - N_a) \\
-   &= \sum_{N_a = N_h + 1}^\infty C_{N_a + N_h -1}^{N_h-1}p^{N_h}p^{N_a} + \sum_{N_a = 0}^{N_h} C_{N_a + N_h -1}^{N_h-1}p^{N_h}p^{N_a}(\frac{p}{p})^{N_h - N_a +1} \\
-   &= 1 - \sum_{N_a = 0}^{N_h} C_{N_a + N_h -1}^{N_h-1}(p^{N_h}p^{N_a} - p^{N_a - 1}p^{N_h + 1}), p > q.
+  P_S(p, q, z) & = P\{N_a > N_h\}\cdot 1 + P\{N_a \leq N_h\}\cdot C(p, q, N_h - N_a) \\
+   & = \sum_{N_a = N_h + 1}^\infty C_{N_a + N_h -1}^{N_a}p^{N_h}q^{N_a} + \sum_{N_a = 0}^{N_h} C_{N_a + N_h -1}^{N_a}p^{N_h}q^{N_a}(\frac{q}{p})^{N_h - N_a +1} \\
+   &= 1 - \sum_{N_a = 0}^{N_h} C_{N_a + N_h -1}^{N_a}(p^{N_h}q^{N_a} - p^{N_a - 1}q^{N_h + 1}),
    \end{align*}$$
 
-At time $t_1$, the number of transactions approcving the honest trasnactionis $W(t_1) - 1$. Therefore, we can have $N_h = w - W(t_1) + 1$ transactions from $t_1$ to $t_2$. The successful attack probability can be expressed as 
-$$P\{\text{attack succeed}\} =  1 - \sum_{N_a = 0}^{w - W(t_1) + 1} C_{N_a + w - W(t_1)}^{w - W(t_1)}(p^{w - W(t_1) + 1}q^{N_a} - p^{N_a - 1}q^{w - W(t_1) + 2}), p > q,$$
-where $W(t_1)$ is the cumulative weight of the honest transaction at the end of adaption period. And $p = \frac{(n-1)\lambda'}{(n-1)\lambda' + \mu'}, q = \frac{\mu'}{(n-1)\lambda' + \mu'}$, where $\lambda' = \min\{\lambda, \frac{m}{nh}\},
-   \mu' = \min\{\mu, \frac{m}{nh}\}$.
+At time $t_1$, the number of transactions approcving the honest trasnactionis $W(t_1) - 1$. Therefore, we can have $N_h = N_{cw} - W(t_1) + 1$ transactions from $t_1$ to $t_2$. The successful attack probability can be expressed as 
+$$P_S(p, q, ) =  1 - \sum_{N_a = 0}^{w - W(t_1) + 1} C_{N_a + w - W(t_1)}^{w - W(t_1)}(p^{w - W(t_1) + 1}q^{N_a} - p^{N_a - 1}q^{w - W(t_1) + 2}), $$
+where $W(t_1)$ is the cumulative weight of the honest transaction at the end of adaption period. Propabilitis with which honest nodes and an attacker issue a new transaction are   $p = \frac{(n-1)\lambda'}{(n-1)\lambda' + \mu'}, q = \frac{\mu'}{(n-1)\lambda' + \mu'}$, where $\lambda' = \min\{\lambda, \frac{m}{nh}\}, \mu' = \min\{\mu, \frac{m}{nh}\}$, and $p > q$.
 
-We use $\lambda, \mu$ representing the transaction arrival rates of honest nodes and attacker to model double-spending attack. Besides, our analysis depends on wireless communication protocol, we use $m$ presenting the number of broadcast trasnactions in wireless blockchain network.
-
-<font color = red>计算出双花攻击成功的概率</font>
+We use $\lambda, \mu$ representing the transaction arrival rates of honest nodes and an attacker to model double-spending attack. Besides, our analysis depends on wireless communication protocol, we use $m$ presenting the number of broadcast trasnactions in wireless blockchain network.
 
 
-### Security Goal
+#### Successful Probabilities of Different Attack Strategies
 
-### Probability of a Successful Attack
+In this subsection, we analyse the the impacts of different attack strategies for successful attack probability.
+<font color = red>12月23日再继续</font>
+A. Advance Attack Strategy
 
+B. Adaptive Attack Strategy
 
 
 ## Simulation and Discussion
