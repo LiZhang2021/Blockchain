@@ -115,8 +115,17 @@ The path probability of a walker is defined as follows: let $W_x$ be the cumulat
 $$P_{xy} = \frac{\exp(-\alpha(W_x - W_y))}{\sum_{z:\text{z approves x}}\exp(-\alpha(W_x - W_z))}$$
 where $\alpha$ is a parameter that determines the amplification degree of the difference of between $W_x$ and $W_y$.
 
-Based on the MCMC selection algorithm, random walker would like to choose the paththat with higher cumulative weight transaction. For example, If $W_{y_1} > W_{y_2}$, then $W_x - W_{y_1} < W_x - W_{y_2}$, i.e. $P_{xy_1} \gg P_{xy_2}$. Therefore, the tip with higher cumulative weight is easier to be chosen. 
- <font color = red>上面一小段部分可以作为一个命题，之后给出相应的证明</font>
+Based on the MCMC selection algorithm, random walker would like to choose the path that with higher cumulative weight transaction. 
+**Propotion:** Let $x$ be the transaction whose weight in interval $N_{cw}, 2N_{cw}]$, where $N_{cw}$ is the cumulative weight confirmation threshold. Let $W_{h}$ and $W_{c}$ be the weights of an honest trasnaction $h$ and corresponding conflict transaction $c$ respectively. If $W_c > W_h$, then the walker will choose the path from $x$ to $c$ with high probability. 
+**Proof:** The path probabilities from $x$ to $h$ and from $x$ to $c$ can be computed respectively:
+$$\left\{
+  \begin{aligned}
+   P_{xh} = \frac{\exp(-\alpha(W_x - W_h))}{\sum_{z:\text{z approves x}}\exp(-\alpha(W_x - W_z))},\\
+   P_{xc} = \frac{\exp(-\alpha(W_x - W_c))}{\sum_{z:\text{z approves x}}\exp(-\alpha(W_x - W_z))}.
+    \end{aligned}
+  \right.$$ 
+When $W_c > W_h$, we have $W_x - W_c < W_x - W_h$. Thus, we can obtain that $P_{xc} \gg P_{xh}$, which means the path from $x$ to $c$ will be chosen by the random walker with high probability.
+
  #### Attack Process Analysis
 
 The double-spending attack process of  DAG-based blockchain in wireless network is different to that in perfect network. As shown in Fig. 3, the typical way that a malicious attacker lunches double spending attack is to construct a fraudulent chain in blockchain system, the main procedures are shown as follows:
@@ -131,7 +140,7 @@ The double-spending attack process of  DAG-based blockchain in wireless network 
 
 ![](pics/Figure_3.png)
 
-Before providing goods or services to the attacker, honest nodes will choose to wait for some transactions on the honest subtangle  to ensure the cumulative weight of honest transaction reaches threshold $N_{cw}$, which includes the own weight of the honest transaction. The attacker will publish the parasite chain if his/her attack was successful. Therefore, we can define two necessary conditions for double-spending attack as follows:
+Before providing goods or services to the attacker, honest nodes will choose to wait for some transactions on the honest subtangle  to ensure the cumulative weight of honest transaction reaches threshold $N_{cw}$, which includes the own weight of the honest transaction. The attacker will publish the parasite chain if its attack was successful. Therefore, we can define two necessary conditions for double-spending attack as follows:
 <font color = blue>
 **Definition** A double-spending attack succeeds if the follwing two conditions satisfied:
 * **Transaction Confirmation:** the cumulative weight of the honest transaction is greater than or equal to $N_{cw}$, and
@@ -140,9 +149,9 @@ Before providing goods or services to the attacker, honest nodes will choose to 
 <font color = red>12月22日再继续分析</font>
 #### The Attack Probability
 
-We can describe the abovementioned attack process as a Markov chain. In this paper, we fit the transaction arrival process of each node using Poisson Process[5] with transaction arrival rate $\lambda$(transactions per second). Recall that assuming there are $n-1$ honest nodes and one attacker. 
+We can describe the abovementioned attack process as a Markov chain. In this paper, we fit the transaction arrival process of each node using Poisson Process[5] with transaction arrival rate $\lambda$(transactions per second). 
 
-We denote the weight of the honest subtangle and fraudulent subtangle by two independent Poisson counting processes[6]. <font color = red>Let $H(t)$ be the weight of honest subtangle with transaction arrival rate $\lambda$ at time $t$ and $A(t)$ be the weight of fraudulent subtangle with transaction arrival rate $\mu$ at time $t$. Assume that attacker launches double-spending attack at time $t = 0$ at which both subtangles have same initial state, i.e. $H(0) = A(0) = 1$. </font>
+We denote the weight of the honest subtangle and fraudulent subtangle by two independent Poisson counting processes[6]. Let $H(t)$ be the weight of honest subtangle with transaction arrival rate $\lambda$ at time $t$ and $A(t)$ be the weight of fraudulent subtangle with transaction arrival rate $\mu$ at time $t$. Assume that attacker broadcasts an honest trasnaction at time $t_0$, and launches double-spending attack at time $t_1$. We assume that the states of these two subtangles should satisfy $H(t_1) = A(t_1) = 1$. In this case, the two subtangles have common profix before DAG-based blockchain forking occurs. The difference between $H(t)$ and $A(t)$ in a discrete-time can be represented as a random walk.
 
 Due to the characteristics of CSMA/CA, the time interval between two new transactions should be $nh$, where $n$ is the number of nodes and $h$ is the transimission delay of a packet under wireless blockchain network. Recall that we assume there are $n-1$ honest nodes and $1$ attacker in a one-hop wireless blockchain network, the arrival rates of new trasnactions on a honest node and a malicious attacker shold be 
 $$\left\{
@@ -159,11 +168,13 @@ $$\left\{
     \end{aligned}
   \right.$$ 
 
-The attacker can take control of the DAG-based blockchain as soon as it create a fraudulent subtangle heavier than the valid one. When discussing the successfull probability of double-spending attack, we should consider two scenarios:
+The attacker can take control of the DAG-based blockchain as soon as it create a fraudulent subtangle heavier than the honest one. When discussing the successfull probability of double-spending attack, we should consider two scenarios:
 * When confirming the honest transaction, the weight of the fraudulent subtangle is greater than that of the honest subtangle. In this case, attacker will publish the  fraudulent subtangle, which indicates attacker launches double-spending attack successfully;
-* When confirming the honest transaction,  the weight of the fraudulent subtangle is smaller than or equal to that of the honest subtangle. In this case,instead of publishing the fraudulent subtangle immediately, attacker will catch up the difference between thw two subtangle. Once the weight of the fraudulent subtangle is greater than that of the honest subtangle, attacker will reveal its subtangle to ensure attack successfully.
+* When confirming the honest transaction,  the weight of the fraudulent subtangle is smaller than or equal to that of the honest subtangle. In this case,instead of publishing the fraudulent subtangle immediately, attacker will catch up the difference between thw two subtangle. Once the weight of the fraudulent subtangle is greater than that of the honest subtangle, attacker will reveal its subtangle to ensure attack successfully.  
 
- Let $N_h, N_a$ be the number of transactions issued by honest nodes and attacker frome time $t_1$ to time $t_2$. Because the number of trasnactions that issued by attacker follows negative binomial distribution, the propability mass function of $N_a$ is 
+Assume that the time slot is sufficiently small that no two new transactions from the attacker and honest nodes can arrive simultaneously. Let $N_h, N_a$ be the number of transactions issued by honest nodes and attacker from time $t_1$ to time $t_2$. The number of transactions issued by attacker in interval $[t_1, t_2]$ can be regarded as a random process obying negative binomial distribution[]. 
+
+Because the number of trasnactions that issued by attacker follows negative binomial distribution, the propability mass function of $N_a$ is 
 
 $$P\{N_a = n\} = C_{n + N_h - 1}^{N_h - 1}p^{N_h}q^n.$$ 
 
@@ -211,3 +222,4 @@ We use $\lambda, \mu$ representing the transaction arrival rates of honest nodes
 https://www.iota.org/research/academic-papers.
 [5] R. G. Gallager, "Discrete Stochastic Processes". Kluwer Academic Publishers, 1996.
 [6] A. Papoulis and S. U. Pillai, “Random walks and other applications,” in Probability, Random Variables and Stochastic Processes, 4th edition., Boston, Mass.: McGraw-Hill Europe, 2002.
+[7] 
