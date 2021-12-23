@@ -207,7 +207,7 @@ $$\begin{align*}
    \end{align*}$$
 
 At time $t_1$, the number of transactions approcving the honest transaction is $0$. Therefore, we can have $N_h = N_{cw} - 1$ transactions from $t_1$ to $t_2$. The successful attack probability can be expressed as 
-$$P_S(p, q, ) =  1 - \sum_{N_a = 0}^{N_{cw} - 1} C_{N_a + N_{cw} - 1}^{N_a}(p^{N_{cw} - 1}q^{N_a} - p^{N_a - 1}q^{N_{cw}}).$$ 
+$$P_S(p, q, N_{cw}) =  1 - \sum_{N_a = 0}^{N_{cw} - 1} C_{N_a + N_{cw} - 2}^{N_a}(p^{N_{cw} - 1}q^{N_a} - p^{N_a - 1}q^{N_{cw}}).$$ 
 
 Propabilitis with which honest nodes and an attacker issue a new transaction are   $p = \frac{(n-1)\lambda'}{(n-1)\lambda' + \mu'}, q = \frac{\mu'}{(n-1)\lambda' + \mu'}$, where $\lambda' = \min\{\lambda, \frac{m}{nh}\}, \mu' = \min\{\mu, \frac{m}{nh}\}$, and $p > q$.
 
@@ -220,15 +220,35 @@ In this subsection, we analyse the the impacts of different attack strategies fo
 <font color = red>12月23日再继续</font>
 A. Advance Attack Strategy
 
-To enhance the successful probability of double-spending attack, an attaker 
+To enhance the successful probability of double-spending attack, an attaker would like to builds a fraudulent subtangle on erliar transactions that will be approved by some other transactions before issuing a target honest transaction. The  number of transactions from the start of the honest subtangle to the target transaction is denoted as $N_s$. Thus, at time $t_2$, the attacker should issue at least $N_{cw} + N_s$ transactions to succeed. Otherwise, to ensure attack successful, the attacker have to catch up $N_{cw} + N_s - N_a$ transactions. The catch-up function in this strategy should be given by
+$$C_a(p, q, N_s, N_{cw}, N_a) = \left\{
+  \begin{aligned}
+   1, & & p \leq q,\\
+    (\frac{q}{p})^{N_{cw} + N_s - N_a}, & & p > q, 
+    \end{aligned}
+  \right.$$ 
 
+Therefore, when the attacker constructs a fraudulent subtangle on earlier trasnaction, the probability of a successful attack is giwen by 
+$$P_S(p, q, N_s, N_{cw}) =  1 - \sum_{N_a = 0}^{N_s + N_{cw}} C_{N_a + N_s + N_{cw} - 1}^{N_a}(p^{N_s  + N_{cw}}q^{N_a} - p^{N_a - 1}q^{N_s  + N_{cw} + 1}).$$ 
+
+Propabilitis with which honest nodes and an attacker issue a new transaction are   $p = \frac{(n-1)\lambda'}{(n-1)\lambda' + \mu'}, q = \frac{\mu'}{(n-1)\lambda' + \mu'}$, where $\lambda' = \min\{\lambda, \frac{m}{nh}\}, \mu' = \min\{\mu, \frac{m}{nh}\}$, and $p > q$.
 
 B. Adaptive Attack Strategy
 
+In Tangle, each node who wants to issue a transaction requires compute a result for a puzzle to meet the target that a  hash value which begin with a specified number of zero bits announced by system. An attacker may give up attacking to avoid too much waste of computational power if the successful attack probability is small. There is an adaptive attack strategy that can improve the probability of a successful attack.
+
+Assume that an attacker builds fraudulent subtangle  on earlier transaction. In this case, attacker will observed the difference between the honest subtangle and its own in time interval from the start of attack to the first time that target honest transaction appears in DAG-based blockchain. The attacker decides whether to continue launch attack base the the observation. Let $N_{h1}, N_{a1}$ be the number of transactions issued by honest nodes anf attacker in interval $[t_1, t_0]$ respectively. Let  $N_{h2}, N_{a2}$ be the number of transactions issued by honest nodes anf attacker in interval $[t_0, t_2]$ respectively. If $N_{a1} \geq N_{h1}$ at time $t_0$, attacker will continue to attack. Otherwise, the attacker doest not continue with the fraudulent subtangle. Instead, it launches attack on transaction  that directly approved by the target transaction.
+
+**Proposition:** An attacker launches double-spending attack at time $t_1$, and the target honest transaction is issued at time $t_0$, $t_1 < t_0$. IWhen the attacker observes that the honest subtangle has $N_{s}$ transaction in interval $[t_1, t_0]$, the probability of a successful attack umer $N_{cw}-$ confirmeation transaction validation is given by
+$P_S(p, q, N_s, N_{cw}) =  \sum_{N_{a1} = N_s}^{\infty}\sum_{N_{a2} = 0}^{\infty} P(p,q,N_s, N_{a1})\cdot P(p, q, N_{a2}, N_{cw}-1)a_{(N_s + N_{cw} - 1) - (N_{a1} + N_{a2})} + \sum_{N_{a1} = 0}^{N_s}\sum_{N_{a1} = 0}^{\infty} P(p,q,N_s, N_{a1})\cdot P(p, q, N_{a2}, N_{cw}-1)a_{(N_{cw} - 1 - N_{a2})},$
+
+where $ P(p,q,N_s, N_{a1})$ is the probability that number of transactions in the fraudulent and honest subtangle are $N_{a1}$ and $N_s$ at time $t_0$ respectively, $ P(p,q,N_{cw} - 1, N_{a2})$ is the probability that number of transactions in the fraudulent and honest subtangle are $N_{a1}$ and $N_s$ in interval$[t_0, t_2]$ respectively, and $a_g$ is the successful attack probability when the fraudulent subtangle is $g$ transaction behind the honest subtangle. Propabilitis with which honest nodes and an attacker issue a new transaction are   $p = \frac{(n-1)\lambda'}{(n-1)\lambda' + \mu'}, q = \frac{\mu'}{(n-1)\lambda' + \mu'}$, where $\lambda' = \min\{\lambda, \frac{m}{nh}\}, \mu' = \min\{\mu, \frac{m}{nh}\}$, and $p > q$.
+
+**Proof:** 
 
 ## Simulation and Discussion
 
-
+##
 
 ## Conclusion
 
