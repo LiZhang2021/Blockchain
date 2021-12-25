@@ -7,11 +7,11 @@
 
 As a emerging technology that provides trustworthy in a decentralized manner without any third party, blockchain has received great attention from academia and industry. Blockchain first appears as the foundation of the famous cryptocurrency Bitcoin [7]. Ethereum [8] with smart contract indicates a promising progress in blockchain applications. Various applications of blockchain technology have appeared, such as Tendermint [9], HyperLedger fabric [10], etc. Our daily lives have been changed greatly with the development and applications of blockchain technology. Due to the characteristics of decentralization, security, interoperation, and trustwarth, blockchain has shown a great potential to be used in the Internet of Thing(IoT) ecosystems, such as smart vehicles[], smart home[], supply chain[], healthcare[] etc. 
 
-Consensus protocol is the core of blockchain-enabled IoT system, which ensures all new block (or transaction) can be efficiently and securely inserted into the main chain by the network connected nodes. Bacuase IoT systems are resource-limited and large scale, the consensus algorithm designed for IoT system should be resource efficiency, low cost and provide high transaction throughput. PoW and PoS are two most common consensus mechanisms used in existing blockchain with "single chain" structure. This structure will limit the transaction throughput and increase consensus delay, because forking is illegal in theses blockchain. Blockchain with direct acyclic graph (DAG) structure allow forking to ensure new transaction can be inserted as soon as possible. 
+Consensus protocol is the core of blockchain-enabled IoT system, which ensures all new block (or transaction) can be inserted into the main chain by the network connected nodes efficiently and securely. Due to the resources limitation and large scale of  IoT systems, the consensus algorithm designed for IoT system should be resource efficiency, low cost and provide high transaction throughput. PoW and PoS are two most common consensus mechanisms used in existing blockchain with "single chain" structure. Because of the illegal of forking, this structure will limit the transaction throughput and increase consensus delay. Blockchain with direct acyclic graph (DAG) structure allows forking to ensure new transaction can be inserted as soon as possible. This architecture may cause “double-spending” in traditional consensus process of single chain blockchain system[]. DAG-based blockchain adopts some effective approaches(Markov Chain Monte Carlo algorithm [] and virtual voting algorithm []) to dicrease the successful probability of double-spending attack[]. 
 
-<font color = Green>介绍双花攻击</font>
+<font color = Green>介绍双花攻击的研究现状</font>
 
-<font color = Green>介绍之前基于无线网络的区块链系统，考虑当前的难点和痛点</font>
+Double-spending attack aims to spend a cryptocurrency twice to obtain much more goods or services. A number of previous works have explored the double-spending attacks on Bitcoin blockchain. S. Nakamoto[7] proposed the problem of double-spending attack for the first time in the Bitcoin system.  
 
 
 <font color = Green>介绍基于这些情况， 我们做了哪些工作。本文的主要贡献有哪些。</font>
@@ -227,7 +227,7 @@ We use $\lambda, \mu$ representing the transaction arrival rates of honest nodes
 #### Successful Probabilities of Different Attack Strategies
 
 In this subsection, we analyse the the impacts of different attack strategies for successful attack probability.
-<font color = red>12月23日再继续</font>
+
 A. Advance Attack Strategy
 
 To enhance the successful probability of double-spending attack, an attaker would like to builds a fraudulent subtangle on erliar transactions that will be approved by some other transactions before issuing a target honest transaction. The  number of transactions from the start of the honest subtangle to the target transaction is denoted as $N_s$. Thus, at time $t_2$, the attacker should issue at least $N_{cw} + N_s$ transactions to succeed. Otherwise, to ensure attack successful, the attacker have to catch up $N_{cw} + N_s - N_a$ transactions. The catch-up function in this strategy should be given by
@@ -259,7 +259,7 @@ where $ P(p,q,N_s, N_{a1})$ is the probability that number of transactions in th
 ##  Discussion
 
 In this section, we illuatrate the impact of CSMA/CA on the security of DA_based blockchain in wireless scenario. 
-
+<font color = red>12月25日再继续</font>
 ### Impact of the Number of Confirmation  Weight
 
 ### Impact of the Successful Attack Probability of  Attacker
