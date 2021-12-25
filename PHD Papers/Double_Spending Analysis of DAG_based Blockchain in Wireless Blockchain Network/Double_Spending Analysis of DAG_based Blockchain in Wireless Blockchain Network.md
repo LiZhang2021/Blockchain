@@ -5,6 +5,16 @@
 
 ## Introduction 
 
+As a emerging technology that provides trustworthy in a decentralized manner without any third party, blockchain has received great attention from academia and industry. Blockchain first appears as the foundation of the famous cryptocurrency Bitcoin [7]. Ethereum [8] with smart contract indicates a promising progress in blockchain applications. Various applications of blockchain technology have appeared, such as Tendermint [9], HyperLedger fabric [10], etc. Our daily lives have been changed greatly with the development and applications of blockchain technology. Due to the characteristics of decentralization, security, interoperation, and trustwarth, blockchain has shown a great potential to be used in the Internet of Thing(IoT) ecosystems, such as smart vehicles[], smart home[], supply chain[], healthcare[] etc. 
+
+Consensus protocol is the core of blockchain-enabled IoT system, which ensures all new block (or transaction) can be efficiently and securely inserted into the main chain by the network connected nodes. Bacuase IoT systems are resource-limited and large scale, the consensus algorithm designed for IoT system should be resource efficiency, low cost and provide high transaction throughput. PoW and PoS are two most common consensus mechanisms used in existing blockchain with "single chain" structure. This structure will limit the transaction throughput and increase consensus delay, because forking is illegal in theses blockchain. Blockchain with direct acyclic graph (DAG) structure allow forking to ensure new transaction can be inserted as soon as possible. 
+
+<font color = Green>介绍双花攻击</font>
+
+<font color = Green>介绍之前基于无线网络的区块链系统，考虑当前的难点和痛点</font>
+
+
+<font color = Green>介绍基于这些情况， 我们做了哪些工作。本文的主要贡献有哪些。</font>
 
 ## Preliminaries
 
@@ -246,9 +256,17 @@ where $ P(p,q,N_s, N_{a1})$ is the probability that number of transactions in th
 
 **Proof:** 
 
-## Simulation and Discussion
+##  Discussion
 
-##
+In this section, we illuatrate the impact of CSMA/CA on the security of DA_based blockchain in wireless scenario. 
+
+### Impact of the Number of Confirmation  Weight
+
+### Impact of the Successful Attack Probability of  Attacker
+
+### Adopt Attack Strategy  in Different Load Ragimes
+
+
 
 ## Conclusion
 
@@ -263,4 +281,7 @@ where $ P(p,q,N_s, N_{a1})$ is the probability that number of transactions in th
 https://www.iota.org/research/academic-papers.
 [5] R. G. Gallager, "Discrete Stochastic Processes". Kluwer Academic Publishers, 1996.
 [6] A. Papoulis and S. U. Pillai, “Random walks and other applications,” in Probability, Random Variables and Stochastic Processes, 4th edition., Boston, Mass.: McGraw-Hill Europe, 2002.
-[7] 
+[7] S. Nakamoto. Bitcoin: A Peer-to-Peer Electronic Cash System. https://bitcoin.org/bitcoin.pdf, 2008.
+[8]	G. Wood. Ethereum: A Secure Decentralized Generalized Transaction Ledger. Ethereum Project Yellow Paper, vol. 151, pp. 1-32, 2014.
+
+
