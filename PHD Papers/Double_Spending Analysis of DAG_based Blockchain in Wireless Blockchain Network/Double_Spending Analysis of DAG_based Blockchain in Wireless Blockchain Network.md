@@ -5,16 +5,16 @@
 
 ## Introduction 
 
-As a emerging technology that provides trustworthy in a decentralized manner without any third party, blockchain has received great attention from academia and industry. Blockchain first appears as the foundation of the famous cryptocurrency Bitcoin [7]. Ethereum [8] with smart contract indicates a promising progress in blockchain applications. Various applications of blockchain technology have appeared, such as Tendermint [9], HyperLedger fabric [10], etc. Our daily lives have been changed greatly with the development and applications of blockchain technology. Due to the characteristics of decentralization, security, interoperation, and trustwarth, blockchain has shown a great potential to be used in the Internet of Thing(IoT) ecosystems, such as smart vehicles[], smart home[], supply chain[], healthcare[] etc. 
+As an emerging technology that provides trustworthy in a decentralized manner without any third party, blockchain has received great attention from academia and industry. Blockchain first appears as the foundation of the famous cryptocurrency Bitcoin [7].  Various applications of blockchain technology have appeared, such as Ethereum [8], Tendermint [11], HyperLedger fabric [12], etc. Due to the characteristics of decentralization, security, interoperation, and trustwarth, blockchain has shown a great potential to be used in the Internet of Thing(IoT) ecosystems, such as smart vehicles[], supply chain[9], healthcare[10] etc. . At earlier time, blockchain systems are designed in stable wired communication environment and running in advanced devices.  However, these blockchain systems may not suit for high dynamic wireless connected IoT, which consists of  massive low-power wireless devices. Wireless network is vulnerable due to wireless channel fading and openness, which pose a bottleneck on the blockchain system performance and security.
 
-Consensus protocol is the core of blockchain-enabled IoT system, which ensures all new block (or transaction) can be inserted into the main chain by the network connected nodes efficiently and securely. Due to the resources limitation and large scale of  IoT systems, the consensus algorithm designed for IoT system should be resource efficiency, low cost and provide high transaction throughput. PoW and PoS are two most common consensus mechanisms used in existing blockchain with "single chain" structure. Because of the illegal of forking, this structure will limit the transaction throughput and increase consensus delay. Blockchain with direct acyclic graph (DAG) structure allows forking to ensure new transaction can be inserted as soon as possible. This architecture may cause “double-spending” in traditional consensus process of single chain blockchain system[]. DAG-based blockchain adopts some effective approaches(Markov Chain Monte Carlo algorithm [] and virtual voting algorithm []) to dicrease the successful probability of double-spending attack[]. 
+Consensus protocol is the core of blockchain system, which ensures all new blocks (or transactions) can be inserted into the main chain by the network connected nodes efficiently and securely. Proof of Work(PoS) [7] and Proof of Stake(PoS)[13] are two widely used consensus protocols in existing blockchain with "single chain" structure.  Because of the illegal of forking, this structure will limit the transaction throughput and increase consensus delay. Resources limited and large-scale IoT systems require consensus protocols satisfy resource efficiency, low cost and high transaction throughput. Blockchain with direct acyclic graph (DAG) structure allows forking to ensure new transaction can be inserted as soon as possible. DAG-based blockchain allows multiple transactions to be processed simultaneously, transaction confirmation delay can be increased significantly. Transaction per second of DAG-based blockchain can be very large if transaction arrival rate is big enough.
 
-<font color = Green>介绍双花攻击的研究现状</font>
+Double-spending attack is  a classical problem in blockchain system. S. Nakamoto [7] and M. Rosenfeld [14] have shown that attacker with high computing power can have higher successful probability of double-spending attack in PoW-based blockchain.DAG-based blockchain adopts some effective approaches(Markov Chain Monte Carlo algorithm [4]) to dicrease the successful probability of double-spending attack. When analyzing the double-spending attack, many works assume that communications among the nodes are perfect without any throughput and delay constraints in the traditional blockchain systems. In wireless connected blockchain networks,  the assumption is hard to meet because of unstable channel quality, interference, limited resource, and various network topologies etc. Thus, communication plays an important role in wireless blockchain system, and its impact on the system is far from perfect to be ignored. For example, the broadcast in CSMA/CA comminication protocol should be competitive, which resulting longer transaction confirmation delay and reducing the wireless blockchain security. There is small number of analytical attack models considered the wireless communication impacts on the double-spending successful attack probability of DAG-based blockchain security. Moreover, There is also no detailed analyzation that successful double-spending attack probability of different attack strategies in wireless blockchain network. 
 
-Double-spending attack aims to spend a cryptocurrency twice to obtain much more goods or services. A number of previous works have explored the double-spending attacks on Bitcoin blockchain. S. Nakamoto[7] proposed the problem of double-spending attack for the first time in the Bitcoin system.  
+Those observations inspire us analyze the double-spending attack in DAG-based blockchain with CSMA/CA communication protocol. The main contributions of this article are shown as follows.
+* We first introduce a system model for wireless blockchain system with CSMA/CA communication protocol;
+* We descibe a double-spending attack model, and 
 
-
-<font color = Green>介绍基于这些情况， 我们做了哪些工作。本文的主要贡献有哪些。</font>
 
 ## Preliminaries
 
@@ -283,5 +283,16 @@ https://www.iota.org/research/academic-papers.
 [6] A. Papoulis and S. U. Pillai, “Random walks and other applications,” in Probability, Random Variables and Stochastic Processes, 4th edition., Boston, Mass.: McGraw-Hill Europe, 2002.
 [7] S. Nakamoto. Bitcoin: A Peer-to-Peer Electronic Cash System. https://bitcoin.org/bitcoin.pdf, 2008.
 [8]	G. Wood. Ethereum: A Secure Decentralized Generalized Transaction Ledger. Ethereum Project Yellow Paper, vol. 151, pp. 1-32, 2014.
+[9] G. Perboli, S. Musso, and M. Rosano, “Blockchain in Logistics and Supply Chain: A lean approach for designing real-world use cases,” IEEE Access, vol. 6, pp. 62018–62028, Oct. 2018.
+[10] X. Liang et al., “Integrating Blockchain for Data Sharing and Collaboration in Mobile Healthcare Applications,” in Proc. IEEE 28th Annu. Int. Symp.,
+Oct. 2017, pp. 1–5.
+[11] J. Kwon. Tendermint: Consensus without mining. Draft v. 0.6, fall, 1(11), 2014.
+[12]	E. Androulaki, A. Barger,  and et al. Hyperledger Fabric: A Distributed Operating System for Permissioned Blockchains. In Proceedings of the Thirteenth EuroSys Conference, page 1–15. ACM, Apr 2018.
+[13]	S. King, S. Nadal. PPCoin: Peer-to-peer crypto-currency with proof-of-stake. https://archive.org/details/PPCoinPaper (2012).
+[14] M. Rosenfeld, “Analysis of Hashrate-Based Double Spending,” ArXiv14022009 Cs, Feb. 2014, Accessed: Oct. 11, 2018. [Online]. Available: http://arxiv.org/abs/1402.2009.
+
+
+
+
 
 
