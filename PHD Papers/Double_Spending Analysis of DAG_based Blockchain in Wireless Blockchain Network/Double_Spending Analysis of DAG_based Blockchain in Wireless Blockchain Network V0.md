@@ -13,8 +13,10 @@ Double-spending attack is  a classical problem in blockchain system. S. Nakamoto
 
 Those observations inspire us analyze the double-spending attack in DAG-based blockchain with CSMA/CA communication protocol. The main contributions of this article are shown as follows.
 * We first introduce a system model for wireless blockchain system with CSMA/CA communication protocol;
-* We descibe a double-spending attack model, and 
+* We theoretically analyze the double-spending attack in a DAG-based blockchain under wireless network. In order to study the impact of communication protocol, we investigate the probability of successful double-spending attack by a stochastic model.
+* We introduce different double-spending attack strategies in a DAG-based blockchain, and derive the expression of the successful double-spending attack probabilities that adopt different attack strategies in different network load of wireless blockchain network. 
 
+In the rest of this paper is organized as follows. Section 2 introduce some basic concepts of wireless network and DAG-based blockchain. The system model and double-spending attack model introduced in Section 3. InSection 4, we theoretically analyze a double-spending attack process in a DAG-based blockchain under wireless network,  and derive the expression of successful attack probability. Section 5 introduces different double-spending attack strategies in different network load regimes of wireless blockchain network. Simulations result show the impact of CSMA/CA on the double-spending attack of wireless blockchain network in Section 6. Section 7 gives the conclusion of of this paper.
 
 ## Preliminaries
 
@@ -115,7 +117,35 @@ In Tangle[4], S.Popov proposed two approaches for double-spending attack, one is
 
 #### MCMC Selection Algorithm
 
-In order to analyze attack process, we should know the details of MCMC tips selection algorithm.  Recall the assumption that all own weights are equal to $1$, the cumulative weight of a tip should be $1$. In Tangle, the standard of main chain is cumuleitive computational power. The greater the cumulative computational power of the link approved by tips, the more worthy the link to be approved. The idea is to place some random walkers on transactions with at least $2$ cumulative weight of Tangle, and let them randomly walk towards tips. The seceltion algorithm is shown in the following way:
+In order to analyze attack process, we should know the details of MCMC tips selection algorithm.  Recall the assumption that all own weights are equal to $1$, the cumulative weight of a tip should be $1$. In Tangle, the standard of main chain is cumuleitive computational power. The greater the cumulative computational power of the link approved by tips, the more worthy the link to be approved. The idea is to place some random walkers on transactions with at least $2$ cumulative weight of Tangle, and let them randomly walk towards tips. The MCMC algorithm is given as follows.
+
+<pre class="pseudocode" lineNumber="true">
+\begin{algorithm}
+\caption{ Markov Chain Monte Carlo Selection Algorithm}
+\begin{algorithmic}
+\PROCEDURE{MCMC}{$BC_{DAG}, N_{cw}, C_N$}
+  \STATE $C_N = []$
+  \IF{$len(C_N) \leq N$}
+     \STATE $walker = $\CALL{RandomSelect}{$BC_{DAG}$}
+      \IF{$N_{cw} \leq CW_{walker} \leq 2N_{cw}$}
+        \STATE $C_N = C_N \cup \{walker\}$ 
+    \ENDIF
+  \ENDIF
+  \STATE $WTT = []$
+  \WHILE{$len(WTT) < 2$}
+    \STATE walker = \CALL{FirstToTip}{$BC_{DAG}, C_N$}
+    \STATE path = \CALL{PathToTips}{$BC_{DAG},walker$}
+    \IF{$len(path) > \alpha$}
+      \STATE $WTT = WTT\cup\{walker\}$
+    \ENDIF
+  \ENDWHILE
+\ENDPROCEDURE
+\end{algorithmic}
+\end{algorithm}
+</pre>
+
+
+The seceltion algorithm is shown in the following way:
 * Consider all transactions whose cumulative weight on the interval $[N_{cw}, 2N_{cw}]$, where $N_{cw}$ is the cumulative weight confirmation threshold;
 *  Randomly select $N$ transactions from the transactions in step 1 as walkers. 
 *  They will perform independent discrete-time random walks "from transaction with high cumulative weight towards the tips", meaning that a path from $x$ to $y$ is possible if and only if $y$ approves $x$;
@@ -136,7 +166,7 @@ $$\left\{
   \right.$$ 
 When $W_c > W_h$, we have $W_x - W_c < W_x - W_h$. Thus, we can obtain that $P_{xc} \gg P_{xh}$, which means the path from $x$ to $c$ will be chosen by the random walker with high probability.
 
- #### Attack Process Analysis
+ ## Attack Process Analysis
 
 The double-spending attack process of  DAG-based blockchain in wireless network is different to that in perfect network. As shown in Fig. 3, the typical way that a malicious attacker lunches double spending attack is to construct a fraudulent chain in blockchain system, the main procedures are shown as follows:
 <font color = purple>
@@ -157,7 +187,7 @@ Before providing goods or services to the attacker, honest nodes will choose to 
 * **Success in competition:** the number of tips in fraudulend subtangle is greater than that in honest subtangle.
 </font>
 
-#### The Attack Probability
+### The Attack Probability
 
 We can describe the abovementioned attack process as a Markov chain. In this paper, we fit the transaction arrival process of each node using Poisson Process[5] with transaction arrival rate $\lambda$(transactions per second). 
 
@@ -224,11 +254,11 @@ Propabilitis with which honest nodes and an attacker issue a new transaction are
 We use $\lambda, \mu$ representing the transaction arrival rates of honest nodes and an attacker to model double-spending attack. Besides, our analysis depends on wireless communication protocol, we use $m$ presenting the number of broadcast trasnactions in wireless blockchain network.
 
 
-#### Successful Probabilities of Different Attack Strategies
+## Successful Probabilities of Different Attack Strategies
 
 In this subsection, we analyse the the impacts of different attack strategies for successful attack probability.
 
-A. Advance Attack Strategy
+### Advance Attack Strategy
 
 To enhance the successful probability of double-spending attack, an attaker would like to builds a fraudulent subtangle on erliar transactions that will be approved by some other transactions before issuing a target honest transaction. The  number of transactions from the start of the honest subtangle to the target transaction is denoted as $N_s$. Thus, at time $t_2$, the attacker should issue at least $N_{cw} + N_s$ transactions to succeed. Otherwise, to ensure attack successful, the attacker have to catch up $N_{cw} + N_s - N_a$ transactions. The catch-up function in this strategy should be given by
 $$C_a(p, q, N_s, N_{cw}, N_a) = \left\{
@@ -243,7 +273,7 @@ $$P_S(p, q, N_s, N_{cw}) =  1 - \sum_{N_a = 0}^{N_s + N_{cw}} C_{N_a + N_s + N_{
 
 Propabilitis with which honest nodes and an attacker issue a new transaction are   $p = \frac{(n-1)\lambda'}{(n-1)\lambda' + \mu'}, q = \frac{\mu'}{(n-1)\lambda' + \mu'}$, where $\lambda' = \min\{\lambda, \frac{m}{nh}\}, \mu' = \min\{\mu, \frac{m}{nh}\}$, and $p > q$.
 
-B. Adaptive Attack Strategy
+### Adaptive Attack Strategy
 
 In Tangle, each node who wants to issue a transaction requires compute a result for a puzzle to meet the target that a  hash value which begin with a specified number of zero bits announced by system. An attacker may give up attacking to avoid too much waste of computational power if the successful attack probability is small. There is an adaptive attack strategy that can improve the probability of a successful attack.
 
@@ -256,10 +286,12 @@ where $ P(p,q,N_s, N_{a1})$ is the probability that number of transactions in th
 
 **Proof:** 
 
-##  Discussion
+### Attack Strategy in Different Network Load
+
+##  Simulation and Discussion
 
 In this section, we illuatrate the impact of CSMA/CA on the security of DA_based blockchain in wireless scenario. 
-<font color = red>12月25日再继续</font>
+<font color = red>12月29日再继续</font>
 ### Impact of the Number of Confirmation  Weight
 
 ### Impact of the Successful Attack Probability of  Attacker
