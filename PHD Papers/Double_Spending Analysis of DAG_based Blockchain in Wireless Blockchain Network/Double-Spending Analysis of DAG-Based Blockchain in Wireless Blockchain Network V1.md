@@ -133,7 +133,7 @@ An attacker launches double-spending attack should be earlier than the end of ad
 * **Success in competition:** the number of tips in fraudulend subtangle is greater than that in honest subtangle.
 </font>
 
-### MCMC Selection Algorithm in Tangle
+### MCMC Selection Algorithm
 
 In Tangle[4], S.Popov proposed two approaches for double-spending attack, one is large weight attack and another is parasite chain attack. Due to the assumption that all transactions have same own weight, we only consider the parasite chain attack that an attacker privately builds a fraudulent subtangle which occasionally references the main tangle to gain higher cumulative weight. 
 
@@ -279,7 +279,7 @@ where $ P(p,q,N_s, N_{a1})$ is the probability that number of transactions in th
 ##  Simulation and Discussion
 
 In this section, we conduct several experiments to evaluate the the impact of CSMA/CA protocol on the double-spending attack od DAG-based blockchain in wireless network. 
-<font color = red>12月29日再继续</font>
+
 
 ### Impact of the Number of Confirmation  Weight
 
@@ -292,9 +292,17 @@ In this section, we conduct several experiments to evaluate the the impact of CS
 
 ## Related Work
 
-Recently, several DAG-based consensus protocols have been proposed. Byteball[] TrustNote[] Hashgraph[]
+Recent years, several DAG-based blockchain systems have been proposed. 
+<font color = red>12月30日再继续</font>
+Tangle[4] allows different braunches to merge into the main chain. As a decentralized system, Byteball[17] allows tamper proof storage of arbitrary data. The difference is that transaction fee is collected by other nodes who later confirm the newly added unit in this consensus compared to Tangle. TrustNote[18] Hashgraph[19] is proposed for replicated state machines with guaranteed Byzantine fault tolerance. The participants build distributed ledger for recording each transaction based on a gossip protocol, and Byzantine agreement to be achieved through virtual voting.
 
-There are some work study double-spending attak.
+There are some works study the double-spending attak of blockchain in perfect network. S.Nakamoto[7] used  Poisson distribution method and Gambler's Ruin theorem to study tht double-spending attack in Bitcoin. Since Poisson distribution method requiring a constant time interval, it may be not rational to adot it to study attack process while the block generation time of Bitcoin is variable. Thus, M. Rosendeld[14] proposed to use negative binomial distribution method insted of Poisson distribution method. This method is only relying on the randomness of block(or transaction) confirmation delay. Besides, G. Ramezan etal.[15] illustrated that a strong adaptive strategic double-spending attack can improve the successful attack probability on blockchain. The mentioned double-spending analyses are based on PoW algorithm. a quantitative analysis for double-spending in DAG-based blockchain is studied by Y.Li etal[16].
+
+The above work have not  have not fully considered the limitation of the underlying wireless network, and no research focuses on the different  analysis on the perspectives of blockchain system and wireless network simultaneously.
+
+
+
+
 
 ## References
 
@@ -314,8 +322,11 @@ Oct. 2017, pp. 1–5.
 [12]	E. Androulaki, A. Barger,  and et al. Hyperledger Fabric: A Distributed Operating System for Permissioned Blockchains. In Proceedings of the Thirteenth EuroSys Conference, page 1–15. ACM, Apr 2018.
 [13]	S. King, S. Nadal. PPCoin: Peer-to-peer crypto-currency with proof-of-stake. https://archive.org/details/PPCoinPaper (2012).
 [14] M. Rosenfeld, “Analysis of Hashrate-Based Double Spending,” ArXiv14022009 Cs, Feb. 2014, Accessed: Oct. 11, 2018. [Online]. Available: http://arxiv.org/abs/1402.2009.
-
-
+[15] G. Ramezan, C. Leung and Z. Jane Wang, "A Strong Adaptive, Strategic Double-Spending Attack on Blockchains," 2018 IEEE International Conference on Internet of Things (iThings) and IEEE Green Computing and Communications (GreenCom) and IEEE Cyber, Physical and Social Computing (CPSCom) and IEEE Smart Data (SmartData), 2018, pp. 1219-1227, doi: 10.1109/Cybermatics_2018.2018.00216.
+[16] Y. Li et al., "Direct Acyclic Graph-Based Ledger for Internet of Things: Performance and Security Analysis," in IEEE/ACM Transactions on Networking, vol. 28, no. 4, pp. 1643-1656, Aug. 2020, doi: 10.1109/TNET.2020.2991994.
+[17] A. Churyumov, " Byteball: A Decentralized System for Storage and Transfer of Value". [Online]. Available: https://byteball.org/Byteball.pdf, 2016.
+[18] White Paper, "TrustNode: Fast, Scalabile, Developer Friendly," [Online]. Available:https://github.com/trustnote/document, 2018.
+[19] L. Baird, "The Swirlds Hashgraph Consensus Algorithm: Fair, Fast, Byzantine Fault Tolerance". [Online]. Available: http://www.swirlds.com/developer-resources/whitepapers/, 2016.
 
 
 
