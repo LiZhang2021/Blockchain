@@ -9,12 +9,14 @@ As an emerging technology that provides trustworthy in a decentralized manner wi
 
 Consensus protocol is the core of blockchain system, which ensures all new blocks (or transactions) can be inserted into the main chain by the network connected nodes efficiently and securely. Proof of Work(PoS) [7] and Proof of Stake(PoS)[13] are two widely used consensus protocols in existing blockchain with "single chain" structure.  Because of the illegal of forking, this structure will limit the transaction throughput and increase consensus delay. Resources limited and large-scale IoT systems require consensus protocols satisfy resource efficiency, low cost and high transaction throughput. Blockchain with direct acyclic graph (DAG) structure allows forking to ensure new transaction can be inserted as soon as possible. DAG-based blockchain allows multiple transactions to be processed simultaneously, transaction confirmation delay can be increased significantly. Transaction per second of DAG-based blockchain can be very large if transaction arrival rate is big enough.
 
+Wilreless Network
+
 Double-spending attack is  a classical problem in blockchain system. S. Nakamoto [7] and M. Rosenfeld [14] have shown that attacker with high computing power can have higher successful probability of double-spending attack in PoW-based blockchain.DAG-based blockchain adopts some effective approaches(Markov Chain Monte Carlo algorithm [4]) to dicrease the successful probability of double-spending attack. When analyzing the double-spending attack, many works assume that communications among the nodes are perfect without any throughput and delay constraints in the traditional blockchain systems. In wireless connected blockchain networks,  the assumption is hard to meet because of unstable channel quality, interference, limited resource, and various network topologies etc. Thus, communication plays an important role in wireless blockchain system, and its impact on the system is far from perfect to be ignored. For example, the broadcast in CSMA/CA comminication protocol should be competitive, which resulting longer transaction confirmation delay and reducing the wireless blockchain security. There is small number of analytical attack models considered the wireless communication impacts on the double-spending successful attack probability of DAG-based blockchain security. Moreover, There is also no detailed analyzation that successful double-spending attack probability of different attack strategies in wireless blockchain network. 
 
 Those observations inspire us analyze the double-spending attack in DAG-based blockchain with CSMA/CA communication protocol. The main contributions of this article are shown as follows.
 * We first introduce a system model for wireless blockchain system with CSMA/CA communication protocol;
 * We theoretically analyze the double-spending attack in a DAG-based blockchain under wireless network. In order to study the impact of communication protocol, we investigate the probability of successful double-spending attack by a stochastic model.
-* We introduce different double-spending attack strategies in a DAG-based blockchain, and derive the expression of the successful double-spending attack probabilities that adopt different attack strategies in wireless blockchain network. 
+* We introduce different double-spending attack strategies in a DAG-based blockchain, and derive the format of the successful double-spending attack probabilities that adopt different attack strategies in wireless blockchain network. 
 
 In the rest of this paper is organized as follows. Section 2 introduce some basic concepts of wireless network and DAG-based blockchain. The system model and double-spending attack model introduced in Section 3. InSection 4, we theoretically analyze a double-spending attack process in a DAG-based blockchain under wireless network,  and derive the expression of successful attack probabilities of different double-spending attack strategies in wireless blockchain network. Simulations result show the impact of CSMA/CA on the double-spending attack of wireless blockchain network in Section 5. Section 6 gives the conclusion of of this paper.
 
@@ -292,16 +294,14 @@ In this section, we conduct several experiments to evaluate the the impact of CS
 
 ## Related Work
 
-Recent years, several DAG-based blockchain systems have been proposed. 
-<font color = red>12月30日再继续</font>
-Tangle[4] allows different braunches to merge into the main chain. As a decentralized system, Byteball[17] allows tamper proof storage of arbitrary data. The difference is that transaction fee is collected by other nodes who later confirm the newly added unit in this consensus compared to Tangle. TrustNote[18] Hashgraph[19] is proposed for replicated state machines with guaranteed Byzantine fault tolerance. The participants build distributed ledger for recording each transaction based on a gossip protocol, and Byzantine agreement to be achieved through virtual voting.
+Recent years, several DAG-based blockchain systems have been proposed. In 2015, S. D. Lerner[20] first proposed the concept of DAG-Chain, and upgraded the DAG network from block-based level to transaction-based level. IOAT emerged as a new blockchain system in 2015. The innivation of this system is Tangle[4], which is a newly designed distributed ledger with DAG-based structure. In IOAT, there is no concept of block, mining, miners and transaction fee. In 2016, Byteball allows	tamper	proof	storage	of	arbitrary	data. Compared to Tangle, the difference of Byteball is that transaction fee is collected by other nodes who later confirm the newly added unit in this consensus. TrustNote[18] is a minable public DAG-ledger with an innovative, two-tier consensus mechanism. It supports high concurrency transactions, benefits from fast transaction confirmation. Besides, TrustNote  advanced declarative Smart Contracts. Hashgraph[19] is proposed for replicated state machines with guaranteed Byzantine fault tolerance. The participants build distributed ledger for recording each transaction based on a gossip protocol, and Byzantine agreement to be achieved through virtual voting.
 
 There are some works study the double-spending attak of blockchain in perfect network. S.Nakamoto[7] used  Poisson distribution method and Gambler's Ruin theorem to study tht double-spending attack in Bitcoin. Since Poisson distribution method requiring a constant time interval, it may be not rational to adot it to study attack process while the block generation time of Bitcoin is variable. Thus, M. Rosendeld[14] proposed to use negative binomial distribution method insted of Poisson distribution method. This method is only relying on the randomness of block(or transaction) confirmation delay. Besides, G. Ramezan etal.[15] illustrated that a strong adaptive strategic double-spending attack can improve the successful attack probability on blockchain. The mentioned double-spending analyses are based on PoW algorithm. a quantitative analysis for double-spending in DAG-based blockchain is studied by Y.Li etal[16].
 
 The above work have not  have not fully considered the limitation of the underlying wireless network, and no research focuses on the different  analysis on the perspectives of blockchain system and wireless network simultaneously.
 
 
-
+<font color = red>12月30日再继续</font>
 
 
 ## References
@@ -327,7 +327,7 @@ Oct. 2017, pp. 1–5.
 [17] A. Churyumov, " Byteball: A Decentralized System for Storage and Transfer of Value". [Online]. Available: https://byteball.org/Byteball.pdf, 2016.
 [18] White Paper, "TrustNode: Fast, Scalabile, Developer Friendly," [Online]. Available:https://github.com/trustnote/document, 2018.
 [19] L. Baird, "The Swirlds Hashgraph Consensus Algorithm: Fair, Fast, Byzantine Fault Tolerance". [Online]. Available: http://www.swirlds.com/developer-resources/whitepapers/, 2016.
-
+[20] S. D. Lerner, "DagCoin: A, Cryptocurrency without Blocks," [Online]. Available: https://bitslog.com/2015/09/11/dagcoin/, 2015.
 
 
 
