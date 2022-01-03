@@ -57,13 +57,47 @@ Storage units connected into a DAG,units are werticesand parent-child links are 
 ![](pics2/Figure_2.png)
 
 The basic concepts of Byteball are represented as follows:
-* **Parent Unit & Child Unit:**
-* **Directly Include:**
-* **Indirectly Include:**
-* **Tops Unit:**
-* **Genesis Unit:**
+* **Parent Unit & Child Unit:** If unit A directly arrows unit B, i.e. the path length from unit A to unit B is $1$, then the unit B is the parent of unit A and unit A is unit B's child.
+* **Directly Include:** If unit A is the children of unit B, then unit A directly include or verify unit B.
+* **Indirectly Include:** If the length of the path that from unit A to unit B is bigger than $1$, then the unit A indirectly include or verify unit B.
+* **Top Unit:** A unit is defined as top unit if the unit has no child unit. We also call it  unverified unit.
+* **Genesis Unit:** The unit that constructed by the genesis transaction is called genesis unit. The genesis unit has no parent unit. The index of genesis unit is $0$
 
+Every new child unit in	the	DAG	confirms its parents, all parents of parents. Thus, it is impossible to revise a unit without cooperating with all its childrens or stealing their private keys. Once a unit is broadcast	into	the	network,and	other	users	start	building their units on	top of it	(referencing it	as parent),	the	number	of	secondary	revisions required to	edit this	unit hence	grows	like	a	snowball.
 
+###  The Main Chain Selection Rule
+
+In Byteball, the optimal paths from any tipits to the genesis unit are denoted as **Candidate Main Chain**. The main chain is constructed by selecting the "best parent" unit from all parent units of a child unit. The main chain built starting from a specific unit will never change as new unit are added. If nodes star from another tip, they will build another main chain. Different candidate main chains will intersection in some intersection points, which is called **stable point**. (the worst case is that chains are intersection in genesis unit). For all candidate main chain, the path from stable point to genesis unit is exactly same, which is called **stable main chain**. Stable main chain is a deterministic path, and transition from a candidate path to a stable path is a process that gradually changes from uncertain to certain. Thus, the main chain can establish a total order beyween two conflicting nonserial units. The genesis unit has index $0$, the next main chain unit that is a child of genensis has index$1$ and the main chain index can be assigned so on. For units that not lie on the main chain, we can find a main chain indes where this units is first included(directly or indirectly).
+![](./pics2/Figure_3.png)
+
+Witnesses is the participants of network that are non-anonymous, high reputable and mainning the network healthy. Nodes select the best parent unit of a new incoming unit according to the level of unit and witnessed.
+* **Unit Level:** the level of a unit is defined as the path length from the unit to genesis unit;
+* **Witnessed Level:** Backtracking along the main chain from current unit, and count the number of different witnesses in the path until encountering enough witnesses. Witnessed level is the unit level of the backtracking stop position.
+
+The best parent unit selection strategy consists of the following three components:
+* When selecting the best parent unit, a parent unit with higher witness level is the best parent unit;
+* If the witness level is the same, the one with smaller unit level is regared as the best parent unit;
+* If both witness level and unit level are the same, the one with lower unit hash value should be selected as the best parent unit.
+
+In the mentioned strategy, witnesses become the historical perspective of a unit. Each unit can maintian its own witnesses list, and can also refer other units' witnesses list through witnesslistunit function. Ifthe witnesslist of  two units differs at most $1$ mutation, then the two units is **Unit Compatible**.
+
+**The "near-conformity rule":** best parent must be selected among those parents whose witness list differs from child's by at most $1$ mutation. That is, the best parent unit can only be selected from the parents unit that compatible with the current unit to ensure the continuity of the historical perspective. Incompatible parent units are still recognized, but they cannot be the best parent unit. In particular, if a new unit is incompatible with all tips, the parent of the unit should be selected from the parent units of the previous level. 
+
+Byteball requires	that the number of witnesses	is exactly $12$.
+* it is sufficiently large to protect against the occasional failures of a few witnesses (they might prove dishonest, or be hacked,	or go offline for a long time, or lose their private keys and go offline forever);
+* it is sufficiently small that humans can keep track of all the witnesses to know who is who and change the list when necessary;
+* the	one allowed	mutation is sufficiently small compared with the $11$ unchanged witnesses.
+
+### Consensus Process
+
+The main procedures of consensus process in Byteball are as follows:
+<font color = purple>
+* A witness composed a new unit, and select parents from candidates according to the best parent selction algorithm. 
+* The witness sign the new unit, pays a fee equal to the size of added date in bytes, and broadcasts the unit to others;
+* Other nodes receive the new unit and check it to confirm legality. If the new unit is legal on the digital signature, then it will become a new tip and wait for the direct or indirect approvement for confirmation. 
+</font>
+
+The main chain inroduces a total order of all unit in DAG-based blockchain. All new incoming units would like to be the units of his current main chain. The current main chain	may	be different at different nodes because	they may see different sets of childless units.	
 
 ## TrustNode
 
