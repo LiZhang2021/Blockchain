@@ -179,14 +179,37 @@ Hashgraph is a distributed ledger technology that has been described as an alter
 
 The hashgraph consensus algorithm is based on the following core concepts.
 * **Transactions:** any member can create a signed transaction at any time. All members get a copy of it, and the community reaches Byzantine agreement on the order of those transactions.
+* **Gossip:** information spreads by each member repeatedly choosing another member at random, and telling them all they know
 * **Hashgraph:** a data structure that records who gossiped to whom, and in what order.
+* **Event：** an even includes transactions, two events, timestamp,signature, and communicates with each other by Gossip protocol.
+* **See:** If some event $w$ has even$x$ as ancestor, then the event $w$ see event $x$.
+* **Strongly See:** An event $x$ can strongly see event $y$ if $x$ can see $y$ and there is a set $S$ of events by more than \frac{2}{3} of the members such that $x$ can see every event in $S$, and every event in $S$ can see $y$.
+* **Ancestor & Self-ancestor:** An event $x$ is defined to be an ancestor of event $y$ if $x$ is $y$, or a parent of $y$, or a parent of a parent of $y$, and so on. It is also a self-ancestor of $y$ if $x$ is $y$, or a self-parent of $y$, or a self-parent of a self-parent of $y$ and so on.
+* **Round Created Number:** The round created number (or round) of an event $x$ is defined to be $r + i$, where $r$ is the maximum round number of the parents of $x$ (or 1 if it has no parents), and $i$ is defined to be $1$ if $x$ can strongly see more than $\frac{2n}{3}$ witnesses in round $r$ (or 0 if it can’t).
+*  **Round Received Number:** The round received number (or round received) of an event $x$ is defined to be the first round where all unique famous witnesses are descendants of $x$.
+*  **Witness:** A witness is the first event created by a member in a round.
+*  **Famous witnesses:**A famous witness is a witness that has been decided to be famous by the community. Informally, the community tends to decide that a witness is famous if many members see it by the start of the next round. A **unique famous witness** is a famous witness that does not have the same creator as any other famous witness created in the same round. In the absence of forking, each famous witness is also a unique famous witness.
 
 
-
-
-
-
-
+![](./pics2/Figure_4.png)
 
 ### Consensus Process
 
+The main procedures of consensus process in Hashgraph are as follows:
+<font color = purple>
+* Node A randomly syncs to node B, and sends all events it knowns that B doesn't. 
+* Node B creates a new event to record these events with valid signatures containing valid hashes of parent events it has.
+* After gossip sync, the node calls three procedures to determined the consensus order for as many events as possible:
+  * Divide Rounds: All known events are then divided into rounds. And node B should assign the round numberto all known events.
+  * Decide Fame: Then the first events by each member in each round (the “witnesses”) are decided as being famous or not, through purely local Byzantine agreement with virtual voting. 
+  * Find Order: The total order is found on those events for which enough information is available.First, the received round is calculated. Then, the received time is calculated. Then the consensus order is calculated. 
+</font>
+
+Hashgraph共识算法通过一个拜占庭一致性协议来对事件进行虚拟排序。该算法不需要选举出主节点来对事务进行排序。排序也只需要极小的通信开销，比较适用于在联盟链环境中参与共识的节点数量较多的场景。但是对于公链的场景就有些不足。因为该算法需要知道全网的总数量，且从算法上来看至少需要两轮才能确定当前轮中事务的顺序，算法的效率和事务处理的时效性也许不高。共识算法主要是两个部分：
+* 首先随机选择一个节点同步，创建一个新的事务。
+* 随后对于当前的所有事务进行排序：
+  * 对所有事务划分轮数。每轮中创建的第一个事务就是一个见证； 
+  * 随后我们执行局部的拜占庭一致性算法判定当前轮的每个见证是否是著名见证。主要是通过后一轮中的见证来判定当前一轮的见证是否是著名见证。如果后一轮的见证能够“看见”前一轮的那个见证，则会投票为“是”，否则否票为“否”。一旦有超过 $\frac{2n}{3}$ 个都能“看见”前一轮的那个见证，则说明那个见证是著名见证。随后在后两轮中对于投票进行计数。如果后两轮的某个见证能够“强看见“后一轮中的见证，则计数，否则不进行计数。根据最终计数结果来判定最终当前轮的见证是否是著名的。
+  * 对于不是见证的事件，是没有投票的。大多数见证者在第一轮投票中几乎一致地投票被宣布是著名的，所以大多数选举不会储蓄较长时间。在确定了当前轮中每个见证的声望之后，就可以为一组的事件找到接收轮和共识时间戳。对于能够被当前轮中每个著名见证看见的事务，其接收轮就是当前轮数。随后在各节点上找到一个事件既是该事件的后代又是当前轮著名见证的祖先。取出这些事件的时间戳，选择中位数时间戳作为该事件的共识时间戳。
+  
+最终对当前轮所有达成共识的事件（收到了接收轮数的事件）按照所有节点都同意的顺序排序，这个顺序就是共识顺序。这个排序就是通过它们的round received来进行的。通过中位数时间戳来打破联系
