@@ -33,16 +33,6 @@ As shown in Fig.1, Tangle uses directed acyclic graph topology to record transac
 
 ![](./pics2/Figure_1.png)
 
-### Consensus Process
-
-In IOTA, all nodes reach agreement on system by DAG consensus that requires  new transaction sent by nodes verify the previous transaction by referencing them. The main procedures of consensus process in Tangle are as follows:
-<font color = purple>
-* A node finds a nonce to solve a cryptographic puzzle to meet the difficult target.
-* The node creates a new transaction which will select two nonconflicting tips to approve by MCMC tips selction algorithm;
-* The node uses its private key to sign this new transaction, and broadcasts the transaction to others;
-* Other nodes receive the new transaction and check it to confirm legality. If the new transaction is legal on the digital signature and nonce, then it will become a new tip and wait for the direct or indirect approvement for confirmation. 
-</font>
-
 ### Transaction Confirmation
 
 Before issuing a transaction, nodes should compute a nonce, which makes the solution of a cryptographic puzzle meet the difficult target.  A transaction is confirmed when its cumulative weight is large enough. In this case, the consensus mechanism of Tangle is PoW cumulative weight. The weigh accumulating process of an issued transaction is divided into two stages: reveal stage and weight accumulating stage.
@@ -52,6 +42,16 @@ Before issuing a transaction, nodes should compute a nonce, which makes the solu
 </font>
 
 After issuing a transaction, node will choose two issued transactions(unverified transactions-Tips) randomly by MCMC selection algorithm. Then, the node will verify the legality of the two selected transaction.  Node will check the correctness of transaction signature, the proof of work of transaction, and whether it conflicts with transactions directly or indirectly connected to it. If there is a conflict, the old transaction is reselected; otherwise, the verification is passed. After transactionverification, the new generated transaction will reference these verified transaction. 
+
+### DAG Consensus Process
+
+In IOTA, all nodes reach agreement on system by DAG consensus that requires  new transaction sent by nodes verify the previous transaction by referencing them. The main procedures of consensus process in Tangle are as follows:
+<font color = purple>
+* A node finds a nonce to solve a cryptographic puzzle to meet the difficult target.
+* The node creates a new transaction which will select two nonconflicting tips to approve by MCMC tips selction algorithm;
+* The node uses its private key to sign this new transaction, and broadcasts the transaction to others;
+* Other nodes receive the new transaction and check it to confirm legality. If the new transaction is legal on the digital signature and nonce, then it will become a new tip and wait for the direct or indirect approvement for confirmation. 
+</font>
 
 ### Double-Spending Scenarios
 
@@ -68,12 +68,12 @@ Besids, all these results are based on high-frequency trading.  Since low-freque
  
 ## Byteball
 
-Byteball is a decentralized	system that allows	tamper proof storage of	arbitrary data. Storage	units are linked to	each other such that each	storage	unit includes one or more hashes of	earlier	storage	units, which serves	both to	confirm	earlier	units and establish	their partial order. The set	of links among units forms a DAG (directed acyclic graph). 
+Byteball is a decentralized	system that allows	tamper proof storage of	arbitrary data. Storage	units are linked to	each other such that each	storage	unit includes one or more hashes of	earlier	storage	units, which serves	both to	confirm	earlier	units and establish	their partial order. The set	of links among units forms a DAG (directed acyclic graph). To store data in the global decentralized database we have to pay a fee in internal currency called bytes, and the amount we pay is equal to the size of data you are going to store(including all headers, signatures, etc). 
 
 ### Basic Concepts
 
-The Storage unit in Byteball include **unit message, signature and parent unit**
-* **Unit Message:** A unit message includes more than one data package.
+The storage unit in Byteball include **unit message, signature and parent unit**
+* **Unit Message:** A unit message includes more than one data package(i.e. Message).
 * **Signature:** A unit contains the signatures of users who creates the unit.
 * **Parent Unit:** A unit contains the hash of referenced previous units.
 
@@ -81,35 +81,48 @@ Byteball adopts UXTO transaction model.  The	message	contains:
 * An array of outputs: one or more addresses that receive the bytes	and	the amounts	they receive.
 * An array of inputs: one or more references to	previous outputs that are used to fund the transfer. These are outputs that were sent to the author address(es)	in the past and are	not yet	spent.
 
-Storage units connected into a DAG,units are werticesand parent-child links are the edges of the DAG. Soecially, the arrows of the DAG are from child unit to parent unit. 
+Storage units connected into a DAG, units are werticesand parent-child links are the edges of the DAG. Soecially, the arrows of the DAG are from child unit to parent unit. 
 ![](pics2/Figure_2.png)
 
 The basic concepts of Byteball are represented as follows:
+
 * **Parent Unit & Child Unit:** If unit A directly arrows unit B, i.e. the path length from unit A to unit B is $1$, then the unit B is the parent of unit A and unit A is unit B's child.
 * **Directly Include:** If unit A is the children of unit B, then unit A directly include or verify unit B.
 * **Indirectly Include:** If the length of the path that from unit A to unit B is bigger than $1$, then the unit A indirectly include or verify unit B.
-* **Top Unit:** A unit is defined as top unit if the unit has no child unit. We also call it  unverified unit.
-* **Genesis Unit:** The unit that constructed by the genesis transaction is called genesis unit. The genesis unit has no parent unit. The index of genesis unit is $0$
+* **Tip Unit:** A unit is defined as tip unit if the unit has no child unit. We also call it  unverified unit.
+* **Genesis Unit:** The unit that constructed by the genesis transaction is called genesis unit. The genesis unit has no parent unit. The index of genesis unit is $0$.
+* **Witeness:** Witnesses are reputable users with real-world identities, and users who name them expect them to never try to double-spend.
+* **Main Chain:** The main chain is constructed by selecting the "*best parent*" unit from all parent units of a child unit. The main chain built starting from a specific unit, and will never change as new unit are added. 
+* **Stable Point:** Different candidate main chains will intersection in some intersection points, which is called **stable point**. The first stable point is genesis unit.
+*  **Stable Main Chain:** For all candidate main chain, the path from stable point to genesis unit is exactly same, which is called **stable main chain**. 
+* **Unit Level:** the level of a unit is defined as the path length from the unit to genesis unit;
+* **Witnessed Level:** Backtracking along the main chain from current unit, and count the number of different witnesses in the path until encountering enough witnesses. Witnessed level is the unit level of the backtracking stop position.
+* **The "near-conformity rule":** best parent must be selected among those parents whose witness list differs from child's by at most $1$ mutation. That is, the best parent unit can only be selected from the parents unit that compatible with the current unit to ensure the continuity of the historical perspective. Incompatible parent units are still recognized, but they cannot be the best parent unit. In particular, if a new unit is incompatible with all tips, the parent of the unit should be selected from the parent units of the previous level. 
 
-Every new child unit in	the	DAG	confirms its parents, all parents of parents. Thus, it is impossible to revise a unit without cooperating with all its childrens or stealing their private keys. Once a unit is broadcast	into	the	network,and	other	users	start	building their units on	top of it	(referencing it	as parent),	the	number	of	secondary	revisions required to	edit this	unit hence	grows	like	a	snowball.
+### Double-Spending Problem
+
+If a node wants to spend the same output twice, there are two possible situations:
+* There is partial order between the two conflict units., i.e. one unit directly or indirectly includes the other unit. In this case, it is significant that we can safely reject the later unit.
+* There is no partial order between the two units. Byteball will accept both, and then establish a total order between the units, when they are buried deep enough under newer units(usually set a threshold). The unit that appears earlier on the total order is regarded as valid, while the other one is invalid. 
+
+![](./pics3/Figure_2.png)
+
+If someone posts two units such that there is no partial order between them (nonserial	units),	the two units are treated like double-spends even if they don’t try to spend the same output. Such nonserials are handled as described in situation 2 above.
+
 
 ###  The Main Chain Selection Rule
 
-In Byteball, the optimal paths from any tipits to the genesis unit are denoted as **Candidate Main Chain**. The main chain is constructed by selecting the "best parent" unit from all parent units of a child unit. The main chain built starting from a specific unit will never change as new unit are added. If nodes star from another tip, they will build another main chain. Different candidate main chains will intersection in some intersection points, which is called **stable point**. (the worst case is that chains are intersection in genesis unit). For all candidate main chain, the path from stable point to genesis unit is exactly same, which is called **stable main chain**. Stable main chain is a deterministic path, and transition from a candidate path to a stable path is a process that gradually changes from uncertain to certain. Thus, the main chain can establish a total order beyween two conflicting nonserial units. The genesis unit has index $0$, the next main chain unit that is a child of genensis has index$1$ and the main chain index can be assigned so on. For units that not lie on the main chain, we can find a main chain indes where this units is first included(directly or indirectly).
+In normal way, nodes mostly like to select slightly less recent units as its new unit's parents. In this case, we can choose a single chain along parent-child links within the DAG, and relate all units to this chain. All the units will either directly lie on main chain, or be reachable from it by a ralatively small number of hops along the edges of the graph.
+
+In Byteball, the optimal paths from any tip its to the genesis unit are denoted as **Candidate Main Chain**. The main chain is constructed by selecting the "*best parent*" unit from all parent units of a child unit. The main chain built starting from a specific unit, and will never change as new unit are added. If nodes star from another tip, they will build another main chain. Different candidate main chains will intersection in some intersection points, which is called **stable point**. (the worst case is that chains are intersection in genesis unit). For all candidate main chain, the path from stable point to genesis unit is exactly same, which is called **stable main chain**. Stable main chain is a deterministic path, and transition from a candidate path to a stable path is a process that gradually changes from uncertain to certain. Thus, the main chain can establish a total order beyween two conflicting nonserial units. The genesis unit has index $0$, the next main chain unit that is a child of genensis has index$1$ and the main chain index can be assigned so on. For units that not lie on the main chain, we can find a main chain indes where this units is first included(directly or indirectly).
 ![](./pics2/Figure_3.png)
 
-Witnesses is the participants of network that are non-anonymous, high reputable and mainning the network healthy. Nodes select the best parent unit of a new incoming unit according to the level of unit and witnessed.
-* **Unit Level:** the level of a unit is defined as the path length from the unit to genesis unit;
-* **Witnessed Level:** Backtracking along the main chain from current unit, and count the number of different witnesses in the path until encountering enough witnesses. Witnessed level is the unit level of the backtracking stop position.
-
-The best parent unit selection strategy consists of the following three components:
-* When selecting the best parent unit, a parent unit with higher witness level is the best parent unit;
+Witnesses is the participants of network that are non-anonymous, high reputable and mainning the network healthy. Nodes select the best parent unit of a new incoming unit according to the level of unit and witnessed. The best parent unit selection strategy consists of the following three components:
+* When selecting the best parent unit, a parent unit with higher witnessed level is the best parent unit;
 * If the witness level is the same, the one with smaller unit level is regared as the best parent unit;
 * If both witness level and unit level are the same, the one with lower unit hash value should be selected as the best parent unit.
 
 In the mentioned strategy, witnesses become the historical perspective of a unit. Each unit can maintian its own witnesses list, and can also refer other units' witnesses list through witnesslistunit function. Ifthe witnesslist of  two units differs at most $1$ mutation, then the two units is **Unit Compatible**.
-
-**The "near-conformity rule":** best parent must be selected among those parents whose witness list differs from child's by at most $1$ mutation. That is, the best parent unit can only be selected from the parents unit that compatible with the current unit to ensure the continuity of the historical perspective. Incompatible parent units are still recognized, but they cannot be the best parent unit. In particular, if a new unit is incompatible with all tips, the parent of the unit should be selected from the parent units of the previous level. 
 
 Byteball requires	that the number of witnesses	is exactly $12$.
 * it is sufficiently large to protect against the occasional failures of a few witnesses (they might prove dishonest, or be hacked,	or go offline for a long time, or lose their private keys and go offline forever);
@@ -118,22 +131,28 @@ Byteball requires	that the number of witnesses	is exactly $12$.
 
 ### Consensus Process
 
+Byteball adopts DAG consensus and witnesses voting consensus to improve transaction throughput and reduce delay in transaction confirmation, thus effectively solving the problem of Excessive Bifurcation and double-spending. Every new child unit in	the	DAG	confirms its parents, all parents of parents. Thus, it is impossible to revise a unit without cooperating with all its childrens or stealing their private keys. Once a unit is broadcast	into	the	network,and	other	users	start	building their units on	top of it	(referencing it	as parent),	the	number	of	secondary	revisions required to	edit this	unit hence	grows	like	a	snowball.
+
+
 The main procedures of consensus process in Byteball are as follows:
 <font color = purple>
-* A witness composed a new unit, and select parents from candidates according to the best parent selction algorithm. 
-* The witness sign the new unit, pays a fee equal to the size of added date in bytes, and broadcasts the unit to others;
+* Before generating a new unit, a node(including general nodes anf witenesses) will choose its parent from candidates according to the best parent selction algorithm(main chain unit with higher witnessed level, lower unit level, and lower unit hash value ).
+* The node sign the new unit, pays a fee equal to the size of added date in bytes, and broadcasts the unit to others;
 * Other nodes receive the new unit and check it to confirm legality. If the new unit is legal on the digital signature, then it will become a new tip and wait for the direct or indirect approvement for confirmation. 
 </font>
 
-The main chain inroduces a total order of all unit in DAG-based blockchain. All new incoming units would like to be the units of his current main chain. The current main chain	may	be different at different nodes because	they may see different sets of childless units.	
+The main chain inroduces a total order of all unit in DAG-based blockchain. All new incoming units would like to be the units of his current main chain. The current main chain may be different at different nodes because they may see different sets of childless units. In order to establish total order of units in DAG, Byteball introduces witness, which can also compose a new unit, and select parents from candidates according to the best parent selction algorithm.  The reality of a candidate main chains one might travel along the main chain back in time and count the witness-authored units. According to 12 witnesses mechanism, nodes will stop travel if they had encountered the majority of witnesses. Then, nodes measure the length of path on the graph from the stopped unit to the genesis unit. The candidate main chains with greater witnessed level is considered more "real", and parent bearing this main chain is selected as best parent. If two units have same witnessed leve, unit with lower unit level will be the best parent unit. If many candidate parents have same witnessed level and unit level, the the unit with lower hash value wihh be the best parent. 
+
+Once we have a main chain, we can establish a total order on DAG. We first index the units that lie directly on the main chain. The genesis unit has index $0$, the index of next main chain unit should be increases by $1$, and so on we will assign indexes to units lie on main chain. For units that nit lie on main chain, we can find the index of an main chain unit that first directly or indirectly include these units. According the total order, we can sefely reject the unit with higher MCI when two nonserial conflicting units appear in DAG.
+![](./pics3/Figure_3.png)
 
 ## TrustNote
 
-TrustNote is a minable public DAG-ledger with an innovative, two-tier consensus mechanism designed for new applications. 
+TrustNote is a minable public DAG-ledger with an innovative, two-tier consensus mechanism(DAG Consensus and TrustME Consensus) designed for new applications. Its digital token is called “TTT”. TrustNote has a light architecture and intelligent contract system that supports lightweight application extensions and micro wallets.
 
 ### Basic Concepts
 
-In TrustNote, a transaction is viewed as a message. multiple messages can be combined in to a data block which is called **unit**, and a DAG is formed by inter-referenced units. In TustNote, each Unit must reference multiple previous Units, nodes do not require to *spend computing power and time* for solving consensus problem, nor need to wait for the *completion of strong inter-node data synchronization*.
+In TrustNote, a transaction is viewed as a message. Multiple messages can be combined in to a data block which is called **unit**, and a DAG is formed by inter-referenced units. In TustNote, each Unit must reference multiple previous Units, nodes do not require to *spend computing power and time* for solving consensus problem, nor need to wait for the *completion of strong inter-node data synchronization*.
 
 The basic concepts of Byteball are represented as follows:
 * **Unit:** a data structure which can contains many messages generated by the nodes including: Transactions messages, text messages and etc. A unit consists of multiple messages(transactions) of various types.
@@ -156,7 +175,11 @@ The basic concepts of Byteball are represented as follows:
 * **TrustME unit:** A unit used to determine the MC and its first message is a TrustME Coinbase message.
 
 * **Main Chain:**  A single chain along Child-Parent links within the DAG which is determined by applying the Parent Selection Algorithm recursively.
-* **MCI:** Main Chain Idex.
+* **MCI:** Main Chain Index.
+
+### Transaction Confirmation
+
+As new Units are created, each Node keeps track of its current MC, which will constantly change itself as new units arrive. However, certain parts of the MC that are old enough, will remain unchanged. When traveling back, all MCs will come to some point, this point and any previous Units are stable and won’t be changed by the arrival of new Units. Thus,  units referenced(directly or indirectly) by stable unit will be assigned determined main chain index and all transactions contained in theses unit will be confirmed.
 
 ### Consensus Process
 
@@ -164,31 +187,25 @@ TrustNote adopts a two-tier consensus mechanism comprising base consensus and Tr
 * **The based Consensus(DAG consensus)** requires new transaction Units sent by Nodes verify the previous units by referencing them. 
 * **The Attested consensus(TrustME consensus)** requires that the sequences of Non-TrustME Units be rigorously determined by TrustME Units generated by the Attestors. (TrustME-PoW scheme, TrustME-BA scheme)
 
-When a TrustME Unit becoming a stable Unit in the Main Chain, it could finally justify that an Attestor has contributed to TrustNote positively, and thus receive the Attestation reward. A transaction fee is divided and paid to:
+When a TrustME unit becoming a stable unit in the Main Chain, it could finally justify that an Attestor has contributed to TrustNote positively, and thus receive the Attestation reward. A transaction fee is divided and paid to:
 * The Node(s) who generate newer Unit and reference this Unit as Parent.
 * The Attestor who attested the Unit.
 
 If a Unit is referenced by multiple Child Units, the Node who sends the Child Unit with the smallest hash value will get the referencing fee. To qualifying the rewards, the Main Chain Index (MCI) of the Child Unit must equal or be slightly greater than its Parent’s MCI.
 
 The **best parent unit selection algorithm** is showed as below:
-1) Start from a unit.
-2) Selecting the parent unit with the highest Attestation level as its best parent unit.
-3) If there are multiple candidate units, the unit with the lowest unit level will be selected as the best parent unit;
-4) If there are still multiple candidate units, the unit with the smallest unit hash is the best parent.
+  * Selecting the parent unit with the highest Attestation level as its best parent unit.
+  * If there are multiple candidate units, the unit with the lowest unit level will be selected as the best parent unit;
+  * If there are still multiple candidate units, the unit with the smallest unit hash is the best parent.
 
 The main procedures of consensus process in TrustNote are as follows:
 <font color = purple>
-* A node issues a new unit, and select parents from candidates according to the best parent selction algorithm. 
+* A node issues a new unit, and select parents from candidates according to the best parent selction algorithm(find less recent main chain unit with higher Attestation level, lower unit level and the smallest unit hash value). 
 * The node signs the new unit, and broadcasts the unit to other nodes;
-* Other nodes main curretn main chain. when receiving the new unit, nodes will check it to confirm legality. If the new unit and its parent-child link is legal, then it will become a new tip and wait for the direct or indirect approvement for confirmation. 
-* TrustNote will select a small number of super nodes as Attestors using TrustME-PoW or TrustME-BA. These Attestors have the authority to send TrustME Units and are rewarded accordingly. Only when the TrustME Unit becomes the stable Unit on the MC, the corresponding attestation reward can be obtained. 
+* Other nodes main curretn main chain. when receiving the new unit, nodes will check it to confirm legality. If the new unit and its parent-child link is legal, then it will become a new tip and wait for the direct or indirect approvement for confirmation.
 </font>
 
-在获得新的单元时，每个节点会持续追踪自身的主链。不同节点各自的当前主链也许是不同的，因为他们可能看到不同的非稳定单元的集合。当新单元到达时，当前的主链会不断变化，但是当前主链足够老的那部分会保持不变。因此，未来所有的主链在回溯时最终都会汇聚到某个主链单元。这个主链单元及之前的所有的引用单元都是稳定的。因此，创世单元是一个最初的稳定点。若基于当前的非稳定单元集合构造一条当前主链，并且这条链上已有一些之前认定的稳定节点，随后沿着统一路径回溯。被这个稳定点所引用的单元将获得确定的MCI，包含在这些单元中的所有消息也将被确认。
-
-发布交易需要支付交易费用发。节点根据生成单元的字节数计算交易费用。交易费用分为60%的单元引用费和40%的公证费。引用费将被该单元的子单元获得；公证费将被累加到主链中MCI值最接近的公正单元所在共识轮的公正奖金池中。公正单元也需要支付交易非，计算方式与普通单元相同。
-
-为使 TrustNote 生态更加健壮，TrustNote设计了两种 TrustME 共识方案。TrustNote将在早期采用基于工作量证明（Proof of Work，PoW）的 TrustME 共识方案，该方案称为“TrustME-PoW”；未来，TrustNote 计划采用基于拜占庭协商（ByzantineAgreement，BA）的 TrustME 共识方案，该方案称为“TrustME-BA”。无论哪种方案，若超级节点参与共识并被选作公证节点，它将会获得 TTT 作为奖励。在 TrustME-PoW 中，超级节点通过证明自己的运算能力获得公证权，而在TrustME-BA 情况下，利用伪随机算法选择超级节点并赋予其公证权。无论哪种TrustME 共识方案，公证节点发出的公证单元都同样遵守单元引用规则，并且不会影响其它单元之间已经建立的引用关系。而只有在公证单元成为主链上的稳定单元后，才能最终证明某个公证节点做了有益于维护 TrustNote 的工作，并因此获得公证奖励。另外，两种 TrustME 共识机制都鼓励所有节点公平参与，相比中心化和弱中心化的方案更加公平、可信、安全。
+The double-spending problem in TrustNote is similar to that in Byteball. To solve double-spending problem, TrustNote will first try to find a Main Chain (MC) starting from Genesis Unit on the DAG and assign indexes to the Units that lie on the MC, the Genesis Unit’s index is 0, and so on. Second, for those Units that do not lied on the MC, define their indexes equal to the first MC Unit references this Unit. Eventually, every unit on the DAG has an index. If two units try to use the same output, we just need to compare the value of their indexes named Main Chain Index (MCI). The Unit with a smaller index is valid, the Unit with a larger index is invalid. Besides, the total order of TrustNote is ensured by TrustME-PoW consensus. TrustNote will select a small number of super nodes as Attestors using TrustME-PoW or TrustME-BA. These Attestors have the authority to send TrustME Units, which are similar to other nodes. Only when the TrustME Unit becomes the stable Unit on the MC, the corresponding attestation reward can be obtained, and it references units will be confirmed. 
 
 
 ## Hashgraph
@@ -201,38 +218,43 @@ The hashgraph consensus algorithm is based on the following core concepts.
 * **Transactions:** any member can create a signed transaction at any time. All members get a copy of it, and the community reaches Byzantine agreement on the order of those transactions.
 * **Gossip:** information spreads by each member repeatedly choosing another member at random, and telling them all they know
 * **Hashgraph:** a data structure that records who gossiped to whom, and in what order.
-* **Event：** an even includes transactions, two events, timestamp,signature, and communicates with each other by Gossip protocol.
+* **Event：** an even includes transactions, two events, timestamp, signature, and communicates with each other by Gossip protocol.
 * **See:** If some event $w$ has even$x$ as ancestor, then the event $w$ see event $x$.
 * **Strongly See:** An event $x$ can strongly see event $y$ if $x$ can see $y$ and there is a set $S$ of events by more than \frac{2}{3} of the members such that $x$ can see every event in $S$, and every event in $S$ can see $y$.
 * **Ancestor & Self-ancestor:** An event $x$ is defined to be an ancestor of event $y$ if $x$ is $y$, or a parent of $y$, or a parent of a parent of $y$, and so on. It is also a self-ancestor of $y$ if $x$ is $y$, or a self-parent of $y$, or a self-parent of a self-parent of $y$ and so on.
 * **Round Created Number:** The round created number (or round) of an event $x$ is defined to be $r + i$, where $r$ is the maximum round number of the parents of $x$ (or 1 if it has no parents), and $i$ is defined to be $1$ if $x$ can strongly see more than $\frac{2n}{3}$ witnesses in round $r$ (or 0 if it can’t).
 *  **Round Received Number:** The round received number (or round received) of an event $x$ is defined to be the first round where all unique famous witnesses are descendants of $x$.
-*  **Witness:** A witness is the first event created by a member in a round.
+*  **Witness:** A witness is the first event created by a member(node) in a round.
 * **Famous witnesses:** A famous witness is a witness that has been decided to be famous by the community. Informally, the community tends to decide that a witness is famous if many members see it by the start of the next round. A **unique famous witness** is a famous witness that does not have the same creator as any other famous witness created in the same round. In the absence of forking, each famous witness is also a unique famous witness.
 
-
 ![](./pics2/Figure_4.png)
+
+### Event Confirmation
+
+In Hashgraph, members votes according to "see" and "strongly see". An witness(the fir t event of a nodes in a round) is famous if it can be voted by majority witnesses of next round. Then, the withness of the following round will encount the votes. If the witness can strongly see supermajority witnesses of last round, then nodes achieve consensus on the famous witness. In this case, the witness and its ancestors can be confirmed.
+
+### Forking
+
+A node may cheat others by forking or creating two events from same parent event. In this case, the node could have two witnesses in a round. For this problem, Hashgraph use byzantine fault tolerance local vitual voting to ensure that even if an attacker tries to cheat by forking, the events that issued by attacker will still be unable to cause different nodes to decide on different orders.
+![](./pics3/Figure_4.png)
 
 ### Consensus Process
 
 The main procedures of consensus process in Hashgraph are as follows:
 <font color = purple>
-* Node A randomly syncs to node B, and sends all events it knowns that B doesn't. 
-* Node B creates a new event to record these events with valid signatures containing valid hashes of parent events it has.
+
+* Node repeatly syncs all known eventa to a random node.
+* A node who receives a sync will create a new event to record these events with valid signatures containing valid hashes of parent events it has. 
 * After gossip sync, the node calls three procedures to determined the consensus order for as many events as possible:
   * Divide Rounds: All known events are then divided into rounds. And node B should assign the round numberto all known events.
   * Decide Fame: Then the first events by each member in each round (the “witnesses”) are decided as being famous or not, through purely local Byzantine agreement with virtual voting. 
-  * Find Order: The total order is found on those events for which enough information is available.First, the received round is calculated. Then, the received time is calculated. Then the consensus order is calculated. 
+  * Find Order: The total order is found on those events for which enough information is available.
+    * the received round is calculated. Event has a received round of $r$ if that is the first round in which all the unique famous witnesses were descendants of it, and the fame of every witness is decided for rounds less than or equal to $r$.
+    * the received time is calculated. The received time for an even is the median of all the timestamps of events that is the descendant of the event and the self-ancestors of next round witnesses who can see the event.
+    * the consensus order is calculated. All events are sorted by their received round. If two events have the same received round, then they are sorted by their received time. If there are still ties, they are broken by simply sorting by signature, after the signature is whitened by XORing with the signatures of all the unique famous witnesses in the received round.
 </font>
 
-Hashgraph共识算法通过一个拜占庭一致性协议来对事件进行虚拟排序。该算法不需要选举出主节点来对事务进行排序。排序也只需要极小的通信开销，比较适用于在联盟链环境中参与共识的节点数量较多的场景。但是对于公链的场景就有些不足。因为该算法需要知道全网的总数量，且从算法上来看至少需要两轮才能确定当前轮中事务的顺序，算法的效率和事务处理的时效性也许不高。共识算法主要是两个部分：
-* 首先随机选择一个节点同步，创建一个新的事务。
-* 随后对于当前的所有事务进行排序：
-  * 对所有事务划分轮数。每轮中创建的第一个事务就是一个见证； 
-  * 随后我们执行局部的拜占庭一致性算法判定当前轮的每个见证是否是著名见证。主要是通过后一轮中的见证来判定当前一轮的见证是否是著名见证。如果后一轮的见证能够“看见”前一轮的那个见证，则会投票为“是”，否则否票为“否”。一旦有超过 $\frac{2n}{3}$ 个都能“看见”前一轮的那个见证，则说明那个见证是著名见证。随后在后两轮中对于投票进行计数。如果后两轮的某个见证能够“强看见“后一轮中的见证，则计数，否则不进行计数。根据最终计数结果来判定最终当前轮的见证是否是著名的。
-  * 对于不是见证的事件，是没有投票的。大多数见证者在第一轮投票中几乎一致地投票被宣布是著名的，所以大多数选举不会储蓄较长时间。在确定了当前轮中每个见证的声望之后，就可以为一组的事件找到接收轮和共识时间戳。对于能够被当前轮中每个著名见证看见的事务，其接收轮就是当前轮数。随后在各节点上找到一个事件既是该事件的后代又是当前轮著名见证的祖先。取出这些事件的时间戳，选择中位数时间戳作为该事件的共识时间戳。
-  
-最终对当前轮所有达成共识的事件（收到了接收轮数的事件）按照所有节点都同意的顺序排序，这个顺序就是共识顺序。这个排序就是通过它们的round received来进行的。通过中位数时间戳来打破联系
+The Hashgraph consensus algorithm virtually orders all events through Byzantine consensus protocol. The algorithm does not need to select a leader to order transactions. Sorting phase only requires minimal communication overhead, which is more suitable for consortium blockchain that requires a large number of nodes participating in consensus. However, it is not suitable for public blockchain, because it requires the information of the entire network. Besides, the consensus process takes at least two rounds to determine the order of transactions in the current round, the efficiency of consensus and the timeliness of transaction processing may be not effective. 
 
 ## Nano(RaiBlocks XRB)
 
