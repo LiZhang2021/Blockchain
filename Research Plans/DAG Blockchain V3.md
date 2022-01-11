@@ -258,7 +258,7 @@ The Hashgraph consensus algorithm virtually orders all events through Byzantine 
 
 ## Nano(RaiBlocks XRB)
 
-Nano is a cryptocurrency with a novel block-lattice architecture where each account has its own blockchain, delivering near instantaneous transaction speed and unlimited scalability.
+Nano is a cryptocurrency with a novel block-lattice architecture where each account has its own blockchain, delivering near instantaneous transaction speed and unlimited scalability. Nano was launched in 2014 as a side project of Colin LeMahieu, and completed by launching a fully functional mainnet in 2017. The total token of Nano is fixed and uppers to 133248289 XRB, which is generated at the time that launching mainnet. All transaction in Nano are free and confirmed in 5 seconds. The throughput of Nano is extremely high, and only restricted by computing speed and data transfer latency.
 
 ### Basic Concepts
 
@@ -278,30 +278,43 @@ The individual components of Nano are shown as follows:
   * The previous block is the head block of the accountchain. If it exists but is not the head, it is a fork.
   * The account must have an open block.
   * The computed hash meets the PoW threshold requirement
+* **Representative:** representatives are chosen by account holders to represent vote on their behalf.
 
 Nano uses a block-lattice structure. Each account has its own blockchain (account-chain) equivalent to the account’s transaction/balance history. Each account-chain can only be updated by the account’s owner.
 ![](./pics2/Figure_5.png)
 
-Every transfer of funds requires a send block (S) and a receive block (R).
+Every transfer of funds requires a send block (S) and a receive block (R). Transferring amounts as separate transactions in the sender’s and receiver’s accounts serves a few important purposes:
+* Sequencing incoming transfers that are inherently asynchronous.
+* Keeping transactions small to fit in UDP packets.
+* Facilitating ledger pruning by minimizing the data footprint.
+* Isolating settled transactions from unsettled ones.
 ![](./pics2/Figure_6.png)
 
+### Transaction Confirmation
+
+In Nano, a sender needs to issue a send transaction in their own blockchain when sending fund, and receiverneeds to issue a corresponding receive transction in their blockchain when reveiving the fund. Since accounts are the only entities that can update their blockchains, each blockchain can be updated instantly and asynchronously. This makes transactions very fast. Once a blockchain update is made, the transaction is broadcast to the whole network. The transaction will be confirmed as long as no validator finds conflict transctions. 
+
+### Forking Problem
+
+A fork occurs when an account  signed blocks claim the same block as their predecessor. These blocks cause a conflicting view on the status of an account and must be resolved. Only the account’s owner has the ability to sign blocks into their account-chain, so a fork must be the result of poor programming or malicious intent (double-spend) by the account’s owner.
+![](pics3/Figure_5.png)
+
+When detecting forking, representative will create a vote referencing the block in its ledger, and broadcast network. the weight of a node's vote is the sum of te balances of all accounts that have named it as its representative. The most popular block will have the majority of the votes and will be retained in the node’s ledger. The block(s) that lose the vote are discarded. If a representative replaces a block in its ledger, it will create a new vote with a higher sequence number and broadcast the new vote to network. This is the only scenario where representatives vote.
 
 ### Consensus Process
 
 The main procedures of consensus process in Nano are shown as follows:
 <font color = purple>
 * Each Node creates an account by issuing an open transaction. On account creation, a representative must be chosen to vote on your behalf; this can be changed later. (The system is initiated with a genesis account containing the genesis balance. )
-* when transfering a fund, source account should create a send block(transaction).Once broadcasted to the network, fund is immediately deducted from the balance of the source account and waits as pending until the receiving party signs a block to accept
-this fund.
+* when transfering a fund, source account should create a send block(transaction). Once broadcasted to network, fund is immediately deducted from the balance of the source account and waits as pending until the receiving party signs a block to accept
+this fund. 
 * when receiving the fund, destination account will  create a receive block(transaction) on its own account-chain. Once this block is created and broadcasted, the destination account's balance is updated and the fund have officially moved into its account. 
 * When detecting a conflicting view on the status of an account, a representative(node) will create a vote referencing the block in its ledger and broadcast it to the network.
-* The node will observe incoming votes from the other $M$ online representatives and keep a cumulative tally for $4$ voting periods(1
-minute total), and confirm the winning block. The most popular block will have the majority votes and will  be retain in the node's ledger( If a representative replaces a block in its ledger, it will create a new vote with a higher sequence number and broadcast the new vote to the network. This is the only scenario where representatives vote.)
+* The node will observe incoming votes from the other $M$ online representatives and keep a cumulative tally for $4$ voting periods(1 minute total), and confirm the winning block. The most popular block will have the majority votes and will  be retain in the node's ledger.
 </font>
 
-Nano一个节点可以存贮所有账户的历史账本，也可以只存贮每个账户的最后修剪记录。当一笔交易发生的时候，发出金额的一方会生成一个send tx的区块，包含记录扣除的金额；而收款账户则生成receive tx区块记录对应获得的金额。交易数据的收发是可以异步进行的，所以就算同时有多笔金额汇入一个账户也没有问题，最终的金额是收到的所有金额的加法。如果接收方不在线也没关系，未到账的金额会单独标记，等到接收账户上线之后，这笔金额就会从未结算区打入接收区块，完成交易。
+In Nano, the sending and receiving of transactions can be performed asynchronously, which means that an account can receive founds from multiple amounts at the same time. The final amount is the addition of all the amounts received. It doesn’t a matter if the receiver is not online, the unaccounted amount will be marked separately. When the receiving account online, the amount will be entered into the receiving block from the unsettled area to complete the transaction. 
 
-对于分叉问题，NANO使用了DPOS共识机制。账户可以指定代表为其投票，得票最多的代表将处理分叉，这个代表会将分叉广播到网络，并观察来自其他代表节点在固定时间内的投票接结果，以此来确定保留哪一个区块。DPOS可以保证区块的合理低能耗运行。NANO也使用到了POW机制，确认交易需要非常少的工作证明（PoW）。因此，Nano系统采用的是PoW+DPoS混合共识机制。
 
 ## Conflux
 
@@ -316,44 +329,73 @@ Some basic concepts of Conflux are shown in the following"
 * **Block:** a block consists of transactions, parent ID, reference ID and the signature of its creator ect.
 * **Genesis Block:** The firt generated block in conflux.
 * **Parent Edge:** Each block except Genesis has exactly one outgoing parent edge (solid line arrows in Figure 2). The parent edge corresponds to a voting relationship, i.e., the node that generates the child block votes for the transaction history represented by the parent block. 
-* **Reference Edge:** Each block can have multiple outgoing reference edges (dashed lines arrows in Figure 2). A reference edge corresponds to generatedbefore relationships between blocks. 
+* **Reference Edge:** Each block can have multiple outgoing reference edges (dashed lines arrows in Figure 2). A reference edge corresponds to generated before relationships between blocks. 
 * **Pivot Chain:** Note that all parent edges in a DAG together form a parental tree in which the genesis block is the root. In the parental tree, Conflux selects a chain from the genesis block to one of the leaf blocks as the *pivot chain*. Pivot chain Selection rule that Conflux does not select this longest chain because the subtree of A contains more blocks than the subtree of B. Therefore, the chain selection algorithm selects A over B at its first step.
 * **Local DAG State:** Each node maintains a local state that contains all blocks which the node is aware of. Because in Conflux each block may contain links to reference several previous blocks not just one, the result state is a direct acyclic graph (DAG)
 * **Epoch:** Parent edges, reference edges, and the pivot chain together enable Conflux to split all blocks in a DAG into epochs. 
 * **Generating New Block:** Whenever a node generates a new block, it first computes the pivot chain in its local DAG state and sets the last block in the chain as the parent of the new block.
 * **Block Total Order:** Conflux determines the total order of the blocks in a DAG as follows. Conflux first sorts the blocks based on their corresponding epochs and then sorts the blocks in each epoch based on their topological order. If two blocks in an epoch have no partial order relationship, Conflux breaks ties deterministically with the unique ids of the two blocks. 
 * **Transaction Total Order:** Conflux first sorts transactions based on the total orders of their enclosing blocks. If two transactions belong to the same block, Conflux sorts the two transactions based on the appearance order in the block.
-* **Transaction Confirmation:** The user locates the first epoch that contains a block including the confirming transaction. The user identifies the corresponding pivot chain block of the epoch. The user then decides how much risk it can tolerate based on the estimations of the block generation power that the attacker controls. The user finally estimates the risk of the pivot chain block being reverted to decide whether to confirm the transaction.
+
+### Transaction Confirmation
+
+The user locates the first epoch that contains a block including the confirming transaction. The user identifies the corresponding pivot chain block of the epoch. The user then decides how much risk it can tolerate based on the estimations of the block generation power that the attacker controls. The user finally estimates the risk of the pivot chain block being reverted to decide whether to confirm the transaction.
+
+### Double-Spending Problem
+
+If an attacker tries to spend the same output twice, there are two possible situations:
+* If there is reference relationship between the two conflict transactions(i.e. one trasnaction directly or indirectly reference the other one), then it is obviours that we will reject the later transaction.
+* If there is no reference relationship. In this case, it is possible for the attacker that its dishonest subchain outpaces the honest subchain. If this happens, the main chain continues growing from the double-spending transaction, and the legitimate branch with the original payment to the merchant is orphaned. 
+
+In order to prevent double- spending attack, Conflux introduce a pivod chain to order all blocks on DAG ledger. 
+* we first sort the blocks referencing only the parent blocks form a pivot chain according to GHOST rule,
+* we then divide blcoks into epochs according to pivot chain, and then sort the blocks in each epoch topologically. The principle of determining whether blocks included in an epoch should follows the two conditions at the same time:
+  * The block can be tracked through the parent edge or reference edge of the pivot chain,
+  * the block is not included in the previous epochs
+* Sorting blocks between different epochs according to the happens-before principle (that is, who is ahead of whom).
 
 ### Consensus Process
 
-The main procedures of consensus process in Hashgraph are as follows:
+The main procedures of consensus process in Conflux are as follows:
 <font color = purple>
-* Node packets some transactions from Pending Transaction Pool, and generates a new block.
-* The node computes the pivot chain in its local DAG state by pivot chain selection algorithm, and sets the last block in the chain as the parent of the new block. Then the Node selects a sibling block as the reference block of the new block.
-*  The node will update its local  DAG state, and broadcasts the ipdated local DAG blockchain to other nodes.
-*  Other nodes receiving the updated local  DAG state, and broadcasts the updated local  DAG state to others.
+* A node packets some transactions from Pending Transaction Pool, and generates a new block.
+* The node computes the pivot chain in its local DAG state by pivot chain selection algorithm, and sets the last block in the chain as the parent of the new block. Then the Node selects sibling blocks as the reference blocks of the new block.
+*  The node will update its local  DAG state, and broadcasts the updated local DAG blockchain to other nodes.
+*  Other node receiving the updated local DAG state will update its local DAG state(after verifying the correctness), and broadcast the updated local DAG state to others.
 </font>
 
-Conflux共识算法主要流程：
-* 流程一：当一个节点从其他节点接收到了一个DAG的更新信息时，该节点立即更新其局部状态，并且将传递该局部状态到网络中；
-* 流程二：当一个节点成功生成一个新区块时，节点将新区块添加到局部DAG中，且更新 $G$. 先获取一个该DAG中心链的最后一个区块作为该新区块的双亲区块，并在他们之间添加一条双亲边；随后找到所有没有入度的叶子区块，添加新区块到这些叶子区块的引用边；最后节点将更新的 $G$ 广播到网络中。
+The finality of Conflux is based on the estimation of the block computing power controlled by attacker, and transaction confirmation of Conflux is based on the estimated risk. Once generating a new block,  Conflux needs to find a pivot chain from the Genesis block. This process may lead to heavy computing load, which will eventually affect performance. For example, increasing the time of the block generation process and confirmation process. 
 
-Conflux通过构建一个全局区块序来避免分叉问题：
-* 先按照GHOST规则排序只包含父边的块，形成一个枢轴链(pivot chain),它类似于比特币的主链，不一样之处在于它还会引用比特币系统中丢弃的块
-* 根据枢轴链对区块分成各个纪元（epoch）,然后对每个epoch里面的区块拓扑排序。确定epoch包含的区块的划分原则是需要同时满足以下两个条件：
-  * 该区块可以通过枢轴链的父边或者引用边遍历到 该区块没有被之前的epoch包含
-  * 根据happens-before原则(就是谁在谁前面）对不同epoch之间的块进行排序。
 
-最终区块的确认是根据攻击者控制的区块算力的估计来决定他以承受的风险，根据风险的估计值来确认交易。
- 但是这个算法每次都需要从Genesis block开始寻找一条pivod chain。这个过程在之后会造成很大的负担，最终会影响性能。使得区块生成的过程和确认延时会变长。
+## Table of All DAG blockchain Systems
 
-|               | IOTA      | Byteball  | TrustNote | Nano(TaiBlocks)|
-|----------|----------|-----------|------------|------------|
-| Token      | IOTA    | Byte        | TransactionTTT          | XRB          |
-| Consensus Mechanism| PoW Cumulative Weight| 12 Witnesses| Decentralized TrustME Consensus Mechanism| DPoS Consensus Mechanism Balance-Weighted Vote |
-|Reward| No |Transaction Reference and Attestation| Transaction Reference and Mining| No |
-| Nodes| Full Node Light Node| Full Node Light Node| Super Node Full Node Light Node Micro Node| Full Node Light Node |
-|Transaction Fee | No | Yes | 60% Referencing Fee 40% Attestation Fee | No
-|Double-Spending| PoW Wight Comparison | Main Chain Sequencing | Main Chain Indexing|
-| Low-Frequency Trading | Centralized Coordinator | Weak Centralized Attestor | TrustME Attestor| Balance-weighted Voter|
+![](pics3/Figure_6.png)
+
+## Summary
+
+DAG与链式结构的本质区别在于异步与同步通讯。DAG能够解决比特币挖矿集中化的问题，而且大大提高了整个分布式网络的吞吐能力，降低了交易成本。
+
+### Advantages of DAG Blockchain
+
+DAG区块链的优势主要表现在三个方面：
+* **高并发、交易速度快：** DAG的设计理论上是无限多的并发，容纳海量级交易，而且交易的人越多，越频繁，速度就越快。因此，DAG非常适合IoT一类设备非常多且网络状况往往不稳定的应用。
+* **不用挖矿：** 不需要矿工打包成区块（不需要挖矿）再广播给所有人，也就没有了挖矿（POW）。这意味着包括算力攻击、矿工中心化在内的由挖矿引发的问题都将不再是问题。当然也有挖矿，如DAG+TrustMe-POW挖矿模式的TrustNode。
+* **手续费较低：** IOTA没有手续费，因为IOTA主打物联网业务的小额支付，手续费用比交易费用还要高显然不合理，所以IOTA没有手续费，并且引用权重机制对抗垃圾攻击的可能性。
+
+### Disadvantages of DAG Blockchain
+
+DAG也有自身的缺陷性。
+* **交易时长不可控（低频交易场景）：** DAG的验证规则是后面的交易验证前面的交易，这就很容易出现最后的交易迟迟无法被验证的情况，尤其是在整个网络发展的初期节点数量比较少的情况下，造成交易时长无法预测。当然，解决方法也是有的，但是不管是见证人还是其他超级节点机制，都在一定程度上违背了去中心化。
+* **不支持强一致性：** DAG作为一种GHOST传播算法，其异步通讯机制在提高了扩展性的同时也带来了一致性的不可控问题。DAG作为异步操作，它不存在一个全局的排序机制。由于每个节点维护的局部DAG账本状态可能存在差异，从而无法确保所有账本实现强一致性。DAG区块链只能确保最终一致性。通过建立一条主链，使得区块链的增长方向是一致的。在运行一段时间后，所有节点维护的区块链中，主链中较老的交易都是一致的，从而可以确保，交易在运行一段时间后将达到最终一致。但是这样就没办法满足强一致性了。
+* **安全性还没有得到大规模的验证:** DAG技术应用到去中心化账本领域是近几年的事情。目前的DAG区块链系统都运行时间比较短，还没有得到长时间的安全性验证。此外，DAG区块链面临的主要安全问题是**双花**。DAG异步处理数据的特征导致攻击者可能利用节点间的信息差进行双花。具体来说，如果两个顶点间没有明确的父子关系，攻击者可以分别在只看到这两个顶点中的一个的不同节点处，对同一笔存款进行双花。这种双花只有在同时看到两个区块的节点处才能被检测到，并且只有在两个顶点重新汇合到一个新顶点时才能最终判定哪一笔是双花。因此双花攻击没办法预先防止，只能通过事后检验。*因此对于DAG区块链双花攻击成功概率的分析是非常重要的。* 为了避免双花攻击对于区块链系统安全性造成危险，许多DAG区块链都提出了一些解决方案。最常见的是对于DAG账本上的交易建立一个全局序，从而使得系统可以安全地拒绝排序靠后的冲突交易，使得双花攻击不会成功。
+
+## Future Work
+
+对于未来的可研究的问题：
+
+* DAG区块链在无线网络中的性能和安全分析。现在已经有两篇文章做了相关的工作。但是考虑的过程都比较简单，也只对非常典型的Tangle区块链进行分析，且主要是对于DAG共识过程进行分析。对于安全性的分析主要是考虑了双花问题，但是这两篇并没有分析不同的攻击策略对于爽阿胡攻击成功概率的影响，这将是我最近需要完成的工作。
+* 在未来，我们也可以考虑对于Byteball，TrustNote, Hashgraph等在无线网络中的的性能和安全进行分析。由于DAG区块链的性能受到交易数量和节点数量的影响。因此，无线网络的通信协议可能对这三类区块链系统的影响程度有所不同，也许可以做一个比较。
+* 设计一个DAG区块链系统，利用无线网络的特性来选出见证节点可能会更适用于无线网络的环境（可以根据竞争特性和无线信道的特性来选出见证人）
+  
+
+
