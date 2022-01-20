@@ -58,9 +58,9 @@
   *  无激励共识算法：Hyper fabric
 * 区块链可以分为以下几种共识：
   * **竞争类共识**：PoW, PoS, PoA, PoC, PoR
-  * **选举类共识：**DPoS, PBFT, DBFT
-  * **随机共识：**Ouroboros, PEoT
-  * **其他共识：**Ripple, Elastico
+  * **选举类共识：** DPoS, PBFT, DBFT
+  * **随机共识：** Ouroboros, PEoT
+  * **其他共识：** Ripple, Elastico
 
 * 区块链共识也可以分为
   * 资源证明共识可分为
