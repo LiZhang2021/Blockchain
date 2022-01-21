@@ -161,7 +161,7 @@ The main procedures of consensus process in TrustNote are as follows:
 
 发布交易需要支付交易费用发。节点根据生成单元的字节数计算交易费用。交易费用分为60%的单元引用费和40%的公证费。引用费将被该单元的子单元获得；公证费将被累加到主链中MCI值最接近的公正单元所在共识轮的公正奖金池中。公正单元也需要支付交易非，计算方式与普通单元相同。
 
-|               | IOTA      | Byteball  | TrustNote | Nano(TaiBlocks)|
+|               | IOTA      | Byteball  | TrustNote | Nano(RaiBlocks)|
 |----------|----------|-----------|------------|------------|
 | Token      | IOTA    | Byte        | TTT          | XRB          |
 | Consensus Mechanism| PoW Cumulative Weight| 12 Witnesses| Decentralized TrustME Consensus Mechanism| DPoS Consensus Mechanism Balance-Weighted Vote |
@@ -183,7 +183,7 @@ The hashgraph consensus algorithm is based on the following core concepts.
 * **Hashgraph:** a data structure that records who gossiped to whom, and in what order.
 * **Event：** an even includes transactions, two events, timestamp,signature, and communicates with each other by Gossip protocol.
 * **See:** If some event $w$ has even$x$ as ancestor, then the event $w$ see event $x$.
-* **Strongly See:** An event $x$ can strongly see event $y$ if $x$ can see $y$ and there is a set $S$ of events by more than \frac{2}{3} of the members such that $x$ can see every event in $S$, and every event in $S$ can see $y$.
+* **Strongly See:** An event $x$ can strongly see event $y$ if $x$ can see $y$ and there is a set $S$ of events by more than $\frac{2}{3}$ of the members such that $x$ can see every event in $S$, and every event in $S$ can see $y$.
 * **Ancestor & Self-ancestor:** An event $x$ is defined to be an ancestor of event $y$ if $x$ is $y$, or a parent of $y$, or a parent of a parent of $y$, and so on. It is also a self-ancestor of $y$ if $x$ is $y$, or a self-parent of $y$, or a self-parent of a self-parent of $y$ and so on.
 * **Round Created Number:** The round created number (or round) of an event $x$ is defined to be $r + i$, where $r$ is the maximum round number of the parents of $x$ (or 1 if it has no parents), and $i$ is defined to be $1$ if $x$ can strongly see more than $\frac{2n}{3}$ witnesses in round $r$ (or 0 if it can’t).
 * **Round Received Number:** The round received number (or round received) of an event $x$ is defined to be the first round where all unique famous witnesses are descendants of $x$.
@@ -261,4 +261,47 @@ Nano一个节点可以存贮所有账户的历史账本，也可以只存贮每�
 
 对于分叉问题，NANO使用了DPOS共识机制。账户可以指定代表为其投票，得票最多的代表将处理分叉，这个代表会将分叉广播到网络，并观察来自其他代表节点在固定时间内的投票接结果，以此来确定保留哪一个区块。DPOS可以保证区块的合理低能耗运行。NANO也使用到了POW机制，确认交易需要非常少的工作证明（PoW）。因此，Nano系统采用的是PoW+DPoS混合共识机制。
 
+## Conflux
+
+ Conflux is a fast, scalable, and decentralized
+blockchain system that can process thousands of transactions per second while confirming each transaction in minutes. 
+
+### Basic Concepts
+
+![](pics2/Figure_7.png)
+
+Some basic concepts of Conflux are shown in the following"
+* **Block:** a block consists of transactions, parent ID, reference ID and the signature of its creator ect.
+* **Genesis Block:** The firt generated block in conflux.
+* **Parent Edge:** Each block except Genesis has exactly one outgoing parent edge (solid line arrows in Figure 2). The parent edge corresponds to a voting relationship, i.e., the node that generates the child block votes for the transaction history represented by the parent block. 
+* **Reference Edge:** Each block can have multiple outgoing reference edges (dashed lines arrows in Figure 2). A reference edge corresponds to generatedbefore relationships between blocks. 
+* **Pivot Chain:** Note that all parent edges in a DAG together form a parental tree in which the genesis block is the root. In the parental tree, Conflux selects a chain from the genesis block to one of the leaf blocks as the *pivot chain*. Pivot chain Selection rule that Conflux does not select this longest chain because the subtree of A contains more blocks than the subtree of B. Therefore, the chain selection algorithm selects A over B at its first step.
+* **Local DAG State:** Each node maintains a local state that contains all blocks which the node is aware of. Because in Conflux each block may contain links to reference several previous blocks not just one, the result state is a direct acyclic graph (DAG)
+* **Epoch:** Parent edges, reference edges, and the pivot chain together enable Conflux to split all blocks in a DAG into epochs. 
+* **Generating New Block:** Whenever a node generates a new block, it first computes the pivot chain in its local DAG state and sets the last block in the chain as the parent of the new block.
+* **Block Total Order:** Conflux determines the total order of the blocks in a DAG as follows. Conflux first sorts the blocks based on their corresponding epochs and then sorts the blocks in each epoch based on their topological order. If two blocks in an epoch have no partial order relationship, Conflux breaks ties deterministically with the unique ids of the two blocks. 
+* **Transaction Total Order:** Conflux first sorts transactions based on the total orders of their enclosing blocks. If two transactions belong to the same block, Conflux sorts the two transactions based on the appearance order in the block.
+* **Transaction Confirmation:** The user locates the first epoch that contains a block including the confirming transaction. The user identifies the corresponding pivot chain block of the epoch. The user then decides how much risk it can tolerate based on the estimations of the block generation power that the attacker controls. The user finally estimates the risk of the pivot chain block being reverted to decide whether to confirm the transaction.
+
+### Consensus Process
+
+The main procedures of consensus process in Hashgraph are as follows:
+<font color = purple>
+* Node packets some transactions from Pending Transaction Pool, and generates a new block.
+* The node computes the pivot chain in its local DAG state by pivot chain selection algorithm, and sets the last block in the chain as the parent of the new block. Then the Node selects a sibling block as the reference block of the new block.
+*  The node will update its local  DAG state, and broadcasts the ipdated local DAG blockchain to other nodes.
+*  Other nodes receiving the updated local  DAG state, and broadcasts the updated local  DAG state to others.
+</font>
+
+Conflux共识算法主要流程：
+* 流程一：当一个节点从其他节点接收到了一个DAG的更新信息时，该节点立即更新其局部状态，并且将传递该局部状态到网络中；
+* 流程二：当一个节点成功生成一个新区块时，节点将新区块添加到局部DAG中，且更新 $G$. 先获取一个该DAG中心链的最后一个区块作为该新区块的双亲区块，并在他们之间添加一条双亲边；随后找到所有没有入度的叶子区块，添加新区块到这些叶子区块的引用边；最后节点将更新的 $G$ 广播到网络中。
+
+Conflux通过构建一个全局区块序来避免分叉问题：
+* 先按照GHOST规则排序只包含父边的块，形成一个枢轴链(pivot chain),它类似于比特币的主链，不一样之处在于它还会引用比特币系统中丢弃的块
+* 根据枢轴链对区块分成各个纪元（epoch）,然后对每个epoch里面的区块拓扑排序。确定epoch包含的区块的划分原则是需要同时满足以下两个条件：
+  * 该区块可以通过枢轴链的父边或者引用边遍历到 该区块没有被之前的epoch包含
+  * 根据happens-before原则(就是谁在谁前面）对不同epoch之间的块进行排序。
+
+最终区块的确认是根据攻击者空着的区块算力的估计来决定他以承受的风险，根据风险的估计值来确认交易。
 
