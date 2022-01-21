@@ -186,9 +186,9 @@ The hashgraph consensus algorithm is based on the following core concepts.
 * **Strongly See:** An event $x$ can strongly see event $y$ if $x$ can see $y$ and there is a set $S$ of events by more than \frac{2}{3} of the members such that $x$ can see every event in $S$, and every event in $S$ can see $y$.
 * **Ancestor & Self-ancestor:** An event $x$ is defined to be an ancestor of event $y$ if $x$ is $y$, or a parent of $y$, or a parent of a parent of $y$, and so on. It is also a self-ancestor of $y$ if $x$ is $y$, or a self-parent of $y$, or a self-parent of a self-parent of $y$ and so on.
 * **Round Created Number:** The round created number (or round) of an event $x$ is defined to be $r + i$, where $r$ is the maximum round number of the parents of $x$ (or 1 if it has no parents), and $i$ is defined to be $1$ if $x$ can strongly see more than $\frac{2n}{3}$ witnesses in round $r$ (or 0 if it can’t).
-*  **Round Received Number:** The round received number (or round received) of an event $x$ is defined to be the first round where all unique famous witnesses are descendants of $x$.
-*  **Witness:** A witness is the first event created by a member in a round.
-*  **Famous witnesses:**A famous witness is a witness that has been decided to be famous by the community. Informally, the community tends to decide that a witness is famous if many members see it by the start of the next round. A **unique famous witness** is a famous witness that does not have the same creator as any other famous witness created in the same round. In the absence of forking, each famous witness is also a unique famous witness.
+* **Round Received Number:** The round received number (or round received) of an event $x$ is defined to be the first round where all unique famous witnesses are descendants of $x$.
+* **Witness:** A witness is the first event created by a member in a round.
+* **Famous witnesses:** A famous witness is a witness that has been decided to be famous by the community. Informally, the community tends to decide that a witness is famous if many members see it by the start of the next round. A **unique famous witness** is a famous witness that does not have the same creator as any other famous witness created in the same round. In the absence of forking, each famous witness is also a unique famous witness.
 
 
 ![](./pics2/Figure_4.png)
