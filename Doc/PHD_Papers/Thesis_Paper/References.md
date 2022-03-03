@@ -30,7 +30,7 @@ https://doi.org/10.1007/s11276-020-02325-z
 [25]	I. Eyal and E. G. Sirer. Majority is not Enough: Bitcoin Mining is Vulnerable. In Financial Cryptography and Data Security. Springer, November 2014, pp. 436õ454.
 [26]	R. Pass and E. Shi. Fruitchains: A fair blockchain. In Proceedings of the ACM Symposium on Principles of Distributed Computing, ser. PODC ’17. ACM, 2017, pp. 315–324. [Online]. Available: http://doi.acm.org/10.1145/3087801.3087809
 [27]	M. H. Ashik, M. M. Shahriar Maswood, A. G. Alharbi and D. Medhi. FPoW: An ASIC-resistant Proof-of-Work for Blockchain Applications. 2020 IEEE Region 10 Symposium (TENSYMP), 2020, pp. 1608-1611, doi: 10.1109/TENSYMP50017.2020.9230915.
-
+[28]  I. Eyal, A.E. Gencerm E.G. Sirer et al. Bitcoin-NG: A Scalable Blockchain Protocol.Proc. USENIX Symposium on Networked Systems Design and Implementation (NSDI), Boston, MA, Mar. 2016, pp. 45–59.
 [28]	S. King and S. Nadal. PPCoin: Peer-to-peer crypto-currency with proof-of-stake. https://archive.org/details/PPCoinPaper (2012).
 [29]	N. Houy. It will cost you nothing to‘kill’a proof-of-stake crypto-currency[EB/OL]. 2014. ftp://ftp.gate.cnrs.fr/RePEc/2014/1404.pdf.
 [30]	A. Chepurnoy. Interactive proof-of-stake[EB/OL]. 2016. http://arxiv.org/abs/1601.00275.
