@@ -6,7 +6,7 @@
 
 目前，大部分与无线网络相关的区块链研究都是在经典的区块链共识算法的之上提出架构或构建系统。文献[1]，作者提出了区块链的可信移动自组织云架构，并在区块链层设计了一个稳定感知的共识协议提高系统性能。在文献[2]中，作者提出了一种面向未来无线通信的区块链无线接入网架构，并研究了区块链在资源管理和网络接入中的潜在融合应用。文献[3]调研了区块链在智慧城市中的信息通信应用；文献[4]调研了将区块链和机器学习结合应用于移动通信网络系统的一些研究成果，并讨论了潜在问题及挑战。文献[5]利用通过修改无线网络的CSMA/CA协议，设计和部署适用于物联网的区块链PBFT共识算法。
 
-许多的研究工作将区块链简单地套用于无线网络中，实质上无法完全解决其中的信任和安全问题。考虑到无线网络具有节点设备资源有限、节点可移动、网络拓扑动态变化和网络通信质量不稳定等特征，一些关于无线区块链共识算法的研究工作已经展开。文献[6,9]中，作者利用无线网络的通信特性设计适用于无线网络的区块链共识协议。此外文献[7]作者利用无线通信特性提出信道证明的共识算法，设计了单跳无线区块链网络协议并采用正式通用组合框架分析协议的性能。文献[8]中，作者提出了融合无线通信特性和区块链技术的适用于多跳无线网络的区块链协议。文献[9SENATOR]利用无线通信协议CSMA/CA的争用机制，提出能够抵御女巫攻击的基于协作的拜占庭共识协议，适用于建立在开放无线网络中实时性要求高的物联网应用。
+许多的研究工作将区块链简单地套用于无线网络中，实质上无法完全解决其中的信任和安全问题。考虑到无线网络具有节点设备资源有限、节点可移动、网络拓扑动态变化和网络通信质量不稳定等特征，一些关于无线区块链共识算法的研究工作已经展开。文献[6]中，作者利用无线网络的通信特性设计适用于无线网络的区块链共识协议。此外文献[7]作者利用无线通信特性提出信道证明的共识算法，设计了单跳无线区块链网络协议并采用正式通用组合框架分析协议的性能。文献[8]中，作者提出了融合无线通信特性和区块链技术的适用于多跳无线网络的区块链协议。文献[9]利用无线通信协议CSMA/CA的争用机制，提出能够抵御女巫攻击的基于协作的拜占庭共识协议，适用于建立在开放无线网络中实时性要求高的物联网应用。
 
 在本文中，我们设计一个适用于无线网络的基于竞争的区块链协议。根据无线节点生命周期短和区块链存储结构的特征，提出一种基于节点稳定性的类PoS共识算法。在这个共识算法中，拥有更高稳定性的节点将有更大概率获得出块权限，生成区块并且获得系统奖励。这样的设计可以降低共识过程的算力消耗，提高系统共识过程的稳定性和处理交易效率。此外，我们考虑敌手可以干扰节点，但是不能控制所有节点持有总财富的 $50/%$ 的财富。由于满足持久性和活性，因此该协议是安全的。持久性意味着，如果一个诚实节点宣布一个交易是有效的，那么其他诚实节点要么报告相同的结果要么报告错误信息。活性则是诚实节点提出的有效交易最终都会被添加到各诚实节点的区块链上。通过分析共识算法的通信消耗和算力消耗来进一步分析无线区块链共识算法的性能。
 
@@ -22,36 +22,41 @@
 
 ### 区块链共识协议
 
-我们当前区块链共识协议可以分为几种：基于工作量证明的共识协议、基于权益证明的共识协议、混合分布式一致性协议的共识协议以及其他的共识算法。
+我们将当前的区块链共识协议可以分为几种：竞争类共识协议和协同类共识协议，在之后将简要介绍。更详细全面的区块链分类的综述可详见[10]。
 
-基于工作量证明的区块链共识算法中，参与共识的节点通过展示他们的计算算力的消耗来竞争出块权限。工作量证明最早由C.Dwork和M.Naor[18]在1992年提出，用来解决垃圾邮件问题.该机制要求邮件在被发送之前必须找到某个数学难题的答案来证明发送者确实执行了一定量的工作。A.Back在1997年提出，并在2002年正式发表的Hashcash [19]通过寻找哈希函数原像实现工作量证明。在1999年，M.Jakobsso[20]正式提出了工作量证明的概念。这些工作都为比特币的共识机制奠定了坚实的基础。以太坊可以提供一个图灵完备的以太坊虚拟机并且采用改进的工作量证明共识算法——Ethash。此外，采用基于工作量证明共识算法的区块链协议的有Bitcoin-NG、Fruitchain等。
-
-基于权益证明的的共识算法中参与节点根据拥有资产的比例来决定成为下一个出块者的概率。因此，这类共识算法依赖参与节点的初始代币。由S.King和S.Nadal[28]提出的点点币首次引入了权益证明共识算法，根据参与节点持有代币的币龄来选择生成新区块的节点。V.Buterin等人[33]提出的Casper FFG是用于以太坊的基于PoS共识算法。区块产生仍然依靠以太坊的Ethash工作量证明算法，每隔50个区块出现一个检查点，验证者通过权益证明共识算法对检查点完成最终确定，确保系统的安全性。A.Kiayias等人[35]提出了一种新的基于权益证明的共识算法Ouroboros，根据参与节点持有的股权来随机选举出块节点。P.Daian等人[38]提出的Snow White是基于权益证明的可重配置共识算法。该协议提出了一种保证安全的腐败延迟机制，确保节点离线、候选者节点选择机制被敌手偏置和腐蚀时系统的安全性。
-
-基于委员会的混合共识协议是将经典分布式一致性算法与当前的区块链共识算法相结合，即采用PoW或PoS的方式选举特定的委员会，在委员会内部运行经典分布式共识算法生成区块。根据委员会的数量可以分为单一委员会混合共识协议和多委员会混合共识协议。典型的采用单一委员会混合共识协议的区块链有PeerCensus、Byzcoin、Solida、Algrand等；采用多委员会混合共识机制的区块链协议有ELATICO、Omniledger、Chainspace、RapidChain等。
-
-除了以上三种区块链共识算法的分类以外，许多研究者提出一些其他区块链共识算法。针对工作量证明共识算法耗能大的问题，一些替代的共识算法被提出，比如Proof of space、proof of storage(proof of capacity）、Proof of elapsed time。考虑到权益证明共识算法需要持有股份的特点，提出基于节点信用的Proof of reputation。为了降低区块链节点间同步沟通的成本，Ripple采用的RPCA算法利用验证节点的可信任节点名单对交易投票
-和对区块进行投票最终达成一致。
+竞争类共识算法中所有节点通过资源、能力、名誉、权益等证明方式来竞争获取每一轮的出块权限。工作量证明(Proof of Work)在区块链中使用最广泛的竞争类共识算法，节点通过计算资源证明来获得出块权限。众所周知的采用工作量证明作为共识算法的有比特币和以太坊。此外，典型的竞争类共识算法还有Peercoin 项目[11]中的权益证明(Proof of Stake, PoS)、 Parity 项目[12]中的权威证明(Proof of Authority, PoA)、 Burstcoin项目[13]中的空间证明 (Proof of Sapce, PoSpace)、GoChain项目[14]中的信誉证明(Proof of Reputation,PoR)等[15]。竞争类共识算法在每一轮出块节点的选择中，会设置一个竞争成功的标准，最先达到标准的共识节点获取出块权限生成区块，其他诚实的共识节点会认可这个新区块的有效性。竞争类的共识算法通常具有弱一致性，出现分叉的概率会比较高。
+协同类共识算法中所有参与共识的节点通过执行局部计算和广播消息与其他节点通信协同生成每一轮的区块并达成共识。这种方法在确保活跃性和安全性的同时，为区块链提供了对拜占庭式故障的鲁棒性。典型的协同类共识算法是Fabric v0.6.0[16]中实现的拜占庭容错算法(Practical Byzantine Fault Tolerant, PBFT)。该共识算法从全网节点中选出出块节点负责创建区块，其他节点通过投票协同对区块达成全网共识。实际拜占庭容错协议无权益抵押或者资源的消耗会降低恶意节点的作恶成本，但是通过节点协作机制可以排除恶意行为对共识的影响。典型的协同类共识算法还有NEO项目[17]中提出DBFT算法、Ripple联盟链[18]项目的RPCA共识算法、Cosmos[19]中所采用的Tendermint共识算法、Algorand共识算法[20]、ELASTICO共识算法[21]、Omniledger共识算法[22]和RipidChain共识算法[23]等。协同类的共识算法通常具有强一致性，出现链分叉的概率比较小。
 
 ### 物联网中的区块链
 
+物联网的设备通常是通过无线网络连接的，因此会面临无线网络中存在的安全和信任问题。区块链技术的出现为物联网应用，比如数据管理、访问控制、隐私保护、身份认证等，提供了新的信任和安全体系。文献[24]将区块链的技术和智能设备节点映射技术相结合，实现分布式网络中智能的设备分散自治。文献[25]提出基于雾计算、软件定义网络(SDN)和区块链的分布式云架构，实现安全、高效和低成本的大型数据流的数据管理。文献[26]开发了包含六个组件的架构，用于基于区块链的物联网访问管理。文献[27]在许可的区块链环境中使用零知识证明引入了一种基于区块链的隐私保护身份解决方案——ChainAnchor，为用户提供隐私保护服务。文献[28]将其与监管框架规定联系起来, 提供了区块链的隐私和数据保护方面的解决方案。文献[29]提出了物联
+网系统中身份管理系统的要求，并研究了区块链主权身份解决方案，阐述了物联网构建完整身份管理系统的挑战。文献[30]设计了一个非中心化的身份框架——NEXTLEAP，具有使用盲签名的隐
+私保护功能，并且使用身份解决方案提供的身份验证服务构建更安全的消息传递应用。
 
+### 无线网络中的共识算法
 
-### 无线网络中的区块链协议
+共识算法是区块链技术的核心，我们的研究与无线网络密切相关，因此我们简要介绍无线网络共识算法的研究。文献[31,32]利用无线信道的干扰特性，提出了一种在无线通信场景中更有效地达成共识的策略。文献[33,34]利用衰落无线信道的干扰特性，提出了实现平均一致性和最大一致性的协议。文献[35]利用MAC层和多径和频率选择性信道的网络模型，为无线传感器网络设计了一种分布式一致性算法。文献[36]研究了概率广播的平均共识问题，探索了无线媒体对共识过程的影响，并扩展了非和保持算法以加速收敛。文献[37]在无线自组织网络中给出了一个抽线的物理层并且直接使用高级广播原语，提出了一个专为资源受限的无线自组织网络设计的异步拜占庭共识协议。
 
-目前，大部分与无线网络相关的区块链研究都是在经典的区块链共识算法的之上提出架构或构建系统。例如，在车联网上建立具有区块链安全性的通信架构[引用几篇车联网区块链相关的文章]。在边缘云上构建区块链系统确保安全、公平、高效地实现资源分配[引用几篇边缘计算区块链相关的文章]。在其他物联网领域中对区块链地研究也是提出新的架构系统。比如，[ChainSplitter]
-
-有一些区块链研究是根据无线网络广播特性提出可以在具有一定时间复杂度的区块链系统中达成共识。例如，BLOWN [] 和 wChain [] 分别被提议为单跳和多跳无线区块链协议。此外，[Consensus in wireless blockchain system] 中提出了一种基于 SINR 模型的共识协议，在单跳无线网络中可以在 O(log n) 时间步内获得共识。然而，以前的工作只考虑达成一次共识。但是，区块链系统中的共识需要通过参与节点重复获得。只讨论共识协议的单次共识的效率对于无线网络的区块链共识算法的研究可能会稍显不足。
-
-### 移动无线自组织网络的区块链协议
 
 ## Models And Assumptions
 
-问题定义
+### 区块链基本定义
 
-给出相应的网络模型
+在无线区块链系统中，每个节点 $v$ 局部地维护一个通过区块哈希链接形成的区块链 $BC_v$。记 $B_v^i$ 是节点 $v$ 维护的区块链中的第 $i$ 个区块，而 $BC_v^{i+}$ 表示包括第 $i$ 个区块之前的区块链。每个区块中会包含多个交易，记 $Tx_i^j$ 为在区块 $B_v^i$ 中的第 $j$ 个交易，节点维护区块链的最新区块记作 $B_v^{new}$。
 
+### 系统模型
+
+我们考虑是一个由 $N$ 个全连接的随机分布在一个二维地理平面的节点构成的无线网络，即网络中任意两个节点在彼此的通信范围之内。系统是开放的，任意节点都不需要事先的身份授权就加入系统。每个节点配有半双工收发器，可以发送或接收消息，或感知信道，但不能同时发送和接收或发送和感知。记 $d_{ij}$ 是节点 $i,j$ 之间的欧式距离，而 $D_i(R)$ 是以节点 $i$ 为圆心 $R$ 为通信半径的圆形区域，$N_i(R)$ 表示在节点 $i$ 的通信范围中的所有节点。我们假设每个节点拥有唯一的ID，并且知道所有其他节点的身份和公钥。每个节点的传输功率可以被控制以降低干扰对通信的影响。假设节点可以在网络区域中随意移动，并且节点可以随意进入和离开这个区域。
+
+无线网络中节点之间的通信会受到环境和干扰的影响，我们假设消息是在瑞利信道中传输。根据无线通信中小尺度衰落的特性，接收节点处的信噪比可以表示为
+$$SNR = \frac{P_i hd_{ij}^{-\alpha}}{\sigma^2}$$
+其中 $P_i$ 是节点 $i$ 的发射功率； $h$ 表示瑞利衰落中非负功率增益随机变量，服从指数为 $1$ 的负指数分布；$d_{i,j}$ 是节点 $i$ 到节点 $j$ 的距离；$\alpha$ 是路径损耗分数；$是\sigma^2$ 是干扰噪声功率。设定无线网络的信噪比阈值 $\beta$ 是由节点的硬件设备决定的。我们假设每个节点都能够进行物理载波监听。在一个半径为 $R$ 的圆形网络区域中，发送节点到接收节点的距离 $r$ 的密度函数为 $f(r) = \frac{2r}{R^2}$，节点传输消息平均成功的概率为 
+$P_s = \int_0^R P\{SNR >\beta\}f(r)dr = \frac{2\pi\gamma}{N}\int_0^{\sqrt{\frac{N}{\pi\cdot\gamma}}}\exp\{\frac{-N\cdot r^\alpha\cdot \beta}{P_u}\}rd$。
+
+### 敌手模型
 给出相应的攻击模型
+
+假设
 
 
 ## The Stable Consensus Protocol
@@ -92,6 +97,40 @@
 [6] Q. Xu, Y. Zou, D. Yu, M. Xu, S. Shen, F. Li. Consensus in Wireless Blockchain System, in WASA, 2020.
 [7]	M. Xu, F. Zhao, Y. Zou, C. Liu, X. Cheng, F. Dressler. BLOWN:A Blockchain Protocol for Single-Hop Wireless Networks under Adversarial SINR, in CoRR abs/2103.08361, 2021.
 [8] M. Xu, C. Liu, Y. Zou, F. Zhao, J. Yu and X. Cheng, "wChain: A Fast Fault-Tolerant Blockchain Protocol for Multihop Wireless Networks," in IEEE Transactions on Wireless Communications, vol. 20, no. 10, pp. 6915-6926, Oct. 2021, doi: 10.1109/TWC.2021.3078639.
-[9] Y. Zou, M. Xu, J. Yu, F. Zhao and X. Cheng, "A Fast Consensus for Permissioned Wireless Blockchains," in IEEE Internet of Things Journal, doi: 10.1109/JIOT.2021.3124022.
+[9] Z. Jiang, Z. Cao, B. Krishnamachari, S. Zhou and Z. Niu, "SENATE: A Permissionless Byzantine Consensus Protocol in Wireless Networks for Real-Time Internet-of-Things Applications," in IEEE Internet of Things Journal, vol. 7, no. 7, pp. 6576-6588, July 2020.
+[10] Y. Xiao, N. Zhang, W. Lou, and Y. T. Hou, “A survey of distributed consensus protocols for blockchain networks,” IEEE Commun.Surv. Tutorials, vol. 22, no. 2, pp. 1432–1465, 2020.
 
+[11] Peercoin official website. https://peercoin.net/. Jan. 2019.
+[12] Parity official website. https://www.parity.io/. Jan. 2019.
+[13] Burstcoin official website. https://www.burst-coin.org/. May. 2019.
+[14] Gochain official website. https://gochain.io/. Jan. 2019.
+[15] Proof of Reputation: A Reputation-Based Consensus Protocol for Peer-to-Peer Network. https://link.springer.com/content/pdf/10.1007%2F978-3-319-91458-9_41.pdf. Jan. 2019.
+[16] Fabric official website. https://get.fabric.io/. Jan. 2019.
+[17] NEO offical website. https://neo.org/. Sept. 2019.
+[18] Ripple official website. https://ripple.com/. Jan. 2019.
+[19] J. Kwon. Tendermint: Consensus without mining.
+https://tendermint.com/static/docs/tendermint.pdf (21 August 2021, date last accessed).
+[20] Y.Gilad, R. Hemo, S. Micali, et al. Algorand: Scaling Byzantine agreements for cryptocurrencies[C]. In: Proceedings of the 26th Symposium on Operating Systems Principles, Shanghai, China, October 28–31, 2017: 51–68.
+[21] L.Luu, V. Narayanan, C. Zheng, et al. A secure sharding protocol for open Blockchains[C]. In: Proceedings of the 2016 ACM SIGSAC Conference on Computer and Communications Security. ACM, 2016: 17–30.
+[22] E. Kokoris- Kogias, P. Jovanovic, L. Gasser, et al. OmniLedger: A secure, scale-out, decentralized ledger via sharding[C]. In: Proceedings of 2018 IEEE Symposium on Security and Privacy (SP 2018). IEEE, 2018: 583–598.
+[23] M. Zamani, M. Movahedi, M. Raykova. RapidChain: Scaling Blockchain via full sharding[C]. In: Proceed ings of the 2018 ACM SIGSAC Conference on Computer and Communications Security (CCS 2018). Toronto, ON, Canada, October 15–19, 2018: 931–948.
+
+[24] S. Yu, L. Kun, S. Zhou, Y. Guo, J. Zhou and B. Zhang, “A High Performance Blockchain Platform for Intelligent Devices,” In Proc.IEEE International Conference on Hot Information-Centric Networking (HotICN’18), pp.260-261, 2018. 
+[25] P. Kumar, M. Chen and J. Park, “A Software Defined Fog Node Based Distributed Blockchain Cloud Architecture for IoT,” IEEE Access, vol.6, pp.115-124, 2018. 
+[26] O. Novo, “Blockchain meets iot: An architecture for scalable access management in iot,” IEEE Internet of Things Journal, vol. 5, no. 2,
+pp. 1184–1195, 2018.
+[27] T. Hardjono, A. Pentland, “Verifiable Anonymous Identities and Access Control in Permissioned Blockchains,” pp. 9, 2016. 
+[28] M. Conoscenti, A. Vetro and J. Martin, “Peer to Peer for Privacy 
+and Decentralization in the Internet of Things,” In Proc. IEEE/ACM 39th International Conference on Software Engineering Companion (ICSE-C’17), pp.288-290, 2017.
+[29] X. Zhu and Y. Badr, “Identity Management Systems for the Internet of Things: A Survey Towards Blockchain Solutions,” Sensors, 
+vol.18, no.12, pp.4215-4215, 2018.
+[30] H. Halpin, “NEXTLEAP: Decentralizing Identity with Privacy for Secure Messaging,” In Proc.International Conference on Availability,Reliability and Security (ARES’17), 2017. 
+[31]M. Zheng, M. Goldenbaum, S. Stańczak and H. Yu, "Fast average consensus in clustered wireless sensor networks by superposition gossiping", Proc. IEEE Wireless Commun. Netw. Conf., pp. 1982-1987, 2012.
+[32] M. Goldenbaum, H. Boche and S. Stańczak, "Nomographic gossiping for f-consensus", Proc. 10th Int. Symp. Model. Optimiz. Mobile Ad Hoc Wireless Netw., pp. 130-137, 2012.
+[33] F. Molinari, S. Stańczak and J. Raisch, "Exploiting the superposition property of wireless communication for average consensus problems in multi-agent systems", Proc. Eur. Control Conf., pp. 1766-1772, 2018.
+[34] F. Molinari, N. Agrawal, S. Stańczak and J. Raisch, "Max-Consensus Over Fading Wireless Channels," in IEEE Transactions on Control of Network Systems, vol. 8, no. 2, pp. 791-802, June 2021.
+[35] G. Scutari and S. Barbarossa, “Distributed consensus over wireless sensor networks affected by multipath fading,” IEEE Transactions on Signal Processing, vol. 56, no. 8, pp. 4100–4106, 2008.
+[36] T. C. Aysal, A. D. Sarwate, and A. G. Dimakis, “Reaching consensus in wireless networks with probabilistic broadcast,” in 2009 47th Annual Allerton Conference on Communication, Control, and
+Computing (Allerton). IEEE, 2009, pp. 732–739.
+[37] H. Moniz, N. F. Neves and M. Correia, "Byzantine Fault-Tolerant Consensus in Wireless Ad Hoc Networks," in IEEE Transactions on Mobile Computing, vol. 12, no. 12, pp. 2441-2454, Dec. 2013, doi: 10.1109/TMC.2012.225.
 
