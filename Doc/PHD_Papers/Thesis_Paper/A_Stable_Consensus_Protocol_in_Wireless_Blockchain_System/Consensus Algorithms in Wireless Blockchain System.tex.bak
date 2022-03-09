@@ -1,0 +1,64 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{CJK,amsmath,amssymb,color,graphicx}
+\usepackage[top=1in,bottom=1in,left=1.1in,right=1in]{geometry}
+%------------------------------------------------------------------------%
+
+
+\begin{document}
+\begin{CJK*}{GBK}{song}
+
+\title{Consensus Algorithms in Wireless Blockchain System}
+\author{}
+\date{}
+\maketitle
+
+\section{Consensus Algorithm in Each Round}
+
+
+\begin{algorithm}
+	%\textsl{}\setstretch{1.8}
+	\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+	\renewcommand{\algorithmicensure}{\textbf{Output:}}
+	\caption{Consensus Algorithm}
+	\label{alg1}
+	\begin{algorithmic}[1]
+		\State $\rhd$ Initialization:
+		\State $\rhd$ Leader Election and Block Propocal:
+        \State $(BL, value, Proof) = BlockLeader(seed)$
+        \If {$v == BL$}
+            \State $B_v^{new} = Pack(Txs)$
+            \State $m_B = MSGB(BC_v, B_v^{new}, w_v, value, proof)$
+            \State $broadcast(B_v^{new})$
+        \EndIf
+        \State $\rhd$ Block Verification and Finalization:
+        \If {$isValid(B_v^{new}) \&\& VerifyLeader(pk_v, seed)== true$}
+            \State $Append(BC_v, B_v^{new})$
+        \EndIf
+        \Function {BlockLeader}{$seed, w_v, W$} $\rhd$ Choose a Leader
+            \State $(value, proof) = VRF(sk_v, seed)$
+            \State $p_v = \frac{w_v}{W}$
+            \State ID = 0
+            \If {$\frac{value}{2^{bit(value)}} \notin [\sum_{k=0}^i p_i, \sum_{k=0}^{i+1} p_i)$}
+                \State $ID++$
+            \EndIf
+            \State return ID, value, Proof 
+        \EndFunction
+        \Function{GenerateBlock}{$BC_v, Txs$} $\rhd$ Create a new block
+            \State $B_v^{new}.Index = Length(BC_v)$
+            \State $B_v^{new}. Prehash = BC_v^{latest}.Hash$
+            \State $B_v^{new}.txs = Txs$
+            \State $B_v^{new}.Timestamp = Timestamp$
+            \State $B_v^{new}.Hash = Hash(B_v^{new})$
+            \State return $B_v^{new}$
+        \EndFunction
+        \Function{Append}{$BC_v, B_v^{new}$} $\rhd$ Append the new block
+            \State return $BC_v = BC_v + B_v^{new}$
+        \EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+\end{CJK*}
+\end{document}
