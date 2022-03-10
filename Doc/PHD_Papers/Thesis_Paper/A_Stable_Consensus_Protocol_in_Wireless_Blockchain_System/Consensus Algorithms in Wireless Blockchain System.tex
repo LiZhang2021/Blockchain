@@ -50,7 +50,7 @@
             \If{$\frac{value}{2^{bit(value)}} \notin [\sum_{k=0}^i p_k, \sum_{k=0}^{i+1} p_k)$}
                 \State $ID++$
             \EndIf
-            \State \Return ID, value, Proof 
+            \State \Return ID, value, Proof
         \EndFunction
         \Function{VerifyLeader}{$pk_v, ID, value, proof, seed, w_v, W$} $\rhd$ Verify the validation of leader
             \State $result = VerifyVRF(pk_v, value, proof)$
@@ -112,13 +112,45 @@
         \If {$v == BL$}
             \State $B_v^{new} = GenerateBlock(BC_v, Txs)$
             \State $m_B = MSGB(BC_v, B_v^{new}, w_v, value, proof)$
-            \State $broadcast(m_B)$
+            \State $broadcast(m_B, \sigma_v)$
         \EndIf
         \State $\rhd$ Block Verification and Finalization:
-        \If {$isValid(B_v^{new}) \&\& VerifyLeader(pk_v, seed)== true$}
-            \State $Append(BC_v, B_v^{new})$
-        \EndIf
-        
+        \While {$!Confirmed$}
+            \State $(sigShares, FinalSig, B_v^{new}) = RecNewBlock(m_B, \sigma_v)$
+                \If {$isValid(FinalSig)$}
+                    \State $\sigma_F = FinalSig$
+                    \State $broadcast(m_B, \sigma_F)$
+                    \State $Append(BC_v, B_v^{new})$
+                    \State $Confirmed = True$
+                \ElsIf {$Count(SigShares) > K$}
+                    \State $\sigma_F = RecoverFinalSig(sigShare)$
+                    \State $broadcast(m_B, \sigma_F)$
+                    \State $Append(BC_v, B_v^{new})$
+                    \State $Confirmed = True$
+                \ElsIf {$\sigma_v \notin sigShares$}
+                    \State $sigShares = AppendSignature(\sigma_v)$
+                    \State $broadcast(m_B, sigShares)$
+                \Else
+                    \State $broadcast(m_B, sigShares)$
+                \EndIf
+        \EndWhile
+        \Function{RecNewBlock}{$m_B, \sigma_v$}
+            \If{$\sigma_v \notin sigShares$}
+                \State $sigShares = AppendSignature(\sigma_v)$
+            \EndIf
+            \If{$Count(sigShares) > K$}
+                \State $FinalSig = RecoverFinalSig(sigShares)$
+            \Else
+                \State $FinalSig = null$
+            \EndIf
+            \State \Return $sigShares, FinalSig, B_v^{new}$
+        \EndFunction
+        \Function{AppendSignature}{$\sigma_v$}
+            \If{$\sigma_v \notin sigShares$}
+                \State $sigShares \leftarrow sigShares + \sigma_v)$
+            \EndIf
+            \State \Return $sigShares$
+        \EndFunction
 	\end{algorithmic}
 \end{breakablealgorithm}
 
