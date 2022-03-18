@@ -43,4 +43,22 @@ class Blockchain(object):
     # 获取区块链最后一个区块
     def last_Block(self):
         return self.chain[-1] 
+    
+    # 计算区块的哈希
+    def caculate_hash(self, inBlock):
+        combination = str(inBlock.index) + str(inBlock.timestamp) + str(inBlock.previoushash) + str(inBlock.leader)
+        for trans in inBlock.transactionlist:
+            combination = combination + str(trans)
+        return hashlib.sha256( combination.encode("utf-8")).hexdigest()
+
+    # 判定区块的有效性
+    def is_block_valid(self, newBlock):
+        lastBlock = self.chain[-1]
+        if  lastBlock.index + 1 != newBlock.index:
+            return False
+        if lastBlock.hash != newBlock.previoushash:
+            return False
+        if self.caculate_hash(newBlock) != newBlock.hash:
+            return False
+        return True
  
