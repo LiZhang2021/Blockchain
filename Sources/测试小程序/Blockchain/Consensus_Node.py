@@ -22,7 +22,6 @@ class Node:
         self.chain = []             # 记录区块链信息
 
     # 查看自己是否成为出块节点
-
     def is_leader(self):
         if 
 
