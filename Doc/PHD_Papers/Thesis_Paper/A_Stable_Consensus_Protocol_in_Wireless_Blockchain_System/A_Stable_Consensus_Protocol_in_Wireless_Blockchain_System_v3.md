@@ -176,21 +176,27 @@ $$S_{v}=\alpha\times \rho_{v}+\beta\times r_{v}$$
 
 #### 节点活动时间分析
 
-每个节点在注册进入系统时，通过支付一部分金钱来获取在系统中的活动时间。节点可以通过增加金额来延长活动时间，也可以重新注册新的节点来获得活动时间。
+每个节点在注册进入系统时，通过支付金钱来获取在系统中的活动时间。支付的金钱将通过购买基础设施或者做一些投资来获取盈利。因此，关于活动时间的价格可以根据价格在一段时间内的波动现象和规律来对活动时间的价格进行预测定价。
 
-记 $N$ 为共识节点集合，$T_{i}$ 是节点 $i\in N$ 的活动时间，用户增加活动时间有两种方式：一种是通过充值金钱延长节点 $i$ 的活动时间；一种是通过注册新节点延长用户的活动时间。
-* 第一种情况时用户被选中的概率计算如下：
-  * 节点的活动时间比为 $\rho_{i} = \frac{T_{i} + \Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}}$
-  * 节点的共识比 $r_i = \frac{N_{i} + \Delta N_i}{K} = R_{i} + \Delta R_{i}$
-  * 节点的稳定度为 $w_{i}  = \alpha \rho_{i} + \beta r_{i}$
-  * 节点被选中的概率为 $p_{i} = \frac{w_{i}}{\sum_{i\in N} w_{i} + \alpha \Delta T_{i} + \beta R_{i}}$
-* 第二种情况时用户被选中的概率计算如下：
-  * 节点的活动时间比为 $\rho_{i} = \frac{T_{i} + \Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}}$
+我们可以采用股票价格模型来为活动时间定价。活动时间价格随时间变化的过程的主要影响因素是活动时间价格和时间，每个时间都有一个价格与之对应，因此活动时间价格和时间的函数可以表示为 $A(t)$。根据在 $\Delta t$ 时间中的对数收益率为 $\Delta y(t) = \ln A(t) - \ln A(t - \Delta t)$。根据活动时间对数价格的一阶差分为零均值不相关白噪声，记 $x(t)$ 是零均值不相关白噪声，即 $\Delta y(t) = x(t)$。最终得到 $y(t) = y(t - \Delta t) + x(t)$，活动时间的价格积分为 $y(t) = \int_{0}^t x(t)dt$。我们之后可以根据这个模型来确定不同时刻的活动时间的价格。
+
+节点可以通过增加金额来延长活动时间，也可以重新注册新的节点来获得活动时间。记 $N$ 为共识节点集合，$T_{i}$ 是节点 $i\in N$ 的活动时间，用户增加活动时间有两种方式：一种是通过充值金钱延长节点 $i$ 的活动时间；一种是通过注册新节点延长用户的活动时间。
+* 第一种情况时用户的稳定度概率计算如下：
+  * 节点的活动时间比为 $\rho_{i} = \frac{T_{i} + \Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} $
   * 节点的共识比 $r_i = \frac{N_{i} + \Delta N_i}{K}$
+  * 节点的稳定度为 $w_{i} = \alpha \rho_{i} + \beta r_{i} = \alpha \frac{T_{i} + \Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{N_{i} + \Delta N_i}{K}$
+  * 节点被选中的概率为 $p_{i} = \frac{w_{i}}{\sum_{j\in N} w_{j} + \alpha \Delta \frac{\Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{\Delta N_i}{K}}$
+* 第二种情况时用户稳定度概率计算如下：
+  * 用户所有节点的活动时间比为 $\rho_{i}' = \frac{T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \frac{\Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} = \rho_{i}'' + \Delta \rho_{i}$
+  * 节点的共识比 $r_{i}'= \frac{N_{i}}{K} +  \frac{\Delta N_i}{K} = r_{i}'' + \Delta r_{i}$
+  * 两个节点的稳定度分别为：$w_i'' = \alpha \frac{T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{N_{i}}{K} = \alpha \rho_{i}'' + \beta r_{i}'', \Delta w_{i} = \alpha \frac{\Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{\Delta N_i}{K} =\alpha \Delta\rho_{i} + \beta \Delta r_{i}$
+  * 两个节点的被选中的概率分别为 $p_{i}'' = \frac{w_{i}''}{\sum_{j\in N} w_{j} + \alpha \Delta \frac{\Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{\Delta N_i}{K}}, \Delta p_{i} = \frac{\Delta w_{i}}{\sum_{j\in N} w_{j} + \alpha \Delta \frac{\Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{\Delta N_i}{K}}$。
+
+通过计算可知 $p_{i} = \frac{\alpha \frac{T_{i} + \Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{N_{i} + \Delta N_i}{K}}{\sum_{j\in N} w_{j} + \alpha \Delta \frac{\Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{\Delta N_i}{K}} = \frac{\alpha \frac{T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{N_{i}}{K}}{\sum_{j\in N} w_{j} + \alpha \Delta \frac{\Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{\Delta N_i}{K}}  + \frac{\alpha \frac{\Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{\Delta N_i}{K}}{\sum_{j\in N} w_{j} + \alpha \Delta \frac{\Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{\Delta N_i}{K}} = \alpha\rho_{i}'' + \beta r_{i}'' + \alpha \Delta\rho_{i} + \beta \Delta r_{i}  = p_{i}''$。因此，不管是直接注资延长节点的活动时间还是注册新节点增加活动时间，最终用户控制的节点被选中成为出块节点的概率是相等的。
 
 #### 女巫攻击
 
-我们的协议能够比较好的防止理性的节点发起女巫攻击。假设攻击者被选中成为出块节点的概率为 $p_{A}$，其余 $m$ 个节点的概率分别为 $\{p_1, p_2, \cdots, p_m\}$。若攻击者发起女巫攻击，则攻击节点被选中的概率的期望 $\frac{1}{n}\sum_{k = 1}^n k\cdot p_k, (\sum_{k = 1}^n p_k = p_{A})$。此时有 $\frac{1}{n}\sum_{k = 1}^n k\cdot p_k < p_A$。
+我们的协议能够比较好的防止理性的节点发起女巫攻击。假设攻击者被选中成为出块节点的概率为 $p_{A}$，其余 $m$ 个节点的概率分别为 $\{p_1, p_2, \cdots, p_m\}$。若攻击者发起女巫攻击，则攻击者控制的节点被选中的概率的期望 $\frac{1}{n}\sum_{k = 1}^n k\cdot p_k, (\sum_{k = 1}^n p_k = p_{A})$。此时有 $\frac{1}{n}\sum_{k = 1}^n k\cdot p_k < p_A$。
 **证明**：令 $p_k = \frac{p_A}{n}$，则有 $\frac{1}{n}\sum_{k = 1}^n k\cdot p_k = \frac{1}{n}\sum_{k = 1}^n k\cdot \frac{p_A}{n} = p_A\sum_{k=1}^n\frac{k}{n^2} = p_A\frac{\sum_{k=1}^n k}{n^2}$。当 $n > 1$ 是有 $\sum_{k = 1}^n < n^2$ ，因此 $p_A\frac{\sum_{k=1}^n k}{n^2} < p_A, n>1$。最终得出结论 $\frac{1}{n}\sum_{k = 1}^n k\cdot p_k < p_A, n > 1$。因此，我们的协议中，攻击者发起女巫攻击时，成为出块节点的概率会降低。攻击者的伪造节点越多，则成为出块节点的概率将会越低。通常理性的节点不会愿意伪造多个节点降低成为出块节点的概率，因此我们的协议能够较好的抵抗女巫攻击。
 
 ### 开销分析
@@ -238,16 +244,23 @@ $$H_{Stable} = \left\{
 
 ## 仿真验证
 
-在这一节中，我们仿真研究变量参数是如何影响稳定协议的性能。我们区块共识的平均吞吐量和时延来分析协议的正确性和高效性。随后分析在女巫攻击和网络分区时协议的性能。
+在这一节中，我们仿真研究变量参数是如何影响稳定协议的性能。我们区块共识的平均吞吐量和时延来分析协议的正确性和高效性。
 
-### 吞吐量和时延
+影响性能主要因素包括网络大小、网络密度和信噪比模型。我们采用的信噪比参数分别是 $\alpha = 2, \beta = 3, $（待补充）。此外，节点是均匀分布且女巫节点默认为 $0\%$。
 
-测试不同区块大小时，固定网络大小时，区块确认时延
-测试吞吐量
+为了估计协议的性能，我们主要采用两个指标：吞吐量和共识时延。共识时延是指完成一轮共识所需的时间。换句话说，也是完成添加一个新区块到区块链所需的时间。这个指标主要是受到节点的数量和节点的密度的影响。对于吞吐量，我们固定区块大小之后，可以根据共识时延计算得到 $$Throughput = \frac{\text{number of transactions}}{\text{consensus latency}}$$
 
-### 女巫攻击和网络分区
+吞吐量的单位是每秒交易数(TPS)。
 
-在存在女巫攻击时和网络分区时测试系统吞吐量的情况。
+我们的实验都是在(电脑的基本参数指标)。
+
+
+### 网络大小和密度
+
+由于协议的活性是由网络大小决定的，
+
+### 网络密度
+
 
 ## 结论
 
