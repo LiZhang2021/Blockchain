@@ -43,7 +43,7 @@ $$S_{v}=\alpha\times \rho_{v}+\beta\times r_{v}$$
 * 节点密度 $density = 0.2$：
 * 节点密度 $density = 0.5$：
 * 节点密度 $density = 0.1$：
-* 节点密度 $density = 0.1.5$：
+* 节点密度 $density = 0.15$：
 * 节点密度 $density = 2$：
 
 ## 吞吐量测试
