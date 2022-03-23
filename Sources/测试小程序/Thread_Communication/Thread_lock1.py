@@ -1,6 +1,6 @@
 import threading
 
-# 接下来我们用 threading.Lock() 锁住这个变量，
+# 用 threading.Lock() 锁住这个变量，
 # 等操作完再释放这个锁。lock.acquire() 给资源
 # 加一把锁，对资源处理完成之后，lock.release() 再释放锁。
 money = 0
