@@ -12,7 +12,7 @@ def LeaderElection(sk, seed):
         result = False
     return value, pi, result
 
-# 验证出块节点的有效性
+# 验证出块节点的合法性
 def VerifyLeader(pk, value, pi):
     if (VerifyVRF(pk, value, pi, seed) == 0):
         return 0
