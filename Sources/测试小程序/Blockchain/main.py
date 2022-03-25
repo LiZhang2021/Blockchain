@@ -19,13 +19,31 @@ def VerifyLeader(pk, value, pi):
     else:
         return 1
 
+# 计算所有节点的稳定度
+def caculate_stability(Nodelist):
+    alpha = 0.5
+    beta = 0.5
+    for node in Nodelist:
+        node.currentStability = alpha * node.currentLifetime + beta * node.ratio
+
+# 计算所有节点被选中的概率
+def caculate_probability(Nodelist):
+    prob = []
+    sum_stability = 0
+    for node in Nodelist:
+        sum_stability = sum_stability + node.currentStability
+    for node in Nodelist:
+        temp = node.currentStability/sum_stability
+        prob.append(temp)
+    return prob
+
+
 # 计算区块哈希
 def caculate_hash(inBlock):
     combination = str(inBlock.index) + str(inBlock.timestamp) + str(inBlock.previoushash) + str(inBlock.leader)
     for trans in inBlock.transactionlist:
         combination = combination + str(trans)
     return hashlib.sha256( combination.encode("utf-8")).hexdigest()
-
 
 # 创建一个新区块
 def CreateBlock():

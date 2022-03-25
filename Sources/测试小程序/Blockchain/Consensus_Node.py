@@ -18,6 +18,7 @@ class Node:
         self.state = 0              # 节点的状态
         self.nodeslist = []         # 存储当前参与共识的所有节点
         self.currentLifetime = 0    # 记录节点的生存时间
+        self.currentratio = 0       # 记录节点的共识比
         self.currentStability = 0   # 记录节点当前的稳定度
         self.chain = []             # 记录区块链信息
 
