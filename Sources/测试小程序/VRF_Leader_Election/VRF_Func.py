@@ -2,7 +2,8 @@ import math
 import struct
 import hashlib
 import binascii
-
+import random
+from Crypto import Random
 from Crypto.PublicKey import RSA
 
 
@@ -87,8 +88,16 @@ def VRF_verify(PK, Alpha, Pi):
 
 alpha1 = 'hellow'
 alpha2 = "hello"
-rsa = RSA.generate(1024) # RSA(n, e, d)
-K = {'e':rsa.e, 'n':rsa.n, 'd':rsa.d}# 公钥(n, e)，私钥(nd)
-Beta, Pi = VRF(K, alpha1)
-result = VRF_verify(K, alpha2, Pi)
-print(result)
+random1 = Random.new().read
+rsa1 = RSA.generate(1024, random1) # RSA(n, e, d)
+K1 = {'e':rsa1.e, 'n':rsa1.n, 'd':rsa1.d}# 公钥(n, e)，私钥(nd)
+random2 = Random.new().read
+rsa2 = RSA.generate(1024, random2) # RSA(n, e, d)
+K2 = {'e':rsa2.e, 'n':rsa2.n, 'd':rsa2.d}# 公钥(n, e)，私钥(nd)
+Beta1, Pi1 = VRF(K1, alpha1)
+Beta2, Pi2 = VRF(K2, alpha1)
+print("beta1", Beta1)
+print("beta2", Beta2)
+
+# result = VRF_verify(K, alpha2, Pi)
+# print(result)
