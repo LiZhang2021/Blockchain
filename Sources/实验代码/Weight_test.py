@@ -88,8 +88,8 @@ if __name__ == '__main__':
     # 全局变量
     x = []
     y = []
-    num_consensus = 50     # 共识次数
-    num_nodes = 750         # 节点数量
+    num_consensus = 100     # 共识次数
+    num_nodes = 500         # 节点数量
     K = 1500                        # 区块数量
 
     # 随机生成节点并赋予不同的时间和共识区块
@@ -154,7 +154,7 @@ if __name__ == '__main__':
         y. append(bp)
     
     # 绘图
-    y = savgol_filter(y,25, 3,  mode= 'nearest')
+    y = savgol_filter(y,15, 3,  mode= 'nearest')
     plt.plot(x, y)
     #设置横纵坐标字体大小
     plt.xticks(fontsize=10)
