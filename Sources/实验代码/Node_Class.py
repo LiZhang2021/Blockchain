@@ -1,19 +1,31 @@
-import operator  #导入operator 包,pip install operator
+import operator
+from re import X  #导入operator 包,pip install operator
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import MD5
 from Crypto.PublicKey import RSA
+import random
+import collections
 
 
 class Node:
-    def __init__(self, nodeID, privatekey, public_key):
-         self.nodeID = nodeID
-         self.transactions = []     # 存储交易
-         self.blockchain = []       # 存储区块链
-         self.nodelist = []            # 存储所有节点信息
-         self.lifetime = 0             # 存储节点的寿命
-         self.numblocks = 0        # 存储生成出块节点的数量
+    def __init__(self, nodeID, x, y, radius, privatekey, publickey):
+         self.nodeID = nodeID           # 节点的ID
+         self.x = x                     # 节点的经度
+         self.y = y                     # 节点的纬度
+         self.radius = radius           # 节点的通信半径
+         self.transactions = []         # 存储交易
+         self.blockchain = []           # 存储区块链
+         self.nodelist = []             # 存储所有在线邻节点信息
+         self.sendqueue = []            # 记录发送消息的队列——先进先出原则
+         self.queuetime = []            # 记录各个消息的发送时间队列——先进先出原则
+         self.receivequeue = []         # 记录接收消息的队列——先进先出原则
+         self.busy = 0                  # 记录信道忙碌状态
+         self.sendnode = None
+         self.maxbusy = 10              # 最大忙碌
+         self.lifetime = 0              # 存储节点的寿命
+         self.numblocks = 0             # 存储生成出块节点的数量
          self.privatekey = privatekey   # 存储私钥
-         self.publickey = public_key    # 存储公钥
+         self.publickey = publickey     # 存储公钥
     
     # 生成一个交易
     def Create_Trans(ID):
@@ -143,5 +155,73 @@ class Node:
             self.nodelist.append(node)
             print("Add new node successfully!")
 
+    def add_sendqueue(self, data, current_time):
+        self.sendqueue.append(data)
+        self.queuetime.append(current_time)
+    #print("数据和时间分别是", data, arrival_time_sum)
+    
+    # 计算两个节点同步他们连接的边（信道）发送数据所需要的时间
+    def send_message(self, R):
+        data = self.sendqueue[0]
+        # 如果是交易数据， 一个交易的大小设为512B
+        if data == 'trans':
+            t_trans = pow(2, 9)*8 /float(R)
+        # 如果是区块数据，一个区块的大小设为1MB
+        elif data == 'block':
+            t_trans = pow(2, 20)*8 /float(R)
+        # 如果是签名数据，一个签名的大小设为1024bit 
+        elif data == 'sign':
+            t_trans = pow(2, 11) /float(R)
+        return t_trans
+    
+    # # 信道忙碌时，随机退避一段时间 R 是信道速率
+    def channel_busy(self, R):
+        # 将退避时间与等待时间相加，重设等待时间
+        if len(self.queuetime) > 0:
+            self.busy += 1
+            #print("信道忙碌", self. nodeID, self.busy)
+            if self.busy < self.maxbusy:
+                # 队列中最前的时间是最小的时间 CW = 10
+                CW = random.randint(0,10)
+                backoff_time = self.queuetime[0] + CW* (pow(2, self.busy)-1) * 512/float(R) + random.uniform(0, 0.005)
+                # 对于队列中的时间，如果回退时间大于队列时间，则重置队列时间
+                for i in range(len(self.queuetime)):
+                    if backoff_time > self.queuetime[i]:
+                        self.queuetime[i] = backoff_time
+                    else:
+                        break
+            else:
+                # 丢弃数据
+                self.queuetime = collections.deque(self.queuetime)# 先入先出处理消息
+                self.queuetime.popleft()
+                self.sendqueue = collections.deque(self.sendqueue)
+                self.sendqueue.popleft()
+                self.busy = 0
+    
+    # 传输消息成功之后更新本地信息
+    def update_information(self, curr_time, timeslot, R):
+        data = self.sendqueue[0]
+        t_prop = self.send_message(R)
+        self.queuetime = collections.deque(self.queuetime)
+        self.sendqueue = collections.deque(self.sendqueue)
+        self.queuetime.popleft()
+        self.sendqueue.popleft()
+        for i in range(len(self.queuetime)):
+            self.queuetime[i] = t_prop + self.queuetime[0]
+        for node in self.nodelist:
+            node.receivequeue.append(data)
+            for i in range(len(node.queuetime)):
+                if node.queuetime[i] <= t_prop + node.queuetime[0]:
+                    node.queuetime[i] = t_prop + node.queuetime[0]
+            node.busy = 0
+        self.busy = 0
+
+    def print_node(self):
+        print("Node:", self.nodeID)
+        print("Location, radius", self.x, self.y, self.radius)
+        print("Send data", self.sendqueue)
+        print("Send time", self.queuetime)
+        print("Neighbers", len(self.nodelist))
+        print("Receive data", self.receivequeue)
         
     
