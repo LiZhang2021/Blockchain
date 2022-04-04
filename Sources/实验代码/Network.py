@@ -41,15 +41,15 @@ class Network:
             # 如果信道忙，找到发送节点，判定是否在当前时隙传输消息完成
             if node.busy > 0:
                 if node.sendnode == None:
-                    print("正在传输消息的节点是：", node.nodeID)
                     # 如果是传输节点，则需要判定当前时间是否传输完数据
                     t_trans = node.send_message(R) + node.queuetime[0]
-                    print("传输完成的时间是", t_trans)
-                    if curr_time <= t_trans < (curr_time + timeslot):
-                        print("消息传输完成")
+                    if curr_time <= t_trans <= (curr_time + timeslot):
+                        print("传输完成的时间是", t_trans)
                         node.update_information(curr_time, timeslot, R)
+                        node.print_node()
                         for knode in node.nodelist:
                             knode.sendnode = None
+                            knode.print_node()
                 elif node.sendnode != None and (curr_time <= node.queuetime[0] < (curr_time + timeslot)) and len(node.queuetime) > 0:
                     node.channel_busy(R)
             

@@ -1,5 +1,6 @@
 import operator
-from re import X  #导入operator 包,pip install operator
+from re import X
+from time import time  #导入operator 包,pip install operator
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import MD5
 from Crypto.PublicKey import RSA
@@ -183,7 +184,7 @@ class Node:
             if self.busy < self.maxbusy:
                 # 队列中最前的时间是最小的时间 CW = 10
                 CW = random.randint(0,10)
-                backoff_time = self.queuetime[0] + CW* (pow(2, self.busy)-1) * 512/float(R) + random.uniform(0, 0.005)
+                backoff_time = self.queuetime[0] + CW* (pow(2, self.busy)-1) * 512/float(R) 
                 # 对于队列中的时间，如果回退时间大于队列时间，则重置队列时间
                 for i in range(len(self.queuetime)):
                     if backoff_time > self.queuetime[i]:
@@ -202,19 +203,26 @@ class Node:
     def update_information(self, curr_time, timeslot, R):
         data = self.sendqueue[0]
         t_prop = self.send_message(R)
+        t_trans =  t_prop  + self.queuetime[0] + random.uniform(0, 0.01536)
+        for i in range(len(self.queuetime)):
+            if self.queuetime[i] <= t_trans:
+                self.queuetime[i] = t_trans
+            else:
+                break
+        for node in self.nodelist:
+            node.receivequeue.append(data)
+            for i in range(len(node.queuetime)):
+                r_trans = curr_time + timeslot
+                if node.queuetime[0] <= r_trans:
+                    node.queuetime[i] = r_trans
+                else:
+                    break
+            node.busy = 0
+        self.busy = 0
         self.queuetime = collections.deque(self.queuetime)
         self.sendqueue = collections.deque(self.sendqueue)
         self.queuetime.popleft()
         self.sendqueue.popleft()
-        for i in range(len(self.queuetime)):
-            self.queuetime[i] = t_prop + self.queuetime[0]
-        for node in self.nodelist:
-            node.receivequeue.append(data)
-            for i in range(len(node.queuetime)):
-                if node.queuetime[i] <= t_prop + node.queuetime[0]:
-                    node.queuetime[i] = t_prop + node.queuetime[0]
-            node.busy = 0
-        self.busy = 0
 
     def print_node(self):
         print("Node:", self.nodeID)
