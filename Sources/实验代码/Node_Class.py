@@ -1,3 +1,4 @@
+from calendar import c
 import operator
 from re import X
 from time import time  #导入operator 包,pip install operator
@@ -6,6 +7,10 @@ from Crypto.Hash import MD5
 from Crypto.PublicKey import RSA
 import random
 import collections
+import hashlib
+
+from Block_Class import Block
+from Trans_Class import Trans
 
 
 class Node:
@@ -19,6 +24,7 @@ class Node:
          self.nodelist = []             # 存储所有在线邻节点信息
          self.sendqueue = []            # 记录发送消息的队列——先进先出原则
          self.queuetime = []            # 记录各个消息的发送时间队列——先进先出原则
+         self.queuedata = []            # 记录各个数据的具体信息队列——先进先出原则
          self.receivequeue = []         # 记录接收消息的队列——先进先出原则
          self.busy = 0                  # 记录信道忙碌状态
          self.sendnode = None
@@ -27,29 +33,27 @@ class Node:
          self.numblocks = 0             # 存储生成出块节点的数量
          self.privatekey = privatekey   # 存储私钥
          self.publickey = publickey     # 存储公钥
+         self.finalsign = None          # 记录最终签名
+         self.currentsign = None        # 记录对当前区块的签名
+         self.currentblock = None       # 记录正在处理的区块
+         self.currentleader = None       # 记录当前处理区块的首领节点
     
     # 生成一个交易
-    def Create_Trans(ID):
-        return {'Trans_ID: ': ID}   # 交易ID
+    def Create_Trans(self, ID):
+        return Trans(ID)   # 交易ID
     
     # 生成一个区块
-    def create_Block(self, previous_hash, leaderID, current_transactions):
-        block ={
-            # 区块ID(Height)
-            'ID':len(self.blockchain)+1,
-            # 上一块区块的hash
-            'previous_hash':previous_hash,
-            # 出块节点
-            'leaderID':leaderID,
-            # 区块的hash
-            'Hash': None,
-            # 区块最终签名（区块 + 区块Hash + 签名）
-            'final_signature': None,
-            # 交易账本
-            'transactions': current_transactions
-        }
+    def Create_Block(self, previous_hash, leaderID, current_transactions):
+        block = Block(len(self.blockchain)+1, previous_hash, leaderID, current_transactions)
         return block
     
+    # 计算块的哈希
+    def Set_BlockHash(self, block):
+        combination = str(block.ID) + str(block.previous_hash) + str(block.leaderID)
+        for trans in block.transactions:
+            combination = combination + str(trans)
+        block.Hash = hashlib.sha256( combination.encode("utf-8")).hexdigest()
+
     # 对消息签名
     def RSA_Signature(self, data):
         # 获取 数据消息 的HASH值，摘要算法MD5，验证时也必须用MD5
@@ -88,7 +92,7 @@ class Node:
 
     # 首领选举
     # 计算节点的稳定度
-    def Caculate_Stability(self, K, alpha, beta):
+    def Caculate_Stability(self, K, alpha):
         sum_time = 0.0
         # 计算所有节点的剩余时间和
         for node in self.nodelist:
@@ -173,6 +177,8 @@ class Node:
         # 如果是签名数据，一个签名的大小设为1024bit 
         elif data == 'sign':
             t_trans = pow(2, 11) /float(R)
+        elif data == 'finalsign':
+            t_trans = pow(2, 11) /float(R)
         return t_trans
     
     # # 信道忙碌时，随机退避一段时间 R 是信道速率
@@ -184,7 +190,7 @@ class Node:
             if self.busy < self.maxbusy:
                 # 队列中最前的时间是最小的时间 CW = 10
                 CW = random.randint(0,10)
-                backoff_time = self.queuetime[0] + CW* (pow(2, self.busy)-1) * 512/float(R) 
+                backoff_time = self.queuetime[0] + CW * self.busy * 512/float(R) + random.uniform(0, 0.00512)
                 # 对于队列中的时间，如果回退时间大于队列时间，则重置队列时间
                 for i in range(len(self.queuetime)):
                     if backoff_time > self.queuetime[i]:
@@ -202,15 +208,35 @@ class Node:
     # 传输消息成功之后更新本地信息
     def update_information(self, curr_time, timeslot, R):
         data = self.sendqueue[0]
+        cdata = self.queuedata[0]
         t_prop = self.send_message(R)
         t_trans =  t_prop  + self.queuetime[0] + random.uniform(0, 0.01536)
+        # 更新发送节点传输完成之后消息队列时间
         for i in range(len(self.queuetime)):
             if self.queuetime[i] <= t_trans:
                 self.queuetime[i] = t_trans
             else:
                 break
+        # 根据接收节点接收消息的类型更新节点的状态
         for node in self.nodelist:
-            node.receivequeue.append(data)
+            if data == 'trans':
+                if cdata in node.transactions:
+                    break
+                else:
+                    node.transactions.append(cdata)
+            elif data == 'block':
+                if cdata.leaderID == node.currentleader and node.receivequeue == None:
+                    node.receivequeue.append(cdata)
+                    node.currentblock = cdata
+            elif data == 'sign':
+                if cdata in node.receivequeue:
+                    break
+                else:
+                    node.receivequeue.append(cdata)
+            elif data == 'finalsign':
+                node.finalsign = cdata
+            
+            # 更新所有接收节点发送队列的时间和信道状态
             for i in range(len(node.queuetime)):
                 r_trans = curr_time + timeslot
                 if node.queuetime[0] <= r_trans:
@@ -218,11 +244,14 @@ class Node:
                 else:
                     break
             node.busy = 0
+        # 更新发送节点信道状态和发送队列
         self.busy = 0
         self.queuetime = collections.deque(self.queuetime)
         self.sendqueue = collections.deque(self.sendqueue)
+        self.queuedata = collections.deque(self.queuedata)
         self.queuetime.popleft()
         self.sendqueue.popleft()
+        self.queuedata.popleft()
 
     def print_node(self):
         print("Node:", self.nodeID)
