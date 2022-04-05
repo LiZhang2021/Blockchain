@@ -2,9 +2,9 @@ from calendar import c
 import operator
 from re import X
 from time import time  #导入operator 包,pip install operator
-from Crypto.Signature import pkcs1_15
-from Crypto.Hash import MD5
-from Crypto.PublicKey import RSA
+import Crypto.PublicKey.RSA
+import Crypto.Signature.PKCS1_v1_5
+import Crypto.Hash.SHA256
 import random
 import collections
 import hashlib
@@ -31,6 +31,7 @@ class Node:
          self.maxbusy = 10              # 最大忙碌
          self.lifetime = 0              # 存储节点的寿命
          self.numblocks = 0             # 存储生成出块节点的数量
+         self.stability = 0
          self.privatekey = privatekey   # 存储私钥
          self.publickey = publickey     # 存储公钥
          self.finalsign = None          # 记录最终签名
@@ -57,63 +58,80 @@ class Node:
     # 对消息签名
     def RSA_Signature(self, data):
         # 获取 数据消息 的HASH值，摘要算法MD5，验证时也必须用MD5
-        digest = MD5.new(data.encode('utf-8'))
+        data = data.encode()
+        digest = Crypto.Hash.SHA256.new()
+        digest.update(data)
          # 使创建 私钥 签名工具, 并用私钥对HASH值进行签名
-        signature = pkcs1_15.new(self.privatekey).sign(digest)
+        signature = Crypto.Signature.PKCS1_v1_5.new(self.privatekey).sign(digest)
         return signature
 
     # 验证签名
     def RSA_Verifier(public_key,data, signature):
         # 获取 数据消息 的HASH值，签名时采用摘要算法MD5，验证时也必须用MD5
-        digest = MD5.new(data.encode('utf-8'))
+        digest = Crypto.Hash.SHA256.new()
+        digest.update(data.encode())
         # 使用Crypto.Signature 中 公钥 验签工具 对 数据和签名 进行验签
-        verify_result = pkcs1_15.new(public_key).verify(digest, signature)
+        verify_result = Crypto.Signature.PKCS1_v1_5.new(public_key).verify(digest, signature)
         return verify_result
     
     # 验证区块的有效性
-    def Verify_Block(self, block, leaderID):
+    def Verify_Block(self, block):
          # 验证出块节点的合法性
-        if block.leaderID != leaderID:
+        verify_result = True
+        if block.leaderID != self.currentleader:
             verify_result = False
          # 验证区块高度的有效性
         elif block.ID != len(self.blockchain)+1:
             verify_result = False
          # 验证父区块hash的有效性
-        elif block.previous_hash != self.blockchain[-1].hash:
+        elif block.previous_hash != self.blockchain[-1].Hash:
             verify_result = False
          # 验证交易的有效性
-        for tx in block.transactions:
-            for bc in self.blockchain:
-                if tx in bc.transactions:
-                    verify_result = False
         else:
-            verify_result = True
+            for tx in block.transactions:
+                for bc in self.blockchain:
+                    if tx in bc.transactions:
+                        verify_result = False
         return verify_result
 
     # 首领选举
     # 计算节点的稳定度
     def Caculate_Stability(self, K, alpha):
-        sum_time = 0.0
-        # 计算所有节点的剩余时间和
-        for node in self.nodelist:
-            sum_time = sum_time + node.lifetime
-        # 计算每个节点的稳定度
-        for node in self.nodelist:
-            bratio = round(node.bnum/K, 4)
-            tratio =  round(node.lifetime/sum_time, 4)
-            node.stability =  round(alpha * tratio +  (1- alpha) * bratio, 4)
+        if len(self.blockchain) >K:
+            sum_time = 0.0
+            # 计算所有节点的剩余时间和
+            for node in self.nodelist:
+                sum_time = sum_time + node.lifetime
+            # 计算每个节点的稳定度
+            for node in self.nodelist:
+                bratio = round(node.numblocks/K, 4)
+                tratio =  round(node.lifetime/sum_time, 4)
+                node.stability =  round(alpha * tratio +  (1- alpha) * bratio, 4)
+        else:
+            sum_time = 0.0
+            # 计算所有节点的剩余时间和
+            for node in self.nodelist:
+                sum_time = sum_time + node.lifetime
+            # 计算每个节点的稳定度
+            for node in self.nodelist:
+                tratio =  round(node.lifetime/sum_time, 4)
+                node.stability =  tratio 
 
     # 构建轮盘并选举首领
-    def Leader_Election(self):
+    def Leader_Election(self, probability):
         # 按照节点的ID进行排序
-        self.nodelist.sort(key = operator.attrgetter('nodeID')) 
+        temp_stabilitys = self.nodelist
+        temp_stabilitys.append(self)
+        temp_stabilitys.sort(key = operator.attrgetter('nodeID')) 
+        for node in temp_stabilitys:
+            print("排序后", node.nodeID)
         sum_stability = 0
         probs = []
         # 计算所有节点的稳定度之和
-        for node in self.nodelist:
+        for node in temp_stabilitys:
             sum_stability = sum_stability + node.stability
         # 计算各个节点被选中的概率
-        for node in self.nodelist:
+        for node in temp_stabilitys:
             prob = round(node.stability/sum_stability, 4)
             probs.append(prob)
         #构建轮盘
@@ -123,8 +141,8 @@ class Node:
             sum_p = round(sum_p + prob, 4)
             Disk.append(sum_p)
         # 根据区块链最新确认的区块hash选举首领节点
-        seed = self.blockchain[-1].hash
-        probability = seed/2^(len(seed))
+        # seed = self.blockchain[-1].Hash
+        # probability = int(seed)/2^(len(seed))
         for k in range(len(probs)):
                 if probability >= Disk[k] and probability < Disk[k+1]: # 判定随机数是否在节点k的区间中
                     leaderID = k
@@ -226,7 +244,7 @@ class Node:
                     node.transactions.append(cdata)
             elif data == 'block':
                 if cdata.leaderID == node.currentleader and node.receivequeue == None:
-                    node.receivequeue.append(cdata)
+                    # node.receivequeue.append(cdata)
                     node.currentblock = cdata
             elif data == 'sign':
                 if cdata in node.receivequeue:
