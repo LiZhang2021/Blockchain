@@ -10,10 +10,10 @@ from cv2 import sqrt
 from Node_Class import Node
 from Network import Network
 
-Num_nodes = 3          # 节点数量
+Num_nodes = 50          # 节点数量
 radius = 200                  # 节点的通信半径
 R = 1*pow(10, 6)            # 信道传输速率
-maxSimulationTime = 10 # 仿真时间
+maxSimulationTime = 20 # 仿真时间
 timeslot = 512/float(R) # 一个包大小为512bit，在当前传输速率下时隙长度
 K = 1
 alpha = 0.9
@@ -33,10 +33,9 @@ while curr_time < maxSimulationTime:
     N1.transmission1(curr_time, timeslot, R)
     # curr_time += 0.1
     curr_time += timeslot
-
 for node in N1.nodes:
-    print("节点的区块数量", node.nodeID, len(node.blockchain))
-
-    
+    print("输出节点信息", node.nodeID, len(node.blockchain))
+    # for i in range(1,len(node.blockchain)):
+    #     node.blockchain[i].print_block()
 
 
