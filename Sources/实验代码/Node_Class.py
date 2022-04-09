@@ -28,7 +28,7 @@ class Node:
          self.receivequeue = []         # 记录接收消息的队列——先进先出原则
          self.busy = 0                  # 记录信道忙碌状态
          self.sendnode = None
-         self.maxbusy = 100              # 最大忙碌
+         #self.maxbusy = 100              # 最大忙碌
          self.lifetime = 0              # 存储节点的寿命
          self.numblocks = 0             # 存储生成出块节点的数量
          self.stability = 0

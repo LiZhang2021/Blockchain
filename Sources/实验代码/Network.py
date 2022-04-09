@@ -146,7 +146,7 @@ class Network:
                     # 节点直到自己成为首领节点就打包交易生成区块
                     # 交易池中最多取2000个交易，生成区块
                     if len(node.transactions) < 200:
-                        current_transactions = node.transactions[:len(node.transactions)+1]
+                        current_transactions = node.transactions[:len(node.transactions)+1]# (有语法问题)
                     else:
                         current_transactions = node.transactions[:200]
                     curr_block = node.Create_Block(node.blockchain[-1].Hash, node.currentleader , current_transactions)
@@ -323,8 +323,9 @@ class Network:
                                     for i in range(0, len(node.queuetime)):
                                         if node.queuetime[i] < curr_time:
                                             node.queuetime[i] = curr_time
-                            
 
+    def run(self):
+        pass 
 
 
 
