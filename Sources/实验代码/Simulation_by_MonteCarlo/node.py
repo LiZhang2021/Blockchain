@@ -164,10 +164,13 @@ class Node:
                 if node.currentblock == None:
                     node.currentblock = data
             elif data_type == 'sign':
-                if data in node.currentsigns:
-                    break
+                if node.currentsigns == None:
+                    node.currentsigns = []
                 else:
-                    node.currentsigns.append(data)
+                    if data in node.currentsigns:
+                        break
+                    else:
+                        node.currentsigns.append(data)
                     # print('接收添加签名成功',node.nodeID)
             elif data_type == 'finalsign':
                     node.finalsign = data

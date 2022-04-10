@@ -12,14 +12,14 @@ from node import Node
 from block import Block
 from transaction import Transaction
 
-threshold_signs = 2
-probability = 0.5
+
 
 class Network:
     def __init__(self):
         self.nodes = []         # 记录网络中所有节点
         self.leaderID = None    # 记录当前的首领节点ID
         self.leader = None      # 记录当前首领节点
+        # self.hight = 1
     
     # 创建节点
     def create_nodes(self, Num_nodes, radius):
@@ -145,7 +145,7 @@ class Network:
                         node.channel_busy(R)
             else:
                 # 如果节点认为信道为空，查看自己是否需要发送数据
-                if len(node.queuetime) > 0:
+                if node.queuetime != None:
                     if curr_time <= node.queuetime[0] < (curr_time + slot):
                         sum_busy = 0
                         for rnode in node.nodelist:
@@ -162,11 +162,11 @@ class Network:
                             print("有其他节点在传输，信道忙")
                             node.channel_busy(R)
                             
-                else:
-                    print("节点没有消息要发送", node.nodeID)
+                # else:
+                    # print("节点没有消息要发送", node.nodeID)
     
     # 事件处理
-    def handle_event(self, curr_time, K, alpha):
+    def handle_event(self, probability, curr_time, K, alpha, threshold_signs):
         # 确定当前是否有首领节点
         if self.leaderID == None: 
             # 确定当前的首领
@@ -176,20 +176,21 @@ class Network:
                 if node.nodeID == currentleader:
                     self.leader = node
             self.leaderID = currentleader
+            print("首领节点是", self.leaderID)
         else:
             # 确定首领之后，看是否生成区块
             if self.leader.currentblock == None:
                 # 查看交易数量是否超过最低阈值
-                if len(self.leader.transactions) >= 10:
+                if self.leader.transactions!= None and len(self.leader.transactions) >= 30:
                     # 交易池中最多取200个交易，生成区块
                     ntransactions = list(self.leader.transactions)
-                    if len(self.leader.transactions) < 200:
+                    if len(self.leader.transactions) < 1000:
                         current_transactions = ntransactions[:len(self.leader.transactions)]
                     else:
-                        current_transactions = ntransactions[:200]
+                        current_transactions = ntransactions[:1000]
                     curr_block = self.leader.create_block(self.leader.blockchain[-1].Hash, self.leader.currentleader , current_transactions)
                     self.leader.currentblock = curr_block
-                    print("首领生成区块成功", self.leader.nodeID)
+                    print("首领生成区块成功, 交易数量为", self.leader.nodeID, len(current_transactions))
                     # 将生成的区块放入发送队列中，优先级最高
                     self.leader.sendqueue.insert(0, 'block')
                     self.leader.queuetime.insert(0, curr_time)
@@ -209,8 +210,8 @@ class Network:
                     for i in range(len(self.leader.queuetime)):
                         if self.leader.queuetime[i] < curr_time:
                             self.leader.queuetime[i] = curr_time  
-                else:
-                    print("交易数量不够，首领节点需要等待...")
+                # else:
+                    # print("交易数量不够，首领节点需要等待...")
             else:
                 # 如果有正在处理的区块，首先需要判定是否有节点接收到该区块的最终签名
                 for node in self.nodes:
@@ -219,7 +220,7 @@ class Network:
                     # else:
                         # print('节点收到区块了')
                         if node.currentblock.final_signature != None:
-                            print("节点已经确认区块啦", node.nodeID, node.currentblock.blockID)
+                            # print("节点已经确认区块啦", node.nodeID, node.currentblock.blockID)
                             # 如果，则需要将区块添加到本地链上
                             node.blockchain.append(node.currentblock)
                             # 更新交易池中的信息
@@ -236,7 +237,7 @@ class Network:
                                 node.currentsigns = []
                             else:
                                 if len(node.currentsigns) >= threshold_signs:
-                                    print("节点可以生成最终签名啦")
+                                    # print("节点可以生成最终签名啦")
                                     # 节点收集签名的数量达到阈值，则生成当前区块的最终签名
                                     temp_finalsign = 'final signature successful'
                                     node.currentblock.final_signature = temp_finalsign
@@ -261,9 +262,9 @@ class Network:
                                         if node.currentblock != None and node.verify_block(node.currentblock):
                                             node.currentsign = str(node.nodeID) + '签名区块' + str(node.currentblock.blockID) +'成功'
                                             node.currentsigns.append(node.currentsign)
-                                            node.sendqueue.insert(1, 'sign')
-                                            node.queuetime.insert(1, curr_time)
-                                            node.queuedata.insert(1, node.currentsign)
+                                            node.sendqueue.insert(0, 'sign')
+                                            node.queuetime.insert(0, curr_time)
+                                            node.queuedata.insert(0, node.currentsign)
                                             for i in range(len(node.queuetime)):
                                                 if node.queuetime[i] < curr_time:
                                                     node.queuetime[i] = curr_time
