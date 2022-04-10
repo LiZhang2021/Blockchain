@@ -1,3 +1,5 @@
-trans = [1 ,2, 3]
+probs = [1, 2, 3, 4, 5]
+prob1 = probs[:2]
+prob1 = set(probs)
 
-print(trans[:len(trans)+1])
+print(prob1)

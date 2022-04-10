@@ -1,6 +1,6 @@
 class Block:
     def __init__(self, blockID, previous_hash, leaderID, current_transactions):
-        self.ID = blockID
+        self.blockID = blockID
         self.previous_hash = previous_hash
         self.leaderID = leaderID
         self.Hash = None
@@ -8,7 +8,7 @@ class Block:
         self.transactions = current_transactions
     
     def print_block(self):
-        print("区块ID", self.ID)
+        print("区块ID", self.blockIDID)
         print("区块previous_hash", self.previous_hash)
         print("区块LeaderID", self.leaderID)
         print("区块Hash", self.Hash)
