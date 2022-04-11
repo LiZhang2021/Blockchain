@@ -1,4 +1,3 @@
-from ast import NotIn
 from calendar import c
 import operator
 from time import time  #导入operator 包,pip install operator
@@ -143,70 +142,53 @@ class Node:
     
     # 传输消息成功之后更新本地信息
     def update_information(self, slot, R):
-        print("传输完成，更新消息")
         # 获取传输消息的信息，并计算传输消息的时间
         data_type = self.sendqueue[0]
         data = self.queuedata[0]
         t_trans = self.commpute_trans_time(R)
         t_prop =  t_trans  + self.queuetime[0] + random.uniform(0, 0.1536)
-        # 更新消息传输完成后发送节点的区块状态
-        if self.currentleader!= None and self.currentblock != None:
-            self.finalsign = data
-            self.currentblock.final_signature = data
         # 更新发送节点传输完成之后消息队列时间
         for i in range(len(self.queuetime)):
             if self.queuetime[i] <= t_prop:
                 self.queuetime[i] = t_prop
             else:
                 break
-        # 更新消息传输完成后接收节点的区块状态
+        # 更新消息传输完成后接收节点的状态
         for node in self.nodelist:
             if data_type == 'trans':
                 if data in node.transactions:
-                    print("已经在交易池中",node.nodeID)
+                    break
                 else:
-                    print("添加交易到交易池中", node.nodeID)
                     node.transactions.add(data)
             elif data_type == 'block':
                 if node.currentblock == None:
-                    print("节点接收区块成功", node.nodeID)
                     node.currentblock = data
             elif data_type == 'sign':
                 if node.currentsigns == None:
                     node.currentsigns = []
-                    node.currentsigns.append(data)
-                    print('第一次接收添加签名成功',node.nodeID)
                 else:
                     if data in node.currentsigns:
-                        print("已经在签名集合中")
+                        break
                     else:
-                        print("添加签名到签名池中",node.nodeID)
                         node.currentsigns.append(data)
-                        print('接收添加签名成功',node.nodeID)
+                    # print('接收添加签名成功',node.nodeID)
             elif data_type == 'finalsign':
-                if node.currentblock != None:
                     node.finalsign = data
                     node.currentblock.final_signature = data
-                    if node.sendqueue[0] == 'finalsign':
-                        del node.sendqueue[0]
-                        del node.queuetime[0]
-                        del node.queuedata[0]
-                    if node.sendqueue[1] == 'finalsign':
-                        del node.sendqueue[1]
-                        del node.queuetime[1]
-                        del node.queuedata[1]
-                    if node.sendqueue[0] == 'sign':
-                        del node.sendqueue[0]
-                        del node.queuetime[0]
-                        del node.queuedata[0]
-                    if node.sendqueue[1] == 'sign':
-                        del node.sendqueue[1]
-                        del node.queuetime[1]
-                        del node.queuedata[1]
+                    # 更新所有接收节点发送队列的时间和信道状态
+                    # for i in range(0,len(node.queuetime)):
+                    #     r_prop = t_trans + node.queuetime[0] + 2*slot
+                    #     if node.queuetime[0] <= r_prop:
+                    #         node.queuetime[i] = r_prop
+                    #     else:
+                    #         break
+            else:
+                break
+
             # 更新所有接收节点发送队列的时间和信道状态
-            for i in range(len(node.queuetime)):
+            for i in range(0,len(node.queuetime)):
                 r_prop = t_trans + node.queuetime[0] + slot
-                if node.queuetime[i] <= r_prop:
+                if node.queuetime[0] <= r_prop:
                     node.queuetime[i] = r_prop
                 else:
                     break

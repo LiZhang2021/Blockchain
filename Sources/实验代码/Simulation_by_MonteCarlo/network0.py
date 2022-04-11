@@ -190,7 +190,7 @@ class Network:
                         current_transactions = ntransactions[:1000]
                     curr_block = self.leader.create_block(self.leader.blockchain[-1].Hash, self.leader.currentleader , current_transactions)
                     self.leader.currentblock = curr_block
-                    print("首领生成区块成功, 交易数量为", self.leader.nodeID, len(current_transactions))
+                    print("首领生成区块成功, 交易数量为", self.leader.nodeID, len(current_transactions), curr_time)
                     # 将生成的区块放入发送队列中，优先级最高
                     self.leader.sendqueue.insert(0, 'block')
                     self.leader.queuetime.insert(0, curr_time)
