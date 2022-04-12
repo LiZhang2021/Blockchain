@@ -12,12 +12,12 @@ from node import Node
 from block import Block
 from transaction import Transaction
 
-NUM_NODES = 100          # 节点数量
-CONFIRM_THRESHOLD = 60  # 区块确认阈值
+NUM_NODES = 500          # 节点数量
+CONFIRM_THRESHOLD = 260  # 区块确认阈值
 RADIUS = 200                  # 节点的通信半径
 TRANSMISSION_RATE = 1*pow(10, 6)            # 信道传输速率
 MAX_SIMULATIOND_TIME = 100 # 仿真时间
-MAX_TRANSACTIONS = 200
+MAX_TRANSACTIONS = 2000
 SLOT = 512/float(TRANSMISSION_RATE) # 一个包大小为512bit，在当前传输速率下时隙长度
 NUM_BLOCKS = 10             # 计算共识比的区块数量
 ALPHA = 0.9                         # 稳定度
