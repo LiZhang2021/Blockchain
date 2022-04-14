@@ -23,12 +23,22 @@ def caculate_bratio(NodeList, K):
     # 计算每个节点的共识比，K可以是固定的也可以是可变的
     for node in NodeList:
         node.bratio = node.bnum/K
+        # 取小数点后4位
         node.bratio = round(node.bratio, 4)
-    return NodeList
+        bratio_list.append(node.bratio)
+    
+    # 设定优质节点的共识比阈值，可以是均值，也可以是中位数，或者最大最小值的平均
+    #bthreshold = np.median(bratio_list)
+    bthreshold = np.mean(bratio_list)
+    #bmax = max(bratio_list)
+    #bmin = min(bratio_list)
+    #bthreshold = (bmax + bmin)/2
+    return bratio_list
 
 # 计算所有节点剩余时间比
 def caculate_tratio(NodeList):
     sum_time = 0.0
+    tratio_list = []
     # 计算所有节点的剩余时间和
     for node in NodeList:
         sum_time = sum_time + node.ttime
@@ -39,55 +49,31 @@ def caculate_tratio(NodeList):
             node.tratio = round(node.tratio, 4)
         else:
             node.tratio = 0
-    return NodeList
+        tratio_list.append(node.tratio)
+    # 设定优质节点的剩余时间比阈值，可以是均值，也可以是中位数，或者最大最小值的平均
+    #tthreshold = np.median(tratio_list)
+    tthreshold = np.mean(tratio_list)
+    #tmax = max(tratio_list)
+    #tmin = min(tratio_list)
+   # tthreshold = (tmax + tmin)/2
+    return tthreshold
 
 # 计算所有节点稳定度
-def caculate_stability(NodeList, K, alpha):
-    sum_time = 0.0
-    # 计算所有节点的剩余时间和
-    for node in NodeList:
-        sum_time = sum_time + node.ttime
-    # 计算每个节点的剩余时间比和共识比
-    for node in NodeList:
-        if sum_time > 0:
-            node.tratio = node.ttime/sum_time
-            node.tratio = round(node.tratio, 4)
-        else:
-            node.tratio = 0     
-        node.bratio = node.bnum/K
-        node.bratio = round(node.bratio, 4)
+def caculate_stability(NodeList, alpha):
     stability_list = []
     # 计算所有节点的稳定度
     for node in NodeList:
         node.stability = alpha * node.tratio +  (1- alpha) * node.bratio
         node.stability = round(node.stability, 4)
-
+        stability_list.append(node.stability)
 
 # 计算所有节点被选中的概率，并构建轮盘
-def caculate_prob(NodeList, K, alpha):
-    sum_time = 0.0
-    # 计算所有节点的剩余时间和
-    for node in NodeList:
-        sum_time = sum_time + node.ttime
-    # 计算每个节点的剩余时间比和共识比
-    for node in NodeList:
-        if sum_time > 0:
-            node.tratio = node.ttime/sum_time
-            node.tratio = round(node.tratio, 4)
-        else:
-            node.tratio = 0     
-        node.bratio = node.bnum/K
-        node.bratio = round(node.bratio, 4)
-    # 计算所有节点的稳定度
-    for node in NodeList:
-        node.stability = alpha * node.tratio +  (1- alpha) * node.bratio
-        node.stability = round(node.stability, 4)
-    # 计算节点被选中的概率
-    sum_stability = 0.0
+def caculate_prob(NodeList):
+    sum_stability = 0
     probs = []
     # 计算所有节点的稳定度之和
     for node in NodeList:
-        sum_stability += node.stability
+        sum_stability = sum_stability + node.stability
     # 计算各个节点被选中的概率
     for node in NodeList:
         tprob = node.stability/sum_stability
@@ -107,75 +93,88 @@ def create_nodes(num_nodes):
     NodeList = []
     for j in range(num_nodes):
         if j % 4 == 0:
-            ttime = 250
-            bnum = 12
+            ttime = 100
+            bnum = 250
         elif j % 4 == 1:
-            ttime = 500
-            bnum = 12
+            ttime = 1000
+            bnum = 250
         elif j % 4 == 2:
-            ttime = 250
-            bnum = 36 
+            ttime = 100
+            bnum = 500 
         else:
-            ttime = 500
-            bnum = 36
+            ttime = 1000
+            bnum = 500
         TNode = Node(j, ttime, bnum)
         NodeList.append(TNode)
+    return NodeList
+def random_create(num_nodes, K):
+    # 随机生成节点并赋予不同的时间和共识区块
+    NodeList = []
+    temp_K = K
+    for j in range(num_nodes):
+        # ttime = np.random.uniform(0, 2500)
+        ttime = random.uniform(0, 500)
+        bnum = random.randint(0, temp_K)
+        temp_K = temp_K - bnum
+        TNode = Node(j, ttime, bnum)
+        NodeList.append(TNode)
+    if temp_K > 0:
+        node = random.choice(NodeList)
+        node.bnum = node.bnum + temp_K
     return NodeList
 
 if __name__ == '__main__':
     # 全局变量
     x = []
     y = []
-    num_consensus = 499     # 共识次数
+    num_consensus = 100     # 共识次数
     num_nodes = 500         # 节点数量
-    K = 12000
+    K = 1500
     NodeList = create_nodes(num_nodes)
-    timelist = []
-    blocklist = []
-    for node in NodeList:
-        timelist.append(node.ttime)
-        blocklist.append(node.bnum)
-    tt = np.var(timelist)
-    ttf = np.sqrt(tt)
-    bn = np.var(blocklist)
-    bnf = np.sqrt(bn)
-    print("时间和区块的方差分别是", ttf, bnf, ttf/(ttf+bnf))
-    #     print("节点", node.index, node. ttime, node.bnum)
     # 测试不同alpha值时，优质节点被选中的概率
-    alphas = np.arange(0, 1.1, 0.1)
+    alphas = np.arange(0, 1.01, 0.01)
     #alphas = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0]
     for alpha in alphas:
         alpha = round(alpha, 4)
         print("alpha为:", alpha)
-        temp_nodelist = create_nodes(num_nodes)
-        # print("临时节点数量",len(temp_nodelist), temp_nodelist[5].index, temp_nodelist[5].ttime, temp_nodelist[5].bnum)
+        temp_nodelist = NodeList
         num_best = 0.0  # 记录在不同的alpha下优质节点被选中的次数
 
         # 测试num_consensus 次数时，优质节点被选中的次数
         for nc in range(num_consensus):
+            # 计算所有节点的时间比、共识比和稳定度
+            bthreshold = caculate_bratio(temp_nodelist, K)
+            tthreshold = caculate_tratio(temp_nodelist)
+            caculate_stability(temp_nodelist,alpha)
+            
             # 根据所有节点的稳定度绘制轮盘赌
-            Disk = caculate_prob(temp_nodelist, K, alpha)
-            # 生成出块节点选举的值
-            p = nc/50.0
+            Disk = caculate_prob(temp_nodelist)
+            # 随机生成出块节点选举的值
+            # 选举节点的值
+            # p = np.random.uniform(0,1) 
+            # p = random.random()
+            # p = round(p,4)
+            p = num_consensus/101.0
+
             # 确定出块节点（根据轮盘赌）
-            temp = 0
-            for t in range(num_nodes):
-                if p >= Disk[t] and p < Disk[t+1]: # 判定随机数是否在节点k的区间中
-                    temp = t
+            for k in range(num_nodes):
+                if p >= Disk[k] and p < Disk[k+1]: # 判定随机数是否在节点k的区间中
+                    temp = k
                     break
             
-            # print("选中节点的下标是", temp)
             # 判定出块节点是否是优质节点
             for node in temp_nodelist:
                 if node.index == temp:
-                    # print("优质节点的信息", node.index, node. ttime, node.bnum)
                     # 更新节点的共识区块数量
                     node.bnum = node.bnum + 1
-                    if (node.ttime > 400)  and (node.bnum > 20):
+                    # if (node.tratio > tthreshold)  and (node.bratio > bthreshold):
+                    #if (node.tratio > 0.001)  and (node.bratio > 0.001):
+                    # print("节点的活动时间和区块数量")
+                    if (node.ttime > 800)  and (node.bnum > 400):
                         num_best = num_best + 1
                         #print("优质节点计数：", num_best)
-            d = random.randint(0,num_nodes-1)
-            temp_nodelist[nc].bnum -= 1
+            t = random.randint(0,num_nodes-1)
+            temp_nodelist[t].bnum -= 1
             # 更新所有节点的剩余活动时间
             for node in temp_nodelist:
                 node.ttime = node.ttime - 1
