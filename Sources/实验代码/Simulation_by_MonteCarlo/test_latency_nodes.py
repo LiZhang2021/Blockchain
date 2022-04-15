@@ -1,11 +1,15 @@
 import random
 import math
-from time import sleep
 import Crypto.PublicKey.RSA
 import Crypto.Signature.PKCS1_v1_5
 import Crypto.Hash.SHA256
 import hashlib
 import operator
+
+import matplotlib.pyplot as plt
+import matplotlib.pyplot as mp
+
+import numpy
 
 
 from node import Node
@@ -16,12 +20,14 @@ NUM_NODES = 100          # 节点数量
 CONFIRM_THRESHOLD = 51  # 区块确认阈值
 RADIUS = 200                  # 节点的通信半径
 TRANSMISSION_RATE = 1*pow(10, 6)            # 信道传输速率
-MAX_SIMULATIOND_TIME = 100 # 仿真时间
+MAX_SIMULATIOND_TIME = 50 # 仿真时间
 MAX_TRANSACTIONS = 2000
 SLOT = 512/float(TRANSMISSION_RATE) # 一个包大小为512bit，在当前传输速率下时隙长度
 NUM_BLOCKS = 10             # 计算共识比的区块数量
 ALPHA = 0.5                         # 稳定度
-
+# CONSENSUS_BEGIN_TIME = []
+# CONSENSUS_END_TIME = []
+# NUM_TRANSACTIONS = []
 class Network:
     def __init__(self):
         self.nodes = []         # 记录网络中所有节点
@@ -174,7 +180,7 @@ class Network:
                     # print("节点没有消息要发送", node.nodeID)
 
     # 事件处理
-    def handle_event(self, curr_time, block_threshold, alpha, signs_threshold):
+    def handle_event(self, curr_time, block_threshold, alpha, confirm_threshold, max_transactions, consensus_begin_time, num_transactions):
         # 确定当前是否有首领节点
         if self.leaderID == None: 
             # 确定当前的首领
@@ -185,25 +191,24 @@ class Network:
                 if node.nodeID == currentleader:
                     self.leader = node
             self.leaderID = currentleader
-            print("首领节点是", self.leaderID)
+            # print("首领节点是", self.leaderID)
         else:
             # 确定首领之后，看是否生成区块
             if self.leader.currentblock == None:
                 # 查看交易数量是否超过最低阈值
-                if self.leader.transactions!= None and len(self.leader.transactions) >= MAX_TRANSACTIONS:
+                if self.leader.transactions!= None and len(self.leader.transactions) >= max_transactions:
                     # 交易池中最多取200个交易，生成区块
                     ntransactions = list(self.leader.transactions)
-                    if len(self.leader.transactions) < MAX_TRANSACTIONS:
+                    if len(self.leader.transactions) < max_transactions:
                         current_transactions = ntransactions[:len(self.leader.transactions)]
                     else:
-                        current_transactions = ntransactions[:MAX_TRANSACTIONS]
+                        current_transactions = ntransactions[:max_transactions]
                     curr_block = self.leader.create_block(self.leader.blockchain[-1].Hash, self.leader.currentleader , current_transactions)
                     self.leader.currentblock = curr_block
-                    print("首领生成区块成功, 交易数量为", self.leader.nodeID, len(current_transactions), curr_time)
+                    consensus_begin_time.append(curr_time)
+                    num_transactions.append(len(current_transactions))
+                    # print("首领生成区块成功, 交易数量为", self.leader.nodeID, len(current_transactions), curr_time)
                     # 将生成的区块放入发送队列中，优先级最高
-                    self.leader.sendqueue.insert(1, 'block')
-                    self.leader.queuetime.insert(1, curr_time)
-                    self.leader.queuedata.insert(1, curr_block)
                     # 将生成的区块Hash签名放入发送队列中，优先级次高
                     leader_sign = str(self.leader.nodeID) + '签名区块' + str(self.leader.currentblock.blockID) +'成功'
                     self.leader.currentsign = leader_sign
@@ -213,9 +218,21 @@ class Network:
                         self.leader.currentsigns.append(leader_sign)
                     else:
                         self.leader.currentsigns.append(leader_sign)
-                    self.leader.sendqueue.insert(2, 'sign')
-                    self.leader.queuetime.insert(2, curr_time)
-                    self.leader.queuedata.insert(2, str(self.leader.nodeID) + ' sign')
+                    if self.leader.busy >0 and self.leader.sendnode == None:
+                        self.leader.sendqueue.insert(1, 'block')
+                        self.leader.queuetime.insert(1, curr_time)
+                        self.leader.queuedata.insert(1, curr_block)
+                        self.leader.sendqueue.insert(2, 'sign')
+                        self.leader.queuetime.insert(2, curr_time)
+                        self.leader.queuedata.insert(2, str(self.leader.nodeID) + ' sign')
+                    else:
+                        self.leader.sendqueue.insert(0, 'block')
+                        self.leader.queuetime.insert(0, curr_time)
+                        self.leader.queuedata.insert(0, curr_block)
+                        self.leader.sendqueue.insert(1, 'sign')
+                        self.leader.queuetime.insert(1, curr_time)
+                        self.leader.queuedata.insert(1, str(self.leader.nodeID) + ' sign')
+                   # 调整所有的消息发送时间
                     for i in range(len(self.leader.queuetime)):
                         if self.leader.queuetime[i] < curr_time:
                             self.leader.queuetime[i] = curr_time  
@@ -231,7 +248,7 @@ class Network:
                                 # print("节点还没有收到任何签名", node.nodeID)
                                 node.currentsigns = []
                             else:
-                                if len(node.currentsigns) >= signs_threshold:
+                                if len(node.currentsigns) >= confirm_threshold:
                                     # print("节点可以生成最终签名啦", node.nodeID, node.currentleader)
                                     # 节点收集签名的数量达到阈值，则生成当前区块的最终签名
                                     temp_finalsign = 'final signature successful'
@@ -270,9 +287,9 @@ class Network:
                                         else:
                                             print("节点已经生成签名了", node.nodeID)
 
-    def run(self):
+    def run(self, max_transactions, consensus_begin_time, consensus_end_time, num_transactions, num_nodes, confirm_threshold):
         # 创建节点和创世区块，并且找到所有节点的邻居节点
-        self.create_nodes(NUM_NODES, RADIUS)
+        self.create_nodes(num_nodes, RADIUS)
         self.create_genesis_block()
         self.find_adjacent_nodes(RADIUS)
         current_time = 0
@@ -324,19 +341,61 @@ class Network:
                     node.currentsign = None
                     node.currentblock = None
                     node.currentleader = None
-                print('所有节点完成了一次区块确认', current_time, self.nodes[0].blockchain[-1].blockID)
-            self.handle_event(current_time, NUM_BLOCKS , ALPHA, CONFIRM_THRESHOLD)
+                consensus_end_time.append(current_time)
+                # print("当前共识完成时间", consensus_end_time)
+                # print('所有节点完成了一次区块确认', current_time, self.nodes[0].blockchain[-1].blockID)
+            self.handle_event(current_time, NUM_BLOCKS , ALPHA, confirm_threshold, max_transactions, consensus_begin_time, num_transactions)
             self.transmission(current_time, SLOT, TRANSMISSION_RATE)
             current_time += SLOT
-        for node in self.nodes:
-            print("输出节点信息", node.nodeID, len(node.blockchain))
+        # for node in self.nodes:
+        #     print("输出节点信息", node.nodeID, len(node.blockchain))
         # for b in self.nodes[0].blockchain:
         #     b.print_block()
 
 if __name__== '__main__':
-    N1 = Network()
-    N1.run()
-
+    num_nodes = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    latency = []
+    throughput = []
+    MAX_TRANSACTIONS = 1024
+    for num in num_nodes:
+        confirm_threshold = int(num/2) + 1
+        N1 = Network()
+        CONSENSUS_BEGIN_TIME = []
+        CONSENSUS_END_TIME = []
+        NUM_TRANSACTIONS = []
+        N1.run(MAX_TRANSACTIONS, CONSENSUS_BEGIN_TIME, CONSENSUS_END_TIME, NUM_TRANSACTIONS, num, confirm_threshold)
+        CONSENSUS_LATENCY = list(map(lambda x: x[0]-x[1], zip( CONSENSUS_END_TIME, CONSENSUS_BEGIN_TIME)))
+        CONSENSUS_AVERAGE = numpy.mean(CONSENSUS_LATENCY)
+        TRANSACTION_AVERAGE = numpy.mean(NUM_TRANSACTIONS)
+        # print("开始时间",CONSENSUS_BEGIN_TIME)
+        # print("结束时间", CONSENSUS_END_TIME)
+        # print("共识时延", CONSENSUS_LATENCY)
+        # print("交易数量", NUM_TRANSACTIONS)
+        print("节点数量", num)
+        print("平均共识时延", CONSENSUS_AVERAGE)
+        print("交易数量", TRANSACTION_AVERAGE)
+        latency.append(CONSENSUS_AVERAGE)
+        throughput.append(round(TRANSACTION_AVERAGE/CONSENSUS_AVERAGE, 4))
+    print("区块大小", num_nodes)
+    print("时延数据", latency)
+    print("吞吐量数据", throughput)
+ 
+    # 绘图
+    mp.gcf().set_facecolor(numpy.ones(3) * 240/255)#设置背景色
+    fig, ax1 = plt.subplots() # 使用subplots()创建窗口
+    # 绘制折线图像1, 标签，线宽
+    ax1.plot(num_nodes, latency, c='orangered', label='Latency', linewidth = 1) 
+    mp.legend(loc=2)
+    ax2 = ax1.twinx() # 创建第二个坐标轴
+    ax2.plot(num_nodes, throughput, c='blue', label='Throughput', linewidth = 1) #同上, 'o-'
+    mp.legend(loc=4)
+    plt.grid(True)  # 样式风格：网格型
+    # ax1.set_title("Double Y axis",size=22)  # 大标题
+    ax1.set_xlabel('Number of Nodes',size=18)  
+    ax1.set_ylabel('Latency',size=18)
+    ax2.set_ylabel('Throughput',size=18)
+    # mp.gcf().autofmt_xdate() # 自动适应刻度线密度，包括x轴，y轴
+    plt.show()
             
 
 

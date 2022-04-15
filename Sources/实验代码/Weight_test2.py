@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 from scipy.interpolate import make_interp_spline
-
+from scipy.interpolate import spline
 
 # 声明节点的类
 class Node:
@@ -187,8 +187,11 @@ if __name__ == '__main__':
         y. append(bp)
     
     # 绘图
-    y = savgol_filter(y,15, 3,  mode= 'nearest')
-    plt.plot(x, y)
+    xnew = np.linspace(x.min(),x.max(),300)#300 represents number of points to make between T.min and T.max
+    power_smooth = spline(x,y,xnew)
+    # y = savgol_filter(y,15, 3,  mode= 'nearest')
+    # plt.plot(x, y)
+    plt.plot(xnew,power_smooth)
     #设置横纵坐标字体大小
     plt.xticks(fontsize=10)
     plt.yticks(fontsize=10)

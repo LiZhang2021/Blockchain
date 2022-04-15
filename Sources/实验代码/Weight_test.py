@@ -130,16 +130,16 @@ if __name__ == '__main__':
     num_nodes = 500         # 节点数量
     K = 12000
     NodeList = create_nodes(num_nodes)
-    timelist = []
-    blocklist = []
-    for node in NodeList:
-        timelist.append(node.ttime)
-        blocklist.append(node.bnum)
-    tt = np.var(timelist)
-    ttf = np.sqrt(tt)
-    bn = np.var(blocklist)
-    bnf = np.sqrt(bn)
-    print("时间和区块的方差分别是", ttf, bnf, ttf/(ttf+bnf))
+    # timelist = []
+    # blocklist = []
+    # for node in NodeList:
+    #     timelist.append(node.ttime)
+    #     blocklist.append(node.bnum)
+    # tt = np.var(timelist)
+    # ttf = np.sqrt(tt)
+    # bn = np.var(blocklist)
+    # bnf = np.sqrt(bn)
+    # print("时间和区块的方差分别是", ttf, bnf, ttf/(ttf+bnf))
     #     print("节点", node.index, node. ttime, node.bnum)
     # 测试不同alpha值时，优质节点被选中的概率
     alphas = np.arange(0, 1.1, 0.1)
