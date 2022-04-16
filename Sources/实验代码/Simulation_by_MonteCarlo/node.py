@@ -35,12 +35,14 @@ class Node:
          self.currentsign = None        # 记录对当前区块的签名
          self.currentblock = None       # 记录正在处理的区块
          self.currentleader = None      # 记录当前处理区块的首领节点
+         self.sybil = 0                 # 记录节点是否是女巫节点
+         self.timeout = 0               # 记录出块节点的超时
 
     # 生成一个交易
     def create_trans(self, ID):
         return Transaction(ID)   # 交易ID
     
-    # 生成一个区块
+    # 生成一个有效区块
     def create_block(self, previous_hash, leaderID, current_transactions):
         block = Block(len(self.blockchain), previous_hash, leaderID, current_transactions)
         combination = str(block.blockID) + str(block.previous_hash) + str(block.leaderID)
@@ -48,7 +50,7 @@ class Node:
             combination = combination + str(trans)
         block.Hash = hashlib.sha256( combination.encode("utf-8")).hexdigest()
         return block
-    
+
     # 对消息签名
     def RSA_signature(self, data):
         # 获取 数据消息 的HASH值，摘要算法MD5，验证时也必须用MD5
@@ -90,9 +92,10 @@ class Node:
     
     # 同步交易
     def update_transactions(self, block):
-        btransactions = set(block.transactions)
-        # self.transactions = set(self.transactions)
-        self.transactions = self.transactions - btransactions
+        if block.transactions != None:
+            btransactions = set(block.transactions)
+            # self.transactions = set(self.transactions)
+            self.transactions = self.transactions - btransactions
 
     # 节点同步最新区块链
     def synchronous_blockchain(self, node):
@@ -108,8 +111,11 @@ class Node:
             t_trans = pow(2, 9)*8 /float(trans_rate)
         # 如果是区块数据，一个区块的大小设为1MB
         elif data_type == 'block':
-            num_trans = len(data.transactions)
-            t_trans = num_trans * pow(2, 9)*8 /float(trans_rate)
+            if data.transactions == None:
+                num_trans = 0
+            else:
+                num_trans = len(data.transactions)
+            t_trans = num_trans * pow(2, 9)*8 /float(trans_rate) + pow(2, 11) /float(trans_rate)
         # 如果是签名数据，一个签名的大小设为1024bit 
         elif data_type == 'sign':
             t_trans = pow(2, 11) /float(trans_rate)
