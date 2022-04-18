@@ -440,6 +440,28 @@ if __name__== '__main__':
     print("时延数据", latency)
     print("吞吐量数据", throughput)
  
+    # 写入数据
+    file = open('test_sybil.txt', 'a')
+    mid = str(gammas).replace('[', '').replace(']', '')
+    # 删除单引号并用字符空格代替逗号
+    mid = mid.replace("'", '').replace(',', '') + '\n'
+    file.write(mid)
+    file.close()
+
+    file = open('test_sybil.txt', 'a')
+    mid = str(latency).replace('[', '').replace(']', '')
+    # 删除单引号并用字符空格代替逗号
+    mid = mid.replace("'", '').replace(',', '') + '\n'
+    file.write(mid)
+    file.close()
+
+    file = open('test_sybil.txt', 'a')
+    mid = str(throughput).replace('[', '').replace(']', '')
+    # 删除单引号并用字符空格代替逗号
+    mid = mid.replace("'", '').replace(',', '') + '\n'
+    file.write(mid)
+    file.close()
+
     # 绘图
     mp.gcf().set_facecolor(numpy.ones(3) * 240/255)#设置背景色
     fig, ax1 = plt.subplots() # 使用subplots()创建窗口

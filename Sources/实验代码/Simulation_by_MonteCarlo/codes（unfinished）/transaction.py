@@ -2,9 +2,12 @@
 """
 交易类
 
-Created on Sun Apr 17 10:37:47 2022
+Created on Sun Apr 18 11:35:47 2022
 @author: shally, ZHANG
 """
+
+from turtle import isvisible
+
 
 class Transaction(object):
     def __init__(self, tx_id=0):
@@ -22,6 +25,7 @@ class Transaction(object):
 if __name__ == "__main__":
     tx = Transaction(0)
     print(tx)
+    print(isinstance(tx, Transaction))
 
     pass
 

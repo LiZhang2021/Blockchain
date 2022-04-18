@@ -25,7 +25,7 @@ MIN_BLOCK_NUM = 1000  # 区块中交易个数的下线
 
 
 class Node:
-    def __init__(self, node_id, x, y, radius):
+    def __init__(self, node_id, lon, lat, radius):
         self.node_id = node_id  # 节点id
         self.lon = lon  # 经度
         self.lat = lat  # 纬度
@@ -40,13 +40,13 @@ class Node:
         self.receive_node = None  # 记录当前从哪个节点接收消息
         self.send_queue = None  # 发送消息的队列——先进先出原则
         self.send_time = None  # 发送消息的时间
-        self.signs = None  # 记录接收消息的队列——先进先出原则
-         self.finalsign = None          # 记录最终签名
-         self.currentsign = None        # 记录对当前区块的签名
-         self.currentblock = None       # 记录正在处理的区块
-         self.is_leader = None  # 是否为首领节点
-         self.sybil = 0                 # 记录节点是否是女巫节点
-         self.timeout = 0               # 记录出块节点的超时
+        self.signs = None  # 部分签名
+        self.finalsign = None          # 记录最终签名
+        self.currentsign = None        # 记录对当前区块的签名
+        self.currentblock = None       # 记录正在处理的区块
+        self.is_leader = None  # 是否为首领节点
+        self.sybil = 0                 # 记录节点是否是女巫节点
+        self.timeout = 0               # 记录出块节点的超时
 
     # 生成一个交易
     def gen_trans(self, current_time):
@@ -57,7 +57,7 @@ class Node:
         else:
             self.tx_pool.add(tx)
         if not self.send_queue:
-            self.send_queue = [tx]:
+            self.send_queue = [tx]
         else:
             self.send_queue.append(tx)
 
