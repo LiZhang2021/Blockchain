@@ -110,7 +110,7 @@ class Network(object):
         for i in range(len(probs)):
             sum_i = sum(probs[:i+1])
             Disk.insert(i+1, sum_i)
-        print("轮盘", Disk )
+        # print("轮盘", Disk )
         # 根据区块链最新确认的区块hash选举首领节点
         for node_id in range(len(probs)):
                 if prob >= Disk[node_id] and prob < Disk[node_id+1]: # 判定随机数是否在节点k的区间中
@@ -124,42 +124,44 @@ class Network(object):
             # 节点的活动时间递减
             node.lifetime -= 1
             # 共识比窗口前移
-            if len(node.blockchain) > block_threshold:
-                if node.nodeID == node.blockchain[-1].leaderID:
-                    node.numblocks += 1
-                if node.nodeID == node.blockchain[-(block_threshold+1)].leaderID:
-                    node.numblocks -= 1
+            # if len(node.blockchain) > block_threshold:
+            if node.node_id == node.blockchain[-1].leader_id:
+                node.recent_gen_blocks += 1
+            # if node.node_id == node.blockchain[-(block_threshold+1)].leaderID:
+        dnode = random.choice(self.nodes)
+        dnode.recent_gen_blocks -= 1
 
      # 传输消息
     def transmission(self, curr_time, slot, trans_rate):
         for node in self.nodes:
-            if node.channel_state == 0:  # 节点空闲
-                if curr_time <= node.send_time < (curr_time + slot):
-                    # 记录能接收消息的节点集合
-                    for rnode in node.neighbors:
-                        if rnode.channel_state == 0:
-                            if not node.transmission_node:
-                                node.transmission_node = [rnode]
-                            else:
-                                node.transmission_node.append(rnode)
-                    if node.transmission_node:
-                        print("节点可以传输消息", node.node_id)
-                        # 更改节点的状态
-                        node.channel_state = 1
-                        for rnode in node.neighbors:
-                            rnode.channel_state = 2
-                            rnode.transmission_node = [node]
-                    # else:
-                    #     print("所有节点都在接收或者传输消息，节点不能传输消息", node.node_id)
-                    #     node.channel_busy(trans_rate)
-            if node.channel_state == 1: # 节点发送消息
+            if node.channel_state == 0 and node.send_queue:
+                # 找到当前时隙所有要传输的节点
+                temp_nodes = [node]
+                for tnode in node.neighbors:
+                    if tnode.channel_state == 0 and curr_time <= tnode.send_time <= (curr_time + slot):
+                        temp_nodes.append(tnode)    
+                snode = random.choice(temp_nodes)
+                # print("节点开始传输数据", snode.node_id, type(snode.send_queue[0]), snode.send_time) 
+                snode.channel_state = 1
+                # print("发送节点状态", snode.node_id, snode.channel_state)
+                for rnode in snode.neighbors:
+                    if rnode.channel_state == 0:
+                        rnode.channel_state = 2
+                        # print("接收节点状态", rnode.node_id, rnode.channel_state)
+                        rnode.transmission_node = [snode]
+                        if not snode.transmission_node:
+                            snode.transmission_node = [rnode]
+                        else:
+                            snode.transmission_node.append(rnode)
+            elif node.channel_state == 1: # 节点发送消息
                 # 查看节点发送消息是否结束
                 t_trans = node.commpute_trans_time(trans_rate) + node.send_time
-                if curr_time <= t_trans <= (curr_time + slot):
+                # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
+                if curr_time <= t_trans < curr_time + slot:
                     # 传输完成，更新发送节点信息
                     # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))
                     for rnode in node.transmission_node:
-                        rnode.update_receivenode_info(slot, trans_rate)
+                        rnode.update_receivenode_info(curr_time,slot, trans_rate)
                         # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                     # print("发送节点", node.node_id, len(node.tx_pool))
                     node.update_sendnode_info(trans_rate)
@@ -170,15 +172,17 @@ class Network(object):
         for node in self.nodes:
             if node.node_id == self.leader_id:  # 首领节点的操作
                 if not node.current_block:
-                    print("节点要生成区块", node.node_id)
+                    # print("节点要生成区块", node.node_id)
                     # 如果还没有生成区块，则需要生成区块和区块Hash的签名
-                    node.gen_valid_block(min_tx_num, curr_time, slot)
+                    node.gen_valid_block(min_tx_num, curr_time)
                     node.gen_sign()
+                    # print("首领生成签名成功了", node.node_id)
+                    # print("首领节点生成签名成功")
                 else:
                     # 已经生成区块之后，判定区块是否被确认
                     if not node.final_sign:
                         if node.signs and len(node.signs) > signs_threshold:
-                            print("节点生成最终签名了", node.node_id)
+                            # print("节点生成最终签名了", node.node_id)
                             node.gen_final_sign(signs_threshold)
                         else:
                             # if not node.signs:
@@ -187,6 +191,7 @@ class Network(object):
                             #     print("节点收集的签名还不够", node.node_id, len(node.signs))
                             if not node.current_sign:
                                 node.gen_sign()
+                                # print("首领节点生成签名成功了", node.node_id)
                             # else:
                             #     print("节点已经生成签名了，只能等待接收",node.node_id)
 
@@ -195,15 +200,19 @@ class Network(object):
                 if node.current_block:
                     # 判断是否已经生成当前区块的最终签名
                     if not node.final_sign:
-                        if node.signs and len(node.signs) > signs_threshold:
-                            node.gen_final_sign(signs_threshold)
-                            print("节点生成最终签名了", node.node_id)
+                        if node.signs:
+                            if len(node.signs) > signs_threshold:
+                                node.gen_final_sign(signs_threshold)
+                                # print("节点生成最终签名了", node.node_id)
                         else:
                             # print("节点收集的签名还不够")
                             if not node.current_sign:
                                 node.gen_sign()
+                                # print("普通节点生成签名成功了", node.node_id)
+                                # print("节点额发送队列", type(node.send_queue[0]))
                             # else:
                             #     print("节点已经生成签名了，只能等待接收",node.node_id)
+
                 else:
                     node.gen_trans(curr_time)
 
@@ -272,38 +281,37 @@ class Network(object):
 
 if __name__== '__main__':
     N1 = Network()
-    NUM_BLOCKS = 4
-    N1.create_nodes(NUM_BLOCKS, 200)
+    NUM_NODES= 4
+    N1.create_nodes(NUM_NODES, 200)
     N1.set_basic_info()
     N1.find_adjacent_nodes()
-    print(N1) 
+    # print(N1) 
     block_threshold = 96 
-    alpha = 0.99
-    # 确定当前是否有首领节点
-    if not N1.leader_id: 
-        # 确定当前的首领
-        prob = 0.5
-        N1.leader_election(prob, block_threshold, alpha)
-        print("首领节点是", N1.leader_id)
-        for node in N1.nodes:
-            node.current_leader_id = N1.leader_id
-            if node.node_id == N1.leader_id:
-                N1.leader = node
-        print("首领节点确实是", N1.leader.node_id)
+    alpha = 0.5
+    prob = 0.5
     current_time = 0
     print("当前时间", current_time)
-    while current_time < 1:
+    while current_time < 10:
+        # 确定当前是否有首领节点
+        if not N1.leader_id: 
+        # 确定当前的首领
+            N1.leader_election(prob, block_threshold, alpha)
+            print("首领节点是", N1.leader_id)
+            for node in N1.nodes:
+                node.current_leader_id = N1.leader_id
+                if node.node_id == N1.leader_id:
+                    N1.leader = node
     # 计算当前完成区块确认的节点数量
         count = 0
         for node in N1.nodes:
-            if node.current_leader_id and node.current_block and node.final_sign:
+            if node.current_leader_id and node.current_block and node.current_block.final_sig:
                 count += 1
         if count == len(N1.nodes):
-            N1.leader = None
-            N1leaderID = None
-            N1.update_information(NUM_BLOCKS)
             for node in N1.nodes:
-                node.blockchain.append(node.currentblcurrent_blockock)
+                if not node.blockchain:
+                    node.blockchain = [node.current_block]
+                else:
+                    node.blockchain.append(node.current_block)
                 # 更新交易池中的信息
                 node.update_transactions()
                 node.signs = None
@@ -311,13 +319,17 @@ if __name__== '__main__':
                 node.current_sign = None
                 node.current_block = None
                 node.current_leader_id = None
+            N1.update_information(NUM_BLOCKS)
+            N1. leader_id = None
+            N1.Leader = None
             print("当前时间", current_time)
             print('所有节点完成了一次区块确认', current_time, N1.nodes[0].blockchain[-1].block_id)
-        N1.handle_event(current_time, SLOT, min_tx_num=10, signs_threshold=2)
+        N1.handle_event(current_time, SLOT, min_tx_num=100, signs_threshold=2)
         N1.transmission(current_time, SLOT, TRANSMISSION_RATE)
-        # print("交易数量", len(N1.nodes[2].tx_pool))
+        # print("首领节点信息", N1.nodes[2].send_queue[0])
         current_time += SLOT
-    # print(N1)    
+    for node in N1.nodes:
+        print("区块数量", node.node_id, len(node.blockchain))  
 
 
         
