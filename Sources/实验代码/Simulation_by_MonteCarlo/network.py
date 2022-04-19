@@ -194,14 +194,10 @@ class Network(object):
                                 # print("首领节点生成签名成功了", node.node_id)
                             # else:
                             #     print("节点已经生成签名了，只能等待接收",node.node_id)
-                node.gen_trans(curr_time)
+                    # node.gen_trans(curr_time)
             else:  # 非首领节点的操作
                 # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
                 if node.current_block:
-                    # ts = 0
-                    # if node.signs:
-                    #     ts = len(node.signs)
-                    # print("节点当前的签名数", node.node_id, ts)
                     # 判断是否已经生成当前区块的最终签名
                     if not node.final_sign:
                         if node.signs:
@@ -216,7 +212,12 @@ class Network(object):
                                 # print("节点额发送队列", type(node.send_queue[0]))
                             # else:
                             #     print("节点已经生成签名了，只能等待接收",node.node_id)
-                node.gen_trans(curr_time)
+                else:
+                    if not node.tx_pool:
+                        node.gen_trans(curr_time)
+                    else:
+                        if len(node.tx_pool) < 5000:
+                            node.gen_trans(curr_time)
    
     # 设置女巫节点
     def set_sybil_nodes(self, gamma):
@@ -269,7 +270,7 @@ class Network(object):
                                     # print("首领节点生成签名成功了", node.node_id)
                                 # else:
                                 #     print("节点已经生成签名了，只能等待接收",node.node_id)
-                    node.gen_trans(curr_time)
+                    # node.gen_trans(curr_time)
             else:  # 非首领节点的操作
                 # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
                 if node.current_block and node.sybil == 0:
@@ -291,7 +292,8 @@ class Network(object):
                                 # print("节点额发送队列", type(node.send_queue[0]))
                             # else:
                             #     print("节点已经生成签名了，只能等待接收",node.node_id)
-                node.gen_trans(curr_time)
+                # else:
+                #     node.gen_trans(curr_time)
 
     def run(self):
         # 创建节点和创世区块，并且找到所有节点的邻居节点
