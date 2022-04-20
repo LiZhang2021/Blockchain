@@ -61,7 +61,7 @@ if __name__== '__main__':
         current_time = 0
         num_slots  = 0
         cblocks = 0 # 当前共识的次数
-        while current_time < MAX_SIMULATIOND_TIME and cblocks < 100:
+        while current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
@@ -100,9 +100,12 @@ if __name__== '__main__':
                     node.current_leader_id = None
                 N1.update_information()
                 file_end_time = open("End_time_nodes.txt","a")
-                file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEND_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                if N1.leader.node_id == 0:
+                    file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                else:
+                    file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 file_end_time.close()
-                N1. leader_id = None
+                N1.leader_id = None
                 N1.leader = None
                 print('所有节点完成了一次区块确认', current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1

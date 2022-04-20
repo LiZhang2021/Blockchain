@@ -60,18 +60,16 @@ if __name__== '__main__':
         N1.set_basic_info()
         N1.find_adjacent_nodes()
         N1.set_sybil_nodes(gamma)
-        # print(N1)
+        # for node in N1.nodes:
+        #     print("Node Sybil State", node.node_id, node.sybil)
         current_time = 0
         cblocks = 0 # 当前共识的次数
         # print("当前时间", current_time)
         while current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
             # print("当前时间", current_time)
             # 确定当前是否有首领节点
-            if not N1.leader_id: 
-                # 确定当前的首领
-                i = 0
-                if N1.nodes[0].blockchain:
-                    i = len(N1.nodes[0].blockchain)    
+            if not N1.leader: 
+                # 确定当前的首领   
                 prob = random.uniform(0, 1)
                 # prob = cblocks/11.0
                 N1.leader_election(prob, block_threshold, ALPHA)
@@ -81,13 +79,16 @@ if __name__== '__main__':
                     file_stability.writelines(["NODE_STABILITY\t Node_id\t", str(node.node_id), "\t Stability\t", str(node.stability), "\t\n"])
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
-                        N1.leader = node               
-                file_stability.writelines(["LEADER_STABILITY\t", str(N1.leader.node_id), "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tStability\t", str(N1.leader.stability), "\t\n"])
+                        N1.leader = node   
+                if N1.leader.node_id == 0:            
+                    file_stability.writelines(["LEADER_STABILITY\t", "0", "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tStability\t", str(N1.leader.stability), "\t\n"])
+                else:
+                    file_stability.writelines(["LEADER_STABILITY\t", str(N1.leader.node_id), "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tStability\t", str(N1.leader.stability), "\t\n"])
                 file_stability.close()
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
-                if node.current_leader_id and node.current_block and node.current_block.final_sig:
+                if N1.leader and node.current_block and node.current_block.final_sig:
                     count += 1
             if count >= int(NUM_NODES/2):
                 for node in N1.nodes:
@@ -102,14 +103,22 @@ if __name__== '__main__':
                     node.current_sign = None
                     node.current_block = None
                     node.current_leader_id = None
-                N1.update_information()
-                N1. leader_id = None
-                N1.Leader = None
-                # print("当前时间", current_time)
-                print('所有节点完成了一次区块确认', current_time, N1.nodes[0].blockchain[-1].block_id)
+                N1.update_information()               
                 file_end_time = open("Sybil_End_time.txt","a")
-                file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id), "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                if N1.leader.node_id == 0:
+                    if not N1.leader.blockchain[-1].tx_arr:
+                        file_end_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", "0", "\n"])
+                    else:
+                        file_end_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                else:
+                    if not N1.leader.blockchain[-1].tx_arr:
+                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id), "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", "0", "\n"])
+                    else:
+                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id), "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 file_end_time.close()
+                N1.leader_id = None
+                N1.leader = None
+                print('所有节点完成了一次区块确认', current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
             N1.Sybil_event(current_time, SLOT, min_tx_num, signs_threshold)
             # N1.handle_event(current_time, SLOT, min_tx_num, signs_threshold)

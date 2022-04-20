@@ -100,24 +100,35 @@ class Node(object):
                     self.send_queue.insert(0, block)
             # self.send_time = current_time + slot
             # file_begin_time = open("Sybil_Begin_time.txt","a")
-            # file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # file_begin_time.close() 
-            # file_begin_time = open("Begin_time_blocksize.txt","a")
-            # file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # file_begin_time.close()    
-            file_begin_time = open("Begin_time_nodes.txt","a")
-            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            file_begin_time = open("Begin_time_blocksize.txt","a")
+            if self.node_id == 0:
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            else:
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
             file_begin_time.close()    
+            # file_begin_time = open("Begin_time_nodes.txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # file_begin_time.close()    
             # file_begin_time = open("Begin_time_bandwidth.txt","a")
-            # file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])    
             # file_begin_time.close() 
-            # print("生成区块成功", self.node_id, block.block_id, len(block.tx_arr), self.send_time)
         else:
             # print("交易不够，生成交易")
             self.gen_trans(current_time)
             # print("交易数量", len(self.tx_pool))
     # 生成一个空区块
-    def gen_empty_block(self): 
+    def gen_empty_block(self, current_time): 
         block_id, pre_hash = 0, 0            
         if self.blockchain:
             block_id = len(self.blockchain)
@@ -135,16 +146,23 @@ class Node(object):
                 self.send_queue.insert(1, block)
             else:
                 self.send_queue.insert(0, block)
-        file_begin_time = open("Begin_time_blocksize.txt","a")
-        file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-        file_begin_time.close()    
-        # file_begin_time = open("Begin_time_nodes.txt","a")
-        # file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-        # file_begin_time.close()    
-        # file_begin_time = open("Begin_time_bandwidth.txt","a")
-        # file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-        # file_begin_time.close() 
-        # print("生成区块成功", self.node_id, block.block_id, len(block.tx_arr), self.send_time)
+        file_begin_time = open("Sybil_Begin_time.txt","a")
+        if self.node_id == 0:
+            if not tx_arr:
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", "0", "\n"])
+            else:
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+        else:
+            if not tx_arr:
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", "0", "\n"])
+            else:
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+        file_begin_time.close() 
+        if not self.tx_pool:
+            self.gen_trans(current_time)
+        else:
+            if len(self.tx_pool) < 5000:
+                self.gen_trans(current_time)
         
 
     # 生成部分签名
@@ -152,6 +170,10 @@ class Node(object):
         if not self.current_sign and self.current_block and self.verify_block():
             tsign = Sign(self.node_id, self.current_block.hash)
             self.current_sign = tsign
+            if not self.signs:
+                self.signs = [tsign]
+            else:
+                self.signs.append(tsign)
             if not self.send_queue:
                 self.send_queue = [tsign]
             else:
@@ -402,7 +424,7 @@ class Node(object):
                         print("已经在签名集合中")
                     else:
                         self.signs.append(data)
-                        # print("节点接收签名成功", self.node_id, data.signer_id, self.send_time)
+                        print("节点接收签名成功", self.node_id, data.signer_id, self.send_time)
             elif isinstance(data, Transaction):
                 if data in self.tx_pool:
                     print("已经在交易池中")

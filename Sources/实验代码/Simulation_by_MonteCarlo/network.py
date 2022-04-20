@@ -181,7 +181,7 @@ class Network(object):
                 else:
                     # 已经生成区块之后，判定区块是否被确认
                     if not node.final_sign:
-                        if node.signs and len(node.signs) > signs_threshold:
+                        if node.signs and len(node.signs) >= signs_threshold:
                             # print("节点生成最终签名了", node.node_id)
                             node.gen_final_sign(signs_threshold)
                         else:
@@ -236,14 +236,15 @@ class Network(object):
 
     # 女巫节点事件处理
     def Sybil_event(self, curr_time, slot, min_tx_num, signs_threshold):
-        timeout = 0
         for node in self.nodes:
             if node.node_id == self.leader_id:  # 首领节点的操作
-                if not node.current_block:
+                if not node.current_block:                   
                     # 如果首领节点是女巫节点
                     if node.sybil == 1:
-                        if timeout >= 10*slot: # 70*slot
-                            node.gen_empty_block()
+                        node.timeout += slot
+                        if node.timeout >= 10*slot: # 70*slot
+                            node.gen_empty_block(curr_time)
+                            node.timeout = 0
                         else:
                             node.gen_trans(curr_time)
                     else:
@@ -257,27 +258,15 @@ class Network(object):
                     if node.sybil == 0:
                         # 已经生成区块之后，判定区块是否被确认
                         if not node.final_sign:
-                            if node.signs and len(node.signs) > signs_threshold:
+                            if node.signs and len(node.signs) >= signs_threshold:
                                 # print("节点生成最终签名了", node.node_id)
                                 node.gen_final_sign(signs_threshold)
                             else:
-                                # if not node.signs:
-                                #     print("节点收集的签名还不够", node.node_id, 0)
-                                # else:
-                                #     print("节点收集的签名还不够", node.node_id, len(node.signs))
                                 if not node.current_sign:
                                     node.gen_sign()
-                                    # print("首领节点生成签名成功了", node.node_id)
-                                # else:
-                                #     print("节点已经生成签名了，只能等待接收",node.node_id)
-                    # node.gen_trans(curr_time)
             else:  # 非首领节点的操作
                 # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
                 if node.current_block and node.sybil == 0:
-                    # ts = 0
-                    # if node.signs:
-                    #     ts = len(node.signs)
-                    # print("节点当前的签名数", node.node_id, ts)
                     # 判断是否已经生成当前区块的最终签名
                     if not node.final_sign:
                         if node.signs:
@@ -292,8 +281,12 @@ class Network(object):
                                 # print("节点额发送队列", type(node.send_queue[0]))
                             # else:
                             #     print("节点已经生成签名了，只能等待接收",node.node_id)
-                # else:
-                #     node.gen_trans(curr_time)
+                else:
+                    if not node.tx_pool:
+                        node.gen_trans(curr_time)
+                    else:
+                        if len(node.tx_pool) < 5000:
+                            node.gen_trans(curr_time)
 
     def run(self):
         # 创建节点和创世区块，并且找到所有节点的邻居节点
