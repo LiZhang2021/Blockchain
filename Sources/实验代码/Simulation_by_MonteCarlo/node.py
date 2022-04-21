@@ -79,7 +79,6 @@ class Node(object):
     # 生成一个有效区块
     def gen_valid_block(self, min_tx_num, current_time):      
         if self.tx_pool and len(self.tx_pool) >= min_tx_num:
-            # print("交易数量足够了，可以生成区块了", len(self.tx_pool))
             block_id, pre_hash = 0, 0        
             if self.blockchain:
                 block_id = len(self.blockchain)
@@ -98,19 +97,18 @@ class Node(object):
                     self.send_queue.insert(1, block)
                 else:
                     self.send_queue.insert(0, block)
-            # self.send_time = current_time + slot
-            # file_begin_time = open("Sybil_Begin_time.txt","a")
-            # if self.node_id == 0:
-            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # else:
-            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # file_begin_time.close() 
-            file_begin_time = open("Begin_time_blocksize.txt","a")
+            file_begin_time = open("Sybil_Begin_time.txt","a")
             if self.node_id == 0:
-                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             else:
-                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
-            file_begin_time.close()    
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            file_begin_time.close() 
+            # file_begin_time = open("Begin_time_blocksize.txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
+            # file_begin_time.close()    
             # file_begin_time = open("Begin_time_nodes.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -124,7 +122,6 @@ class Node(object):
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])    
             # file_begin_time.close() 
         else:
-            # print("交易不够，生成交易")
             self.gen_trans(current_time)
             # print("交易数量", len(self.tx_pool))
     # 生成一个空区块
@@ -179,21 +176,14 @@ class Node(object):
             else:
                 if self.channel_state == 1:
                     if isinstance(self.send_queue[1], Transaction):
-                        # print("第二次数据是", type(self.send_queue[1]))
                         self.send_queue.insert(1, tsign)
-                        # print("插入签名后", type(self.send_queue[1]))
                     else:
                         self.send_queue.insert(2, tsign)
-                        # print("插入签名后2", type(self.send_queue[2]))
                 else:
                     if isinstance(self.send_queue[0], Transaction):
                         self.send_queue.insert(0, tsign)
-                        # print("插入签名后0", type(self.send_queue[0]))
                     else:
                         self.send_queue.insert(1, tsign)
-                        # print("插入签名后1", type(self.send_queue[1]))
-                # print("生成签名成功", self.node_id, type(tsign))
-                    
 
     # 生成最终签名
     def gen_final_sign(self, sign_threshold):
@@ -208,7 +198,6 @@ class Node(object):
                         self.send_queue.insert(1, fsign)
                     else:
                         self.send_queue.insert(0, fsign)
-            # print("节点生成最终签名成功", self.node_id)
 
     # 对消息签名
     def RSA_signature(self, data):
@@ -250,7 +239,6 @@ class Node(object):
          # 验证交易的有效性
         else:
             verify_result = True
-            # print("验证区块成功", self.node_id, self.current_block.block_id)
         return verify_result
     
     # 同步交易
@@ -282,29 +270,6 @@ class Node(object):
             t_trans = pow(2, 11) /float(trans_rate)
         else:
             t_trans = 0
-        # print("计算传输时间",t_trans)
-        return t_trans
-
-    # 计算节点发送数据所需要的时间
-    def commpute_trans_time0(self, trans_rate):
-        data = self.send_queue[0]
-        # 如果是交易数据， 一个交易的大小设为128B
-        if isinstance(data, Transaction):
-            t_trans = pow(2, 9)*8 /float(trans_rate)
-        # 如果是区块数据，一个区块的头部大小设为512B
-        elif isinstance(data, Block):
-            if not data.tx_arr:
-                t_trans = pow(2, 11) /float(trans_rate)
-            else:
-                t_trans = len(data.tx_arr) * pow(2, 9)*8 /float(trans_rate) + pow(2, 11) /float(trans_rate)
-        # 如果是签名数据，一个签名的大小设为1024bit 
-        elif isinstance(data, Sign):
-            t_trans = pow(2, 11) /float(trans_rate)
-        elif isinstance(data, Finalsign):
-            t_trans = pow(2, 11) /float(trans_rate)
-        else:
-            t_trans = 0
-        # print("计算传输时间",t_trans)
         return t_trans
 
     # 信道忙碌时，随机退避一段时间 trans_rate 是信道速率
@@ -319,20 +284,15 @@ class Node(object):
         # 获取传输消息的信息，并计算传输消息的时间
         t_trans = self.commpute_trans_time(data, trans_rate)
         t_prop =  t_trans  + self.send_time + slot
-        # if isinstance(data, Block):
-        #     print("发送完成，更新消息")
-        #     print("节点之后传输完成的时间是", self.node_id, t_trans  + self.send_time)
         # 更新消息传输完成后发送节点的区块状态
         if isinstance(data, Finalsign):
             if self.current_block and self.current_block.hash == data.sign_content:
                 self.current_block.final_sig = data
-                # print("传输最终签名成功", self.node_id)
                 if isinstance(self.send_queue[1], Sign):
                     del self.send_queue[1]
         elif isinstance(data, Block):
             if data.leader_id == self.current_leader_id: 
                self.current_block = data
-            #    print("传输区块成功", self.node_id)
         # elif isinstance(data, Sign):
         #     print("传输签名成功", self.node_id)
         # elif isinstance(data, Transaction):
@@ -347,11 +307,9 @@ class Node(object):
     # 接收消息成功后，更新本地消息
     def update_receivenode_info(self, data, current_time, slot, trans_rate):
         # 更新消息传输完成后接收节点的区块状态
-        # t_trans = self.commpute_trans_time(data, trans_rate)
         if isinstance(data, Finalsign):
             if self.current_block and self.current_block.hash == data.sign_content:
                 self.current_block.final_sig = data
-                # print("节点接收最终签名成功", self.node_id, data.signer_id)
                 if isinstance(self.send_queue[0], Finalsign):
                     del self.send_queue[0]
                 if isinstance(self.send_queue[1], Finalsign):
@@ -366,7 +324,6 @@ class Node(object):
             if not self.current_block and data.leader_id == self.current_leader_id: 
                 self.current_block = data
                 # print("节点接收区块成功", self.node_id, data.block_id)
-                # print("接收区块的时间", self.transmission_node[0].send_time + t_trans)
         elif isinstance(data, Sign):
             if not self.signs:
                 self.signs = [data]
@@ -389,52 +346,6 @@ class Node(object):
         self.send_time = current_time + slot
         self.channel_state = 0
         self.transmission_node = None
-
-# 接收消息成功后，更新本地消息
-    def update_receivenode_info0(self, current_time, slot, trans_rate):
-        # 更新消息传输完成后接收节点的区块状态
-        if self.transmission_node:
-            # print("发送节点是", self.transmission_node[0].node_id, self.transmission_node[0].send_time)
-            data = self.transmission_node[0].send_queue[0]
-            t_trans = self.commpute_trans_time(trans_rate)
-            if isinstance(data, Finalsign):
-                if self.current_leader_id and self.current_block and self.current_block.hash == data.sign_content:
-                    self.current_block.final_sig = data
-                    # print("节点接收最终签名成功", self.node_id, data.signer_id)
-                    if isinstance(self.send_queue[0], Finalsign):
-                        del self.send_queue[0]
-                    if isinstance(self.send_queue[1], Finalsign):
-                        del self.send_queue[1]
-                    if isinstance(self.send_queue[0], Sign):
-                        del self.send_queue[0]
-                    if isinstance(self.send_queue[1], Sign):
-                        del self.send_queue[1]
-                    if isinstance(self.send_queue[2], Sign):
-                        del self.send_queue[2]
-            elif isinstance(data, Block):
-                if not self.current_block and data.leader_id == self.current_leader_id: 
-                    self.current_block = data
-                    # print("节点接收区块成功", self.node_id, data.block_id)
-                    # print("接收区块的时间", self.transmission_node[0].send_time + t_trans)
-            elif isinstance(data, Sign):
-                if not self.signs:
-                    self.signs = [data]
-                else:
-                    if data in self.signs:
-                        print("已经在签名集合中")
-                    else:
-                        self.signs.append(data)
-                        print("节点接收签名成功", self.node_id, data.signer_id, self.send_time)
-            elif isinstance(data, Transaction):
-                if data in self.tx_pool:
-                    print("已经在交易池中")
-                else:
-                    # print("接收交易成功", self.node_id)
-                    self.tx_pool.append(data)
-        # 更新所有接收节点发送队列的时间和信道状态       
-            self.send_time = current_time + slot
-            self.channel_state = 0
-            self.transmission_node = None
 
 
 if __name__ == "__main__":

@@ -38,7 +38,7 @@ if __name__== '__main__':
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 10000 # 仿真时间
     ALPHA = 0.5
-    gammas = np.arange(0.01, 0.50, 0.01)
+    gammas = np.arange(0.46, 0.50, 0.01)
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)
@@ -60,18 +60,13 @@ if __name__== '__main__':
         N1.set_basic_info()
         N1.find_adjacent_nodes()
         N1.set_sybil_nodes(gamma)
-        # for node in N1.nodes:
-        #     print("Node Sybil State", node.node_id, node.sybil)
         current_time = 0
         cblocks = 0 # 当前共识的次数
-        # print("当前时间", current_time)
         while current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
-            # print("当前时间", current_time)
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
                 prob = random.uniform(0, 1)
-                # prob = cblocks/11.0
                 N1.leader_election(prob, block_threshold, ALPHA)
                 print("首领节点是", N1.leader_id)
                 file_stability = open("Sybil_Stability.txt","a")
@@ -121,8 +116,5 @@ if __name__== '__main__':
                 print('所有节点完成了一次区块确认', current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
             N1.Sybil_event(current_time, SLOT, min_tx_num, signs_threshold)
-            # N1.handle_event(current_time, SLOT, min_tx_num, signs_threshold)
             N1.transmission(current_time, SLOT, TRANSMISSION_RATE)
-        #     # print("首领节点信息", N1.nodes[2].send_queue[0])
             current_time += SLOT
-            # cblocks +=1

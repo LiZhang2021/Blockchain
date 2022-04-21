@@ -57,7 +57,6 @@ if __name__== '__main__':
         N1.create_nodes(num_nodes, 200)
         N1.set_basic_info()
         N1.find_adjacent_nodes()
-        # print(N1)
         current_time = 0
         num_slots  = 0
         cblocks = 0 # 当前共识的次数

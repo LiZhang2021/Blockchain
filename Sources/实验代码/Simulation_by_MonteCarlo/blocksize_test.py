@@ -58,17 +58,13 @@ if __name__== '__main__':
         N1.create_nodes(NUM_NODES, 200)
         N1.set_basic_info()
         N1.find_adjacent_nodes()
-        # print(N1)
         current_time = 0
         cblocks = 0 # 当前共识的次数
-        # print("当前时间", current_time)
-        while current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
-            # print("当前时间", current_time)
+        while current_time < MAX_SIMULATIOND_TIME and cblocks < 50:
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领     
                 prob = random.uniform(0, 1)
-                # prob = cblocks/11.0
                 N1.leader_election(prob, block_threshold, ALPHA)
                 print("首领节点是", N1.leader_id)
                 file_stability = open("Stability_blocksize.txt","a")
@@ -101,7 +97,6 @@ if __name__== '__main__':
                     node.current_block = None
                     node.current_leader_id = None
                 N1.update_information()
-                # print("当前时间", current_time)
                 file_end_time = open("End_time_blocksize.txt","a")
                 if N1.leader.node_id == 0:
                     file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
@@ -114,6 +109,4 @@ if __name__== '__main__':
                 cblocks +=1
             N1.handle_event(current_time, SLOT, min_tx_num, signs_threshold)
             N1.transmission(current_time, SLOT, TRANSMISSION_RATE)
-        #     # print("首领节点信息", N1.nodes[2].send_queue[0])
             current_time += SLOT
-            # cblocks +=1
