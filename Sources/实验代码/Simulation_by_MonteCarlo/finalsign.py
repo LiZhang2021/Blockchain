@@ -6,6 +6,9 @@ Created on Sun Apr 18 11:37:47 2022
 @author: shally, ZHANG
 """
 
+import numpy
+
+
 class Finalsign(object):
     def __init__(self, signer_id, sign_content, sign_threshold):
         self.signer_id = signer_id  # 签名节点的id
@@ -32,6 +35,7 @@ if __name__ == "__main__":
     print(block)
     final_sign = Finalsign("shally0", block.hash, 30)
     print(final_sign)
+    print("计算", numpy.log(500))
     pass
 
 

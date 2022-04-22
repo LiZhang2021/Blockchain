@@ -32,7 +32,7 @@ if __name__== '__main__':
     from node import Node
     from network import Network
 
-    BLOCK_SIZE = np.arange(100, 2100, 100)  # 区块大小设置
+    BLOCK_SIZE = np.arange(256, 5121, 256)  # 区块大小设置
     NUM_NODES= 500  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
@@ -60,7 +60,7 @@ if __name__== '__main__':
         N1.find_adjacent_nodes()
         current_time = 0
         cblocks = 0 # 当前共识的次数
-        while current_time < MAX_SIMULATIOND_TIME and cblocks < 50:
+        while current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领     
@@ -73,6 +73,13 @@ if __name__== '__main__':
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node
+                        # 提升出块节点传输概率
+                        node.send_prop = (1+0.1) * node.send_prop
+                        if node.send_prop > 0.9:
+                            node.send_prop = 0.9
+                    else:
+                        # 降低普通节点传输概率
+                        node.send_prop = node.send_prop/(1+0.1)
                 if N1.leader.node_id == 0:             
                     file_stability.writelines(["LEADER_STABILITY\t", "0", "\tStability\t", str(N1.leader.stability), "\t\n"])
                 else:
@@ -96,6 +103,9 @@ if __name__== '__main__':
                     node.current_sign = None
                     node.current_block = None
                     node.current_leader_id = None
+                    node.send_prop = 0.5
+                    node.time_window = 10
+                    node.recent_receive_data = None
                 N1.update_information()
                 file_end_time = open("End_time_blocksize.txt","a")
                 if N1.leader.node_id == 0:

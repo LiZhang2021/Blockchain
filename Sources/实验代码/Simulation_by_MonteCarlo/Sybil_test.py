@@ -38,7 +38,9 @@ if __name__== '__main__':
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 10000 # 仿真时间
     ALPHA = 0.5
-    gammas = np.arange(0.46, 0.50, 0.01)
+    # gammas = np.arange(0.01, 0.50, 0.01)
+    gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.49]
+    # gammas = [0.45]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)
@@ -74,7 +76,14 @@ if __name__== '__main__':
                     file_stability.writelines(["NODE_STABILITY\t Node_id\t", str(node.node_id), "\t Stability\t", str(node.stability), "\t\n"])
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
-                        N1.leader = node   
+                        N1.leader = node  
+                        # 提升出块节点传输概率
+                        node.send_prop = (1+0.1) * node.send_prop
+                        if node.send_prop > 0.9:
+                            node.send_prop = 0.9
+                    else:
+                        # 降低普通节点传输概率
+                        node.send_prop = node.send_prop/(1+0.1)
                 if N1.leader.node_id == 0:            
                     file_stability.writelines(["LEADER_STABILITY\t", "0", "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tStability\t", str(N1.leader.stability), "\t\n"])
                 else:
@@ -98,6 +107,9 @@ if __name__== '__main__':
                     node.current_sign = None
                     node.current_block = None
                     node.current_leader_id = None
+                    node.send_prop = 0.5
+                    node.time_window = 10
+                    node.recent_receive_data = None
                 N1.update_information()               
                 file_end_time = open("Sybil_End_time.txt","a")
                 if N1.leader.node_id == 0:

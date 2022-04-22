@@ -53,7 +53,10 @@ class Node(object):
          self.current_leader_id = None  # 当前区块的出块节点id
          self.sybil = 0  # 标记女巫节点
          self.timeout = 0  # 超时
-         self.busy = 0
+         self.send_prop = 0.5  # 发送概率
+         self.time_window = 10  # 敌手攻击窗口
+         self.recent_receive_data = None  # 近期接收敌手窗口大小的数据
+         self.jamming = 0  # Jamming 节点状态(不发起攻击0/发起攻击1)
 
     # 定义输出
     def __str__(self):
@@ -89,6 +92,10 @@ class Node(object):
                 str(block.pre_hash) + "".join([str(tx) for tx in block.tx_arr])
             block.hash = hashlib.sha256(block_content.encode("utf-8")).hexdigest()
             self.current_block = block
+            # 提升节点传输概率
+            # self.send_prop += 0.2
+            # if self.send_prop > 1:
+            #     self.send_prop = 1
             print("节点生成区块",self.node_id, block.block_id, len(block.tx_arr))
             if not self.send_queue:
                 self.send_queue = [block]
@@ -97,12 +104,18 @@ class Node(object):
                     self.send_queue.insert(1, block)
                 else:
                     self.send_queue.insert(0, block)
-            file_begin_time = open("Sybil_Begin_time.txt","a")
+            file_begin_time = open("Jamming_Begin_time.txt","a")
             if self.node_id == 0:
                 file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             else:
                 file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             file_begin_time.close() 
+            # file_begin_time = open("Sybil_Begin_time.txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # file_begin_time.close() 
             # file_begin_time = open("Begin_time_blocksize.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -123,7 +136,7 @@ class Node(object):
             # file_begin_time.close() 
         else:
             self.gen_trans(current_time)
-            # print("交易数量", len(self.tx_pool))
+
     # 生成一个空区块
     def gen_empty_block(self, current_time): 
         block_id, pre_hash = 0, 0            
@@ -161,12 +174,16 @@ class Node(object):
             if len(self.tx_pool) < 5000:
                 self.gen_trans(current_time)
         
-
     # 生成部分签名
     def gen_sign(self):
         if not self.current_sign and self.current_block and self.verify_block():
             tsign = Sign(self.node_id, self.current_block.hash)
             self.current_sign = tsign
+            # 提升节点传输概率
+            self.send_prop += 0.1
+            if self.send_prop > 1:
+                self.send_prop = 1
+            # 添加签名到签名列表中
             if not self.signs:
                 self.signs = [tsign]
             else:
@@ -191,6 +208,11 @@ class Node(object):
             if self.current_block and self.current_leader_id == self.current_block.leader_id and self.signs and len(self.signs) >= sign_threshold:
                 fsign = Finalsign(self.node_id, self.current_block.hash, sign_threshold)
                 self.final_sign = fsign
+                # 提升节点传输概率
+                self.send_prop += 0.2
+                if self.send_prop > 1:
+                    self.send_prop = 1
+                # 添加最终签名到发送列表中
                 if not self.send_queue:
                     self.send_queue = [fsign]
                 else:
@@ -281,6 +303,20 @@ class Node(object):
     
     # 传输消息成功之后更新本地信息
     def update_sendnode_info(self, data, slot, trans_rate):
+        # 发送节点更新发送状态和接收数据状态
+        if self.current_block:
+            self.recent_receive_data = None
+            if isinstance(data, Transaction):
+                # print("当前有区块，传输数据是", self.current_block.block_id, type(data))
+                self.send_prop = (1/(1 + 0.1)) * self.send_prop
+            else:
+                if not self.current_sign or not self.current_block.final_sig:
+                    self.send_prop = (1 + 0.1) * self.send_prop
+                    if self.send_prop > 0.9:
+                        self.send_prop = 0.9
+                else:
+                    self.send_prop = (1/(1 + 0.1)) * self.send_prop
+            
         # 获取传输消息的信息，并计算传输消息的时间
         t_trans = self.commpute_trans_time(data, trans_rate)
         t_prop =  t_trans  + self.send_time + slot
@@ -306,7 +342,33 @@ class Node(object):
 
     # 接收消息成功后，更新本地消息
     def update_receivenode_info(self, data, current_time, slot, trans_rate):
-        # 更新消息传输完成后接收节点的区块状态
+        # 当有正在处理的区块时，如果连续接收到交易则认为有堵塞的可能
+        if self.current_block:
+            # 判定是否连续接收到交易
+            if isinstance(data, Transaction):
+                if not self.recent_receive_data:
+                    self.recent_receive_data = [data]
+                else:
+                    self.recent_receive_data.append(data)
+                if len(self.recent_receive_data) == self.time_window:
+                    # 对最近接收到的交易数量计数
+                    cout_adversary_tw = 0
+                    for dt in self.recent_receive_data:
+                        if isinstance(dt, Transaction):
+                            cout_adversary_tw += 1
+                    # 如果在时间窗口内都是接收到的都是交易数据，则更改敌手窗口
+                    if cout_adversary_tw >= len(self.recent_receive_data):
+                        self.time_window += 2
+                        # print("修改了时间窗口大小", self.node_id, self.time_window)
+                        if not self.current_sign or not self.current_block.final_sig:
+                            self.send_prop = (1 + 0.1) * self.send_prop
+                            if self.send_prop > 0.9:
+                                self.send_prop = 0.9
+                        else:
+                            self.send_prop = (1/(1 + 0.1)) * self.send_prop
+            else:
+                self.recent_receive_data = None            
+        # 更新消息传输完成后接收节点的状态
         if isinstance(data, Finalsign):
             if self.current_block and self.current_block.hash == data.sign_content:
                 self.current_block.final_sig = data
@@ -323,6 +385,9 @@ class Node(object):
         elif isinstance(data, Block):
             if not self.current_block and data.leader_id == self.current_leader_id: 
                 self.current_block = data
+                # 测试jamming攻击采用
+                if self.node_id == 0:
+                    self.jamming = 1
                 # print("节点接收区块成功", self.node_id, data.block_id)
         elif isinstance(data, Sign):
             if not self.signs:

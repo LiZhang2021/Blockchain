@@ -59,7 +59,6 @@ if __name__== '__main__':
         N1.create_nodes(NUM_NODES, 200)
         N1.set_basic_info()
         N1.find_adjacent_nodes()
-        # print(N1)
         current_time = 0
         cblocks = 0 # 当前共识的次数
         while current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
@@ -77,7 +76,14 @@ if __name__== '__main__':
                         file_stability.writelines(["NODE_STABILITY\t Node_id\t", str(node.node_id), "\t Stability\t", str(node.stability), "\t\n"])
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
-                        N1.leader = node  
+                        N1.leader = node                        
+                        # 提升出块节点传输概率
+                        node.send_prop = (1+0.1) * node.send_prop
+                        if node.send_prop > 0.9:
+                            node.send_prop = 0.9
+                    else:
+                        # 降低普通节点传输概率
+                        node.send_prop = node.send_prop/(1+0.1) 
                 if N1.leader.node_id == 0:            
                     file_stability.writelines(["LEADER_STABILITY\t", "0", "\tStability\t", str(N1.leader.stability), "\t\n"])
                 else:
@@ -101,7 +107,9 @@ if __name__== '__main__':
                     node.current_sign = None
                     node.current_block = None
                     node.current_leader_id = None
-                # print("当前时间", current_time)
+                    node.send_prop = 0.5
+                    node.time_window = 10
+                    node.recent_receive_data = None
                 N1.update_information()
                 file_end_time = open("End_time_bandwidth.txt","a")
                 if N1.leader.node_id == 0:
