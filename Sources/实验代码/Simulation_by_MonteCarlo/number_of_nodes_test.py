@@ -66,7 +66,7 @@ if __name__== '__main__':
                 # 确定当前的首领   
                 prob = random.uniform(0, 1)
                 # prob = cblocks/11.0
-                N1.leader_election(prob, block_threshold, ALPHA)
+                N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 file_stability = open("Stability_nodes.txt","a")
                 for node in N1.nodes:

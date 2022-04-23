@@ -33,7 +33,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = np.arange(256, 5121, 256)  # 区块大小设置
-    NUM_NODES= 500  # 节点的数量
+    NUM_NODES= 10  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     print("时隙", SLOT)
@@ -65,7 +65,7 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领     
                 prob = random.uniform(0, 1)
-                N1.leader_election(prob, block_threshold, ALPHA)
+                N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 file_stability = open("Stability_blocksize.txt","a")
                 for node in N1.nodes:

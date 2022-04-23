@@ -32,7 +32,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 512   # 区块大小设置1MB = 1024KB
-    NUM_NODES= 500  # 节点的数量
+    NUM_NODES= 10  # 节点的数量
     TRANSMISSION_RATES = np.arange(10, 131, 10)  # 信道传输速率
     
     MAX_SIMULATIOND_TIME = 10000 # 仿真时间
@@ -66,7 +66,7 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 prob = random.uniform(0, 1)
-                N1.leader_election(prob, block_threshold, ALPHA)
+                N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 file_stability = open("Stability_bandwidth.txt","a")
                 for node in N1.nodes:
