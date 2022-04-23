@@ -32,13 +32,13 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    NUM_NODES= 500  # 节点的数量
+    NUM_NODES= 100  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 10000 # 仿真时间
     ALPHA = 0.5
-    # gammas = np.arange(0.01, 0.50, 0.01)
+    # gammas = np.arange(0.45, 0.50, 0.01)
     gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.49]
     # gammas = [0.45]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
@@ -69,7 +69,7 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 prob = random.uniform(0, 1)
-                N1.leader_election(prob, block_threshold, ALPHA)
+                N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 file_stability = open("Sybil_Stability.txt","a")
                 for node in N1.nodes:
@@ -84,7 +84,7 @@ if __name__== '__main__':
                     else:
                         # 降低普通节点传输概率
                         node.send_prop = node.send_prop/(1+0.1)
-                if N1.leader.node_id == 0:            
+                if N1.leader_id == 0:            
                     file_stability.writelines(["LEADER_STABILITY\t", "0", "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tStability\t", str(N1.leader.stability), "\t\n"])
                 else:
                     file_stability.writelines(["LEADER_STABILITY\t", str(N1.leader.node_id), "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tStability\t", str(N1.leader.stability), "\t\n"])

@@ -31,9 +31,9 @@ if __name__== '__main__':
     from node import Node
     from network import Network
 
-    BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
+    BLOCK_SIZE = 512   # 区块大小设置1MB = 1024KB
     NUM_NODES= 500  # 节点的数量
-    TRANSMISSION_RATES = np.arange(10, 110, 10)  # 信道传输速率
+    TRANSMISSION_RATES = np.arange(10, 131, 10)  # 信道传输速率
     
     MAX_SIMULATIOND_TIME = 10000 # 仿真时间
     ALPHA = 0.5

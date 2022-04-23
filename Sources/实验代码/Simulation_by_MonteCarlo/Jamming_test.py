@@ -40,7 +40,8 @@ if __name__== '__main__':
     ALPHA = 0.5
     TIME_WINDOW = 60
     # gammas = np.arange(0.01, 0.50, 0.01)  # 诚实节点能够发送的轮数的时间窗口占比
-    gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.49]
+    # gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.49]
+    # gammas = [0.4]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)
@@ -68,7 +69,7 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 prob = random.uniform(0, 1)
-                N1.leader_election(prob, block_threshold, ALPHA)
+                N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 file_stability = open("Jamming_Stability.txt","a")
                 for node in N1.nodes:
@@ -83,7 +84,7 @@ if __name__== '__main__':
                     else:
                         # 降低普通节点传输概率
                         node.send_prop = node.send_prop/(1+0.1)   
-                if N1.leader.node_id == 0:            
+                if N1.leader_id == 0:            
                     file_stability.writelines(["LEADER_STABILITY\t", "0", "\tStability\t", str(N1.leader.stability), "\t\n"])
                 else:
                     file_stability.writelines(["LEADER_STABILITY\t", str(N1.leader.node_id), "\tStability\t", str(N1.leader.stability), "\t\n"])

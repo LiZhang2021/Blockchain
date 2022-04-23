@@ -77,27 +77,31 @@ class Network(object):
 
     # 首领选举
     # 计算节点的稳定度
-    def caculate_stability(self, block_threshold, alpha):
+    def caculate_stability(self, alpha):
         # 对网络中的节点按照节点ID排序
         self.nodes.sort(key = operator.attrgetter('node_id'))
         sum_time = 0.0
         # 计算所有节点的剩余时间和
         for node in self.nodes:
             sum_time +=  node.lifetime
+        # 计算所有节点的近期生成区块数量
+        sum_block = 0
+        for node in self.nodes:
+            sum_block +=  node.lifetime
         # 计算每个节点的稳定度
         for node in self.nodes:
             # 计算共识比
-            bratio = round(node.recent_gen_blocks/block_threshold, 4)
+            bratio = node.recent_gen_blocks/sum_block
             # 计算时间比
-            tratio =  round(node.lifetime/sum_time, 4)
+            tratio =  node.lifetime/sum_time
             # 计算稳定度
-            node.stability =  round(alpha * tratio +  (1- alpha) * bratio, 4)
+            node.stability =  (alpha * tratio +  (1- alpha) * bratio)
             # print("节点稳定度", node.node_id, node.lifetime, node.recent_gen_blocks, node.stability)
 
     # 构建轮盘并选举首领
-    def leader_election(self, prob, block_threshold, alpha):
+    def leader_election(self, prob, alpha):
         # 计算所有节点的稳定度
-        self.caculate_stability(block_threshold, alpha)
+        self.caculate_stability(alpha)
         # 根据节点的稳定度计算节点被选中的概率
         sum_stability = 0
         probs = []
@@ -118,6 +122,8 @@ class Network(object):
                 if prob >= Disk[node_id] and prob < Disk[node_id+1]: # 判定随机数是否在节点k的区间中
                     self.leader_id = node_id
                     break
+        if self.leader_id == None:
+            self.leader_id = 0
 
     # 完成区块确认之后，网络需要更新最新信息
     def update_information(self):
@@ -179,29 +185,66 @@ class Network(object):
                     node.update_sendnode_info(data, slot, trans_rate)
     # 传输消息
     def Jamming_trans(self, curr_time, slot, trans_rate, gamma, T):
-        for node in self.nodes:
-            # 攻击节点会在接收到区块之后发起阻塞攻击，则会连续发送(1-e)T个交易消息，设置节点id为零的节点作为攻击节点
-            if node.node_id == 0 and node.jamming >= 1 and node.jamming <= (1-gamma)* T:
+        # 攻击节点会在接收到区块之后发起阻塞攻击，则会连续发送(1-e)T个交易消息，设置节点id为零的节点作为攻击节点
+            if self.nodes[0].jamming >= 1 and self.nodes[0].jamming <= (1-gamma)* T:
                 # 发起攻击
-                if node.channel_state == 0 and node.send_queue:
-                    print("发起攻击次数", node.node_id, node.jamming, (1-gamma)* T)
-                    self.time_window = 60
-                    snode = node
-                    snode.channel_state = 1
-                    # print("发送节点状态", snode.node_id, snode.channel_state)
-                    for rnode in snode.neighbors:
-                        if rnode.channel_state == 0:
-                            rnode.channel_state = 2
-                            # print("接收节点状态", rnode.node_id, rnode.channel_state)
-                            rnode.transmission_node = [snode]
-                            if not snode.transmission_node:
-                                snode.transmission_node = [rnode]
-                            else:
-                                snode.transmission_node.append(rnode)
-                    node.jamming += 1
+                if self.nodes[0].channel_state == 0:
+                    if self.nodes[0].channel_state == 0 and self.nodes[0].send_queue:
+                        # print("发起攻击次数", self.nodes[0].node_id, self.nodes[0].jamming, (1-gamma)* T)
+                        self.time_window = 60
+                        snode = self.nodes[0]
+                        snode.channel_state = 1
+                        # print("发送节点状态", snode.node_id, snode.channel_state)
+                        for rnode in snode.neighbors:
+                            if rnode.channel_state == 0:
+                                rnode.channel_state = 2
+                                # print("接收节点状态", rnode.node_id, rnode.channel_state)
+                                rnode.transmission_node = [snode]
+                                if not snode.transmission_node:
+                                    snode.transmission_node = [rnode]
+                                else:
+                                    snode.transmission_node.append(rnode)
+                        self.nodes[0].jamming += 1
+                        if self.nodes[0].jamming > (1-gamma)*T:
+                                self.nodes[0].jamming = 0
+                                print("完成一次攻击", self.nodes[0].node_id, self.nodes[0].channel_state)
+                    else:
+                        if self.nodes[0].channel_state == 1 and self.nodes[0].send_queue: # 节点发送消息
+                            # 查看节点发送消息是否结束
+                            data = self.nodes[0].send_queue[0]
+                            t_trans = self.nodes[0].commpute_trans_time(data, trans_rate) + self.nodes[0].send_time
+                            # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
+                            if curr_time <= t_trans < curr_time + slot and self.nodes[0].transmission_node and self.nodes[0].transmission_node[0].send_queue:
+                                # 传输完成，更新发送节点信息
+                                # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))                    
+                                for rnode in self.nodes[0].transmission_node:
+                                    rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
+                                    # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
+                                # print("发送节点", node.node_id, len(node.tx_pool))
+                                self.nodes[0].update_sendnode_info(data, slot, trans_rate)
+                                # self.nodes[0].jamming += 1
+                            # print("发送节点的Jamming", self.nodes[0].jamming, (1-gamma)*T)           
                 else:
+                    # print("正在接收数据，先不发起攻击")
+                    for node in self.nodes:
+                        if node.channel_state == 1 and node.send_queue: # 节点发送消息
+                        # 查看节点发送消息是否结束
+                            data = node.send_queue[0]
+                            t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
+                            # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
+                            if curr_time <= t_trans < curr_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
+                                # 传输完成，更新发送节点信息
+                                # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))                    
+                                for rnode in node.transmission_node:
+                                    rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
+                                    # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
+                                # print("发送节点", node.node_id, len(node.tx_pool))
+                                node.update_sendnode_info(data, slot, trans_rate)
+            else:
+                # 不发起攻击，其他节点正常工作
+                for node in self.nodes:
                     if node.channel_state == 0 and node.send_queue:
-                    # 找到当前时隙所有要传输的节点
+                        # 找到当前时隙所有要传输的节点
                         tp = random.uniform(0,1)
                         if node.send_prop > tp:
                             temp_nodes = [node]
@@ -241,71 +284,6 @@ class Network(object):
                                 # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                             # print("发送节点", node.node_id, len(node.tx_pool))
                             node.update_sendnode_info(data, slot, trans_rate)
-                #     # 查看节点一轮发送消息是否结束
-                #     data = node.send_queue[0]
-                #     t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
-                #     # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
-                #     if curr_time <= t_trans < curr_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
-                #         # 传输完成，更新发送节点信息
-                #         # print("节点在当前时隙传输完成", node.node_id, type(data), (curr_time + slot))                    
-                #         for rnode in node.transmission_node:
-                #             rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
-                #             rnode.channel_state = 0
-                #             print("接收节点状态", rnode.node_id, rnode.channel_state) 
-                #         node.update_sendnode_info(data, slot, trans_rate)
-                #         print("发送节点状态", node.node_id, node.channel_state)
-                #         node.jamming += 1
-                #         # print("发送节点的Jamming", node.jamming, (1-gamma)*T)
-                #         if node.jamming > (1-gamma)*T:
-                #             node.jamming = 0
-                #             # node.channel_state = 0
-                #             print("完成一次攻击", node.node_id, node.channel_state)    
-                #             # for rnode in node.neighbors:
-                #                 # rnode.channel_state = 0
-                #                 # print("邻居节点状态", rnode.node_id, rnode.channel_state)                                          
-            else:
-                # 不发起攻击，其他节点正常工作
-                if node.channel_state == 0 and node.send_queue:
-                    # 找到当前时隙所有要传输的节点
-                    tp = random.uniform(0,1)
-                    if node.send_prop > tp:
-                        temp_nodes = [node]
-                    else:
-                        temp_nodes = []
-                    for tnode in node.neighbors:
-                        if tnode.channel_state == 0 and curr_time <= tnode.send_time <= (curr_time + slot):
-                            tp = random.uniform(0,1)
-                            if tnode.send_prop > tp:
-                                temp_nodes.append(tnode)
-                    if not temp_nodes:
-                        snode = node
-                    else:   
-                        snode = random.choice(temp_nodes)
-                    # print("节点开始传输数据", snode.node_id, type(snode.send_queue[0]), snode.send_time) 
-                    snode.channel_state = 1
-                    # print("发送节点状态", snode.node_id, snode.channel_state)
-                    for rnode in snode.neighbors:
-                        if rnode.channel_state == 0:
-                            rnode.channel_state = 2
-                            # print("接收节点状态", rnode.node_id, rnode.channel_state)
-                            rnode.transmission_node = [snode]
-                            if not snode.transmission_node:
-                                snode.transmission_node = [rnode]
-                            else:
-                                snode.transmission_node.append(rnode)
-                elif node.channel_state == 1 and node.send_queue: # 节点发送消息
-                    # 查看节点发送消息是否结束
-                    data = node.send_queue[0]
-                    t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
-                    # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
-                    if curr_time <= t_trans < curr_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
-                        # 传输完成，更新发送节点信息
-                        # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))                    
-                        for rnode in node.transmission_node:
-                            rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
-                            # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
-                        # print("发送节点", node.node_id, len(node.tx_pool))
-                        node.update_sendnode_info(data, slot, trans_rate)
 
     # 事件处理
     def handle_event(self, curr_time, slot, min_tx_num, signs_threshold):
@@ -364,6 +342,8 @@ class Network(object):
         for i in range(num_sybil):
             sybil_node = random.choice(candidate)
             sybil_node.sybil = 1
+            sybil_node.lifetime = int(1000/10)
+            sybil_node.recent_gen_blocks = int(360/10)
             candidate.remove(sybil_node)
 
     # 女巫节点事件处理
@@ -373,8 +353,9 @@ class Network(object):
                 if not node.current_block:                   
                     # 如果首领节点是女巫节点
                     if node.sybil == 1:
-                        node.timeout += slot
-                        if node.timeout >= numpy.log(500)*4*slot: # log(500)*4*slot
+                        node.timeout += 1
+                        # if node.timeout >= numpy.log(500)*4*slot: # log(500)*4*slot
+                        if node.timeout >= node.time_window: # log(500)*4*slot
                             node.gen_empty_block(curr_time)
                             node.timeout = 0
                         else:
@@ -419,48 +400,7 @@ class Network(object):
                         if len(node.tx_pool) < 5000:
                             node.gen_trans(curr_time)
 
-    # 事件处理
-    def Jamming_event(self, curr_time, slot, min_tx_num, signs_threshold):
-        for node in self.nodes:
-            if node.node_id == self.leader_id:  # 首领节点的操作
-                if not node.current_block:
-                    # 如果还没有生成区块，则需要生成区块和区块Hash的签名
-                    node.gen_valid_block(min_tx_num, curr_time)
-                    node.gen_sign()
-                else:
-                    # 已经生成区块之后，判定区块是否被确认
-                    if not node.final_sign:
-                        if node.signs and len(node.signs) >= signs_threshold:
-                            node.gen_final_sign(signs_threshold)
-                        else:
-                            # if not node.signs:
-                            #     print("节点收集的签名还不够", node.node_id, 0)
-                            # else:
-                            #     print("节点收集的签名还不够", node.node_id, len(node.signs))
-                            if not node.current_sign:
-                                node.gen_sign()
-                                # print("首领节点生成签名成功了", node.node_id)
-                            # else:
-                            #     print("节点已经生成签名了，只能等待接收",node.node_id)
-            else:  # 非首领节点的操作
-                # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
-                if node.current_block:
-                    # 判断是否已经生成当前区块的最终签名
-                    if not node.final_sign:
-                        if node.signs:
-                            if len(node.signs) >= signs_threshold:
-                                node.gen_final_sign(signs_threshold)
-                        else:
-                            if not node.current_sign:
-                                node.gen_sign()
-                            # else:
-                            #     print("节点已经生成签名了，只能等待接收",node.node_id)
-                else:
-                    if not node.tx_pool:
-                        node.gen_trans(curr_time)
-                    else:
-                        if len(node.tx_pool) < 5000:
-                            node.gen_trans(curr_time)
+   
 
     
 if __name__== '__main__':

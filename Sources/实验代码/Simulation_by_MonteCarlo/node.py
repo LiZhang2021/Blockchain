@@ -104,18 +104,18 @@ class Node(object):
                     self.send_queue.insert(1, block)
                 else:
                     self.send_queue.insert(0, block)
-            file_begin_time = open("Jamming_Begin_time.txt","a")
-            if self.node_id == 0:
-                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            else:
-                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            file_begin_time.close() 
-            # file_begin_time = open("Sybil_Begin_time.txt","a")
+            # file_begin_time = open("Jamming_Begin_time.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # file_begin_time.close() 
+            file_begin_time = open("Sybil_Begin_time.txt","a")
+            if self.node_id == 0:
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            else:
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            file_begin_time.close() 
             # file_begin_time = open("Begin_time_blocksize.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -149,6 +149,7 @@ class Node(object):
             str(block.pre_hash) + "None"
         block.hash = hashlib.sha256(block_content.encode("utf-8")).hexdigest()
         self.current_block = block
+        print("生成一个空区块")
         if not self.send_queue:
             self.send_queue = [block]
         else:
@@ -315,8 +316,7 @@ class Node(object):
                     if self.send_prop > 0.9:
                         self.send_prop = 0.9
                 else:
-                    self.send_prop = (1/(1 + 0.1)) * self.send_prop
-            
+                    self.send_prop = (1/(1 + 0.1)) * self.send_prop        
         # 获取传输消息的信息，并计算传输消息的时间
         t_trans = self.commpute_trans_time(data, trans_rate)
         t_prop =  t_trans  + self.send_time + slot
@@ -365,7 +365,7 @@ class Node(object):
                             if self.send_prop > 0.9:
                                 self.send_prop = 0.9
                         else:
-                            self.send_prop = (1/(1 + 0.1)) * self.send_prop
+                            self.send_prop =  self.send_prop/(1 + 0.1)
             else:
                 self.recent_receive_data = None            
         # 更新消息传输完成后接收节点的状态
@@ -374,13 +374,13 @@ class Node(object):
                 self.current_block.final_sig = data
                 if isinstance(self.send_queue[0], Finalsign):
                     del self.send_queue[0]
-                if isinstance(self.send_queue[1], Finalsign):
+                if len(self.send_queue) >1 and isinstance(self.send_queue[1], Finalsign):
                     del self.send_queue[1]
                 if isinstance(self.send_queue[0], Sign):
                     del self.send_queue[0]
-                if isinstance(self.send_queue[1], Sign):
+                if len(self.send_queue)>1 and  isinstance(self.send_queue[1], Sign):
                     del self.send_queue[1]
-                if isinstance(self.send_queue[2], Sign):
+                if len(self.send_queue)>2 and  isinstance(self.send_queue[2], Sign):
                     del self.send_queue[2]
         elif isinstance(data, Block):
             if not self.current_block and data.leader_id == self.current_leader_id: 
@@ -388,7 +388,7 @@ class Node(object):
                 # 测试jamming攻击采用
                 if self.node_id == 0:
                     self.jamming = 1
-                # print("节点接收区块成功", self.node_id, data.block_id)
+                    # print("攻击节点接收区块成功", self.node_id, data.block_id)
         elif isinstance(data, Sign):
             if not self.signs:
                 self.signs = [data]
