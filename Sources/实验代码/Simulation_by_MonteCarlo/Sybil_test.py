@@ -39,8 +39,8 @@ if __name__== '__main__':
     MAX_SIMULATIOND_TIME = 10000 # 仿真时间
     ALPHA = 0.5
     # gammas = np.arange(0.45, 0.50, 0.01)
-    gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.49]
-    # gammas = [0.45]
+    # gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.49]
+    gammas = [0.45]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)

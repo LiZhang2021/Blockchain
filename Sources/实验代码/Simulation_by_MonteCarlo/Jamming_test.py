@@ -38,10 +38,10 @@ if __name__== '__main__':
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 10000 # 仿真时间
     ALPHA = 0.5
-    TIME_WINDOW = 60
+    TIME_WINDOW = 40
     # gammas = np.arange(0.01, 0.50, 0.01)  # 诚实节点能够发送的轮数的时间窗口占比
-    # gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.49]
-    # gammas = [0.4]
+    gammas = [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
+    # gammas = [0.1]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)
@@ -65,6 +65,9 @@ if __name__== '__main__':
         current_time = 0
         cblocks = 0 # 当前共识的次数
         while current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
+            if N1.nodes[0].tx_pool and len(N1.nodes[0].tx_pool) < 10000:
+                N1.nodes[0].gen_trans(current_time)
+            # print("生成交易")
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
