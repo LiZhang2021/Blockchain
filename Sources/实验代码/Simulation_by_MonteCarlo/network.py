@@ -188,104 +188,108 @@ class Network(object):
         if self.nodes[0].timeout >= gamma * T and self.nodes[0].jamming == 0:
             self.nodes[0].timeout = 0
             self.nodes[0].jamming = 1
-            print("开始发起攻击")
+            # print("开始发起攻击")
+        if self.nodes[0].jamming == 1 and self.nodes[0].channel_state == 0:
+            curr_time = curr_time +  (1-gamma)* T* pow(2, 9)*8 /float(trans_rate)
+            self.nodes[0].jamming = 0
+            # print("完成一次攻击")
         # 攻击节点会在接收到区块之后发起阻塞攻击，则会连续发送(1-e)T个交易消息，设置节点id为零的节点作为攻击节点
-        if self.nodes[0].jamming >= 1 and self.nodes[0].jamming <= (1-gamma)* T and self.nodes[0].send_queue:
-            # 发起攻击
-            if self.nodes[0].channel_state == 0:
-                if self.nodes[0].channel_state == 0 and self.nodes[0].send_queue:
-                    # print("发起攻击次数", self.nodes[0].node_id, self.nodes[0].jamming, (1-gamma)* T)
-                    self.time_window = 100
-                    snode = self.nodes[0]
-                    snode.channel_state = 1
-                    for rnode in snode.neighbors:
-                        if rnode.channel_state == 0:
-                            rnode.channel_state = 2
-                            rnode.transmission_node = [snode]
-                            if not snode.transmission_node:
-                                snode.transmission_node = [rnode]
-                            else:
-                                snode.transmission_node.append(rnode)
-                    self.nodes[0].jamming += 1
+        # if self.nodes[0].jamming >= 1 and self.nodes[0].jamming <= (1-gamma)* T and self.nodes[0].send_queue:
+        #     # 发起攻击
+        #     if self.nodes[0].channel_state == 0:
+        #         if self.nodes[0].channel_state == 0 and self.nodes[0].send_queue:
+        #             # print("发起攻击次数", self.nodes[0].node_id, self.nodes[0].jamming, (1-gamma)* T)
+        #             self.time_window = 100
+        #             snode = self.nodes[0]
+        #             snode.channel_state = 1
+        #             for rnode in snode.neighbors:
+        #                 if rnode.channel_state == 0:
+        #                     rnode.channel_state = 2
+        #                     rnode.transmission_node = [snode]
+        #                     if not snode.transmission_node:
+        #                         snode.transmission_node = [rnode]
+        #                     else:
+        #                         snode.transmission_node.append(rnode)
+        #             self.nodes[0].jamming += 1
                     
-                    if self.nodes[0].jamming > (1-gamma)*T or not self.nodes[0].send_queue:
-                        print("完成一次攻击", self.nodes[0].node_id, len(self.nodes[0].send_queue), (1-gamma)* T)
-                        self.nodes[0].jamming = 0
+        #             if self.nodes[0].jamming > (1-gamma)*T or not self.nodes[0].send_queue:
+        #                 print("完成一次攻击", self.nodes[0].node_id, len(self.nodes[0].send_queue), (1-gamma)* T)
+        #                 self.nodes[0].jamming = 0
+        #         else:
+        #             if self.nodes[0].channel_state == 1 and self.nodes[0].send_queue: # 节点发送消息
+        #                 # 查看节点发送消息是否结束
+        #                 data = self.nodes[0].send_queue[0]
+        #                 t_trans = self.nodes[0].commpute_trans_time(data, trans_rate) + self.nodes[0].send_time
+        #                 # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
+        #                 if curr_time <= t_trans < curr_time + slot and self.nodes[0].transmission_node and self.nodes[0].transmission_node[0].send_queue:
+        #                     # 传输完成，更新发送节点信息                   
+        #                     for rnode in self.nodes[0].transmission_node:
+        #                         rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
+        #                     self.nodes[0].update_sendnode_info(data, slot, trans_rate)          
+        #     else:
+        #         # print("正在接收数据，先不发起攻击")
+        #         for node in self.nodes:
+        #             if node.channel_state == 1 and node.send_queue: # 节点发送消息
+        #             # 查看节点发送消息是否结束
+        #                 data = node.send_queue[0]
+        #                 t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
+        #                 # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
+        #                 if curr_time <= t_trans < curr_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
+        #                     # 传输完成，更新发送节点信息
+        #                     # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))                    
+        #                     for rnode in node.transmission_node:
+        #                         rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
+        #                         # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
+        #                     # print("发送节点", node.node_id, len(node.tx_pool))
+        #                     node.update_sendnode_info(data, slot, trans_rate)
+        # else:
+        #    # 不发起攻击，其他节点正常工作
+        for node in self.nodes:
+            if node.channel_state == 0 and node.send_queue:
+                # 找到当前时隙所有要传输的节点
+                tp = random.uniform(0,1)
+                if node.send_prop > tp:
+                    temp_nodes = [node]
                 else:
-                    if self.nodes[0].channel_state == 1 and self.nodes[0].send_queue: # 节点发送消息
-                        # 查看节点发送消息是否结束
-                        data = self.nodes[0].send_queue[0]
-                        t_trans = self.nodes[0].commpute_trans_time(data, trans_rate) + self.nodes[0].send_time
-                        # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
-                        if curr_time <= t_trans < curr_time + slot and self.nodes[0].transmission_node and self.nodes[0].transmission_node[0].send_queue:
-                            # 传输完成，更新发送节点信息                   
-                            for rnode in self.nodes[0].transmission_node:
-                                rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
-                            self.nodes[0].update_sendnode_info(data, slot, trans_rate)          
-            else:
-                # print("正在接收数据，先不发起攻击")
-                for node in self.nodes:
-                    if node.channel_state == 1 and node.send_queue: # 节点发送消息
-                    # 查看节点发送消息是否结束
-                        data = node.send_queue[0]
-                        t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
-                        # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
-                        if curr_time <= t_trans < curr_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
-                            # 传输完成，更新发送节点信息
-                            # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))                    
-                            for rnode in node.transmission_node:
-                                rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
-                                # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
-                            # print("发送节点", node.node_id, len(node.tx_pool))
-                            node.update_sendnode_info(data, slot, trans_rate)
-        else:
-            # 不发起攻击，其他节点正常工作
-            for node in self.nodes:
-                if node.channel_state == 0 and node.send_queue:
-                    # 找到当前时隙所有要传输的节点
-                    tp = random.uniform(0,1)
-                    if node.send_prop > tp:
-                        temp_nodes = [node]
-                    else:
-                        temp_nodes = []
-                    for tnode in node.neighbors:
-                        if tnode.channel_state == 0 and curr_time <= tnode.send_time <= (curr_time + slot):
-                            tp = random.uniform(0,1)
-                            if tnode.send_prop > tp:
-                                temp_nodes.append(tnode)
-                    if not temp_nodes:
-                        snode = node
-                    else: 
-                        snode = temp_nodes[0]
-                        for knode in temp_nodes:
-                            if knode.send_prop > snode.send_prop:
-                                snode = knode
-                            # snode = random.choice(temp_nodes)
-                    # print("节点开始传输数据", snode.node_id, type(snode.send_queue[0]), snode.send_time) 
-                    snode.channel_state = 1
-                    # print("发送节点状态", snode.node_id, snode.channel_state)
-                    for rnode in snode.neighbors:
-                        if rnode.channel_state == 0:
-                            rnode.channel_state = 2
-                            # print("接收节点状态", rnode.node_id, rnode.channel_state)
-                            rnode.transmission_node = [snode]
-                            if not snode.transmission_node:
-                                snode.transmission_node = [rnode]
-                            else:
-                                snode.transmission_node.append(rnode)
-                elif node.channel_state == 1 and node.send_queue: # 节点发送消息
-                    # 查看节点发送消息是否结束
-                    data = node.send_queue[0]
-                    t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
-                    # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
-                    if curr_time <= t_trans < curr_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
-                        # 传输完成，更新发送节点信息
-                        # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))                    
-                        for rnode in node.transmission_node:
-                            rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
-                            # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
-                        # print("发送节点", node.node_id, len(node.tx_pool))
-                        node.update_sendnode_info(data, slot, trans_rate)
+                    temp_nodes = []
+                for tnode in node.neighbors:
+                    if tnode.channel_state == 0 and curr_time <= tnode.send_time <= (curr_time + slot):
+                        tp = random.uniform(0,1)
+                        if tnode.send_prop > tp:
+                            temp_nodes.append(tnode)
+                if not temp_nodes:
+                    snode = node
+                else: 
+                    # snode = temp_nodes[0]
+                    # for knode in temp_nodes:
+                    #     if knode.send_prop > snode.send_prop:
+                    #         snode = knode
+                    snode = random.choice(temp_nodes)
+                # print("节点开始传输数据", snode.node_id, type(snode.send_queue[0]), snode.send_time) 
+                snode.channel_state = 1
+                # print("发送节点状态", snode.node_id, snode.channel_state)
+                for rnode in snode.neighbors:
+                    if rnode.channel_state == 0:
+                        rnode.channel_state = 2
+                        # print("接收节点状态", rnode.node_id, rnode.channel_state)
+                        rnode.transmission_node = [snode]
+                        if not snode.transmission_node:
+                            snode.transmission_node = [rnode]
+                        else:
+                            snode.transmission_node.append(rnode)
+            elif node.channel_state == 1 and node.send_queue: # 节点发送消息
+                # 查看节点发送消息是否结束
+                data = node.send_queue[0]
+                t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
+                # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
+                if curr_time <= t_trans < curr_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
+                    # 传输完成，更新发送节点信息
+                    # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))                    
+                    for rnode in node.transmission_node:
+                        rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
+                        # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
+                    # print("发送节点", node.node_id, len(node.tx_pool))
+                    node.update_sendnode_info(data, slot, trans_rate)
 
     # 事件处理
     def handle_event(self, curr_time, slot, min_tx_num, signs_threshold):
@@ -328,7 +332,7 @@ class Network(object):
                     if not node.tx_pool:
                         node.gen_trans(curr_time)
                     else:
-                        if len(node.tx_pool) < 10000:
+                        if len(node.tx_pool) < 5000:
                             node.gen_trans(curr_time)
    
     # 设置女巫节点

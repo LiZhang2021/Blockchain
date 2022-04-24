@@ -93,8 +93,7 @@ class Node(object):
             block.hash = hashlib.sha256(block_content.encode("utf-8")).hexdigest()
             self.current_block = block
             # 提升节点传输概率
-            # self.send_prop = self.send_prop*(1 + 0.1)
-            self.send_prop += 0.3
+            self.send_prop = self.send_prop*(1 + 0.1)
             if self.send_prop > 1:
                 self.send_prop = 1
             print("节点生成区块",self.node_id, block.block_id, len(block.tx_arr))
@@ -150,6 +149,9 @@ class Node(object):
             str(block.pre_hash) + "None"
         block.hash = hashlib.sha256(block_content.encode("utf-8")).hexdigest()
         self.current_block = block
+        self.send_prop = self.send_prop*(1 + 0.1)
+        if self.send_prop > 1:
+            self.send_prop = 1
         print("生成一个空区块")
         if not self.send_queue:
             self.send_queue = [block]
@@ -305,7 +307,7 @@ class Node(object):
     
     # 传输消息成功之后更新本地信息
     def update_sendnode_info(self, data, slot, trans_rate):
-        # 发送节点更新发送状态和接收数据状态,Jamming
+        # # 发送节点更新发送状态和接收数据状态,Jamming
         if self.node_id == 0:
             self.timeout = 0
         # 连续接收到交易后，需要更新传输概率
@@ -333,9 +335,9 @@ class Node(object):
         elif isinstance(data, Block):
             if data.leader_id == self.current_leader_id: 
                self.current_block = data
-               print("传输区块成功", self.node_id)
-        elif isinstance(data, Sign):
-            print("传输签名成功", self.node_id, len(self.signs))
+            #    print("传输区块成功", self.node_id)
+        # elif isinstance(data, Sign):
+        #     print("传输签名成功", self.node_id, len(self.signs))
         # elif isinstance(data, Transaction):
         #     print("传输交易成功", self.node_id)
         # 更新发送节点传输完成之后消息队列时间
@@ -441,8 +443,6 @@ class Node(object):
         self.send_time = current_time + slot
         self.channel_state = 0
         self.transmission_node = None
-        if len(self.tx_pool) > 30000:
-            self.tx_pool = self.tx_pool[:30000]
 
 
 if __name__ == "__main__":
