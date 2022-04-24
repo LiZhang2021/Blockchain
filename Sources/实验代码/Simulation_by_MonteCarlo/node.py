@@ -104,18 +104,18 @@ class Node(object):
                     self.send_queue.insert(1, block)
                 else:
                     self.send_queue.insert(0, block)
-            file_begin_time = open("Jamming_Begin_time.txt","a")
-            if self.node_id == 0:
-                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            else:
-                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            file_begin_time.close() 
-            # file_begin_time = open("Sybil_Begin_time.txt","a")
+            # file_begin_time = open("Jamming_Begin_time.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # file_begin_time.close() 
+            file_begin_time = open("Sybil_Begin_time.txt","a")
+            if self.node_id == 0:
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            else:
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            file_begin_time.close() 
             # file_begin_time = open("Begin_time_blocksize.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -307,21 +307,21 @@ class Node(object):
     
     # 传输消息成功之后更新本地信息
     def update_sendnode_info(self, data, slot, trans_rate):
-        # # 发送节点更新发送状态和接收数据状态,Jamming
-        if self.node_id == 0:
-            self.timeout = 0
+        # 发送节点更新发送状态和接收数据状态,Jamming
+        # if self.node_id == 0:
+        #     self.timeout = 0
         # 连续接收到交易后，需要更新传输概率
         if self.current_block:
             self.recent_receive_data = None
-            if isinstance(data, Transaction):
+        if self.sybil == 0:
+            if self.current_sign in self.send_queue or not self.current_block.final_sig:
+                self.send_prop = (1 + 0.1)*self.send_prop
+                if self.send_prop > 0.9:
+                    self.send_prop = 0.9    
+            else:
                 self.send_prop = self.send_prop/(1 + 0.1)
                 if self.send_prop <0.1:
                     self.send_prop = 0.1
-            else:
-                if self.current_sign in self.send_queue or not self.current_block.final_sig:
-                    self.send_prop = (1 + 0.1)*self.send_prop
-                    if self.send_prop > 0.9:
-                        self.send_prop = 0.9      
         # 获取传输消息的信息，并计算传输消息的时间
         t_trans = self.commpute_trans_time(data, trans_rate)
         t_prop =  t_trans  + self.send_time + slot
@@ -349,8 +349,8 @@ class Node(object):
 
     # 接收消息成功后，更新本地消息
     def update_receivenode_info(self, data, current_time, slot, trans_rate):
-        if self.node_id == 0 and self.jamming == 0:
-            self.timeout += 1
+        # if self.node_id == 0 and self.jamming == 0:
+        #     self.timeout += 1
             # print("节点接收窗口数量", self.timeout)
         # 当有正在处理的区块时，如果连续接收到交易则认为有堵塞的可能
         if self.current_block:
@@ -370,14 +370,15 @@ class Node(object):
                     if cout_adversary_tw >= len(self.recent_receive_data):
                         self.time_window += 2
                         # print("修改了时间窗口大小", self.node_id, self.time_window)
-                        if self.current_sign in self.send_queue or not self.current_block.final_sig:
-                            self.send_prop = (1 + 0.1) * self.send_prop
-                            if self.send_prop > 0.9:
-                                self.send_prop = 0.9
-                        else:
-                            self.send_prop =  self.send_prop/(1 + 0.1)
-                            if self.send_prop <0.1:
-                                self.send_prop = 0.1
+                        if self.sybil == 0: 
+                            if self.current_sign in self.send_queue or not self.current_block.final_sig:
+                                self.send_prop = (1 + 0.1) * self.send_prop
+                                if self.send_prop > 0.9:
+                                    self.send_prop = 0.9
+                            else:
+                                self.send_prop =  self.send_prop/(1 + 0.1)
+                                if self.send_prop <0.1:
+                                    self.send_prop = 0.1
             else:
                 self.recent_receive_data = None            
         # 更新消息传输完成后接收节点的状态
