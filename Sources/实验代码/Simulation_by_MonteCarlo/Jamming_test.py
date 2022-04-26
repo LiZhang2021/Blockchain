@@ -32,7 +32,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    NUM_NODES= 500  # 节点的数量
+    NUM_NODES= 700  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     print("时隙", SLOT)
@@ -62,11 +62,9 @@ if __name__== '__main__':
         N1.create_nodes(NUM_NODES, 200)
         N1.set_basic_info()
         N1.find_adjacent_nodes()
-        current_time = 0
+        N1.current_time = 0
         cblocks = 0 # 当前共识的次数
-        while current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
-            if N1.nodes[0].tx_pool and len(N1.nodes[0].tx_pool) < 10000:
-                N1.nodes[0].gen_trans(current_time)
+        while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
             # print("生成交易")
             # 确定当前是否有首领节点
             if not N1.leader: 
@@ -117,19 +115,19 @@ if __name__== '__main__':
                 file_end_time = open("Jamming_End_time.txt","a")
                 if N1.leader.node_id == 0:
                     if not N1.leader.blockchain[-1].tx_arr:
-                        file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", "0", "\n"])
+                        file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", "0", "\n"])
                     else:
-                        file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                        file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 else:
                     if not N1.leader.blockchain[-1].tx_arr:
-                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", "0", "\n"])
+                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", "0", "\n"])
                     else:
-                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 file_end_time.close()
                 N1.leader_id = None
                 N1.leader = None
-                print('所有节点完成了一次区块确认', current_time, N1.nodes[0].blockchain[-1].block_id)
+                print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
-            N1.handle_event(current_time, SLOT, min_tx_num, signs_threshold)
-            N1.Jamming_trans(current_time, SLOT, TRANSMISSION_RATE,gamma, TIME_WINDOW)
-            current_time += SLOT
+            N1.handle_event_jamming(min_tx_num, signs_threshold)
+            N1.Jamming_trans(SLOT, TRANSMISSION_RATE,gamma, TIME_WINDOW)
+            N1.current_time += SLOT

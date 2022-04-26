@@ -30,6 +30,8 @@ class Network(object):
         self.nodes = []         # 网络中所有节点
         self.leader_id = None    # 当前的出块节点id
         self.leader = None      # 当前首领节点
+        self.jamming = 0
+        self.current_time = 0
     
     def __str__(self):
         if not self.nodes:
@@ -140,7 +142,7 @@ class Network(object):
         dnode.recent_gen_blocks -= 1
 
      # 传输消息
-    def transmission(self, curr_time, slot, trans_rate):
+    def transmission(self, slot, trans_rate):
         for node in self.nodes:
             if node.channel_state == 0 and node.send_queue:
                 # 找到当前时隙所有要传输的节点
@@ -150,7 +152,7 @@ class Network(object):
                 else:
                     temp_nodes = []
                 for tnode in node.neighbors:
-                    if tnode.channel_state == 0 and curr_time <= tnode.send_time <= (curr_time + slot):
+                    if tnode.channel_state == 0 and self.current_time <= tnode.send_time <= (self.current_time + slot):
                         tp = random.uniform(0,1)
                         if tnode.send_prop > tp:
                             temp_nodes.append(tnode)
@@ -175,24 +177,26 @@ class Network(object):
                 data = node.send_queue[0]
                 t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
                 # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
-                if curr_time <= t_trans < curr_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
+                if self.current_time <= t_trans < self.current_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
                     # 传输完成，更新发送节点信息
                     # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))                    
                     for rnode in node.transmission_node:
-                        rnode.update_receivenode_info(data, curr_time,slot, trans_rate)
+                        rnode.update_receivenode_info(data, self.current_time,slot, trans_rate)
                         # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                     # print("发送节点", node.node_id, len(node.tx_pool))
                     node.update_sendnode_info(data, slot, trans_rate)
     # 传输消息
-    def Jamming_trans(self, curr_time, slot, trans_rate, gamma, T):
-        # if self.nodes[0].jamming == 1:
-        #     self.nodes[0].timeout = 0
-        #     # print("攻击前的时间",curr_time, self.nodes[0].channel_state)
-        #     curr_time = curr_time +  (1-gamma)* T* pow(2, 9)*8 /float(trans_rate)
-        #     self.nodes[0].jamming = 0
-        #     print("完成一次攻击之后的时间",curr_time)
+    def Jamming_trans(self, slot, trans_rate, gamma, T):
         for node in self.nodes:
             if node.channel_state == 0 and node.send_queue:
+                self.jamming += 1
+                if self.jamming >= (gamma * T):
+                    self.jamming = 0
+                    # print("开始一次攻击", self.current_time)
+                    self.current_time += (1 - gamma) * T * (pow(2, 9)*8 /float(trans_rate))
+                    for node in self.nodes:
+                        node.send_time = self.current_time
+                    # print("完成一次攻击", self.current_time, self.jamming)
                 # 找到当前时隙所有要传输的节点
                 tp = random.uniform(0,1)
                 if node.send_prop > tp:
@@ -200,7 +204,7 @@ class Network(object):
                 else:
                     temp_nodes = []
                 for tnode in node.neighbors:
-                    if tnode.channel_state == 0 and curr_time <= tnode.send_time <= (curr_time + slot):
+                    if tnode.channel_state == 0 and self.current_time <= tnode.send_time <= (self.current_time + slot):
                         tp = random.uniform(0,1)
                         if tnode.send_prop > tp:
                             temp_nodes.append(tnode)
@@ -228,23 +232,23 @@ class Network(object):
                 # 查看节点发送消息是否结束
                 data = node.send_queue[0]
                 t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
-                # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
-                if curr_time <= t_trans < curr_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
+                # print("节点开始传输的时间", self.current_time, t_trans, self.current_time + slot)
+                if self.current_time <= t_trans < self.current_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
                     # 传输完成，更新发送节点信息
-                    # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))                    
+                    # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
                     for rnode in node.transmission_node:
-                        rnode.update_receivenode_info_jammer(data, curr_time,slot, gamma, T, trans_rate)
+                        rnode.update_receivenode_info_jammer(data, self.current_time,slot)
                         # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                     # print("发送节点", node.node_id, len(node.tx_pool))
                     node.update_sendnode_info_jammer(data, slot, trans_rate)
-
+                
     # 事件处理
-    def handle_event(self, curr_time, slot, min_tx_num, signs_threshold):
+    def handle_event_jamming(self, min_tx_num, signs_threshold):
         for node in self.nodes:
             if node.node_id == self.leader_id:  # 首领节点的操作
                 if not node.current_block:
                     # 如果还没有生成区块，则需要生成区块和区块Hash的签名
-                    node.gen_valid_block(min_tx_num, curr_time)
+                    node.gen_valid_block(min_tx_num, self.current_time)
                     node.gen_sign()
                 else:
                     # 已经生成区块之后，判定区块是否被确认
@@ -277,11 +281,55 @@ class Network(object):
                             #     print("节点已经生成签名了，只能等待接收",node.node_id)
                 else:
                     if not node.tx_pool:
-                        node.gen_trans(curr_time)
+                        node.gen_trans(self.current_time)
                     else:
                         if len(node.tx_pool) < 5000:
-                            node.gen_trans(curr_time)
-   
+                            node.gen_trans(self.current_time)
+    
+    # 事件处理
+    def handle_event(self, min_tx_num, signs_threshold):
+        for node in self.nodes:
+            if node.node_id == self.leader_id:  # 首领节点的操作
+                if not node.current_block:
+                    # 如果还没有生成区块，则需要生成区块和区块Hash的签名
+                    node.gen_valid_block(min_tx_num, self.current_time)
+                    node.gen_sign()
+                else:
+                    # 已经生成区块之后，判定区块是否被确认
+                    if not node.final_sign:
+                        if node.signs and len(node.signs) >= signs_threshold:
+                            node.gen_final_sign(signs_threshold)
+                        else:
+                            # if not node.signs:
+                            #     print("节点收集的签名还不够", node.node_id, 0)
+                            # else:
+                            #     print("节点收集的签名还不够", node.node_id, len(node.signs))
+                            if not node.current_sign:
+                                node.gen_sign()
+                                # print("首领节点生成签名成功了", node.node_id)
+                            # else:
+                            #     print("节点已经生成签名了，只能等待接收",node.node_id)
+            else:  # 非首领节点的操作
+                # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
+                if node.current_block:
+                    # 判断是否已经生成当前区块的最终签名
+                    if not node.final_sign:
+                        if node.signs:
+                            if len(node.signs) >= signs_threshold:
+                                # print("节点已经生成最终签名了",node.node_id)
+                                node.gen_final_sign(signs_threshold)
+                        else:
+                            if not node.current_sign:
+                                node.gen_sign()
+                            # else:
+                            #     print("节点已经生成签名了，只能等待接收",node.node_id)
+                else:
+                    if not node.tx_pool:
+                        node.gen_trans(self.current_time)
+                    else:
+                        if len(node.tx_pool) < 10000:
+                            node.gen_trans(self.current_time)
+
     # 设置女巫节点
     def set_sybil_nodes(self, gamma):
         # 设置女巫节点，gamma 是女巫节点所占系统的比例
@@ -300,7 +348,7 @@ class Network(object):
             candidate.remove(sybil_node)
 
     # 女巫节点事件处理
-    def Sybil_event(self, curr_time, slot, min_tx_num, signs_threshold):
+    def Sybil_event(self, min_tx_num, signs_threshold):
         for node in self.nodes:
             if node.node_id == self.leader_id:  # 首领节点的操作
                 if not node.current_block:                   
@@ -309,15 +357,15 @@ class Network(object):
                         node.timeout += 1
                         # if node.timeout >= numpy.log(500)*4*slot: # log(500)*4*slot
                         if node.timeout >= node.time_window: # log(500)*4*slot
-                            node.gen_empty_block(curr_time)
+                            node.gen_empty_block(self.current_time)
                             node.timeout = 0
                         else:
-                            node.gen_trans(curr_time)
+                            node.gen_trans(self.current_time)
                     else:
                         # 首领节点不是女巫节点
                         # print("节点要生成区块", node.node_id)
                         # 如果还没有生成区块，则需要生成区块和区块Hash的签名
-                        node.gen_valid_block(min_tx_num, curr_time)
+                        node.gen_valid_block(min_tx_num, self.current_time)
                         node.gen_sign()
                         # print("首领生成签名成功了", node.node_id)
                 else:
@@ -348,10 +396,10 @@ class Network(object):
                             #     print("节点已经生成签名了，只能等待接收",node.node_id)
                 else:
                     if not node.tx_pool:
-                        node.gen_trans(curr_time)
+                        node.gen_trans(self.current_time)
                     else:
                         if len(node.tx_pool) < 10000:
-                            node.gen_trans(curr_time)
+                            node.gen_trans(self.current_time)
 
    
 
