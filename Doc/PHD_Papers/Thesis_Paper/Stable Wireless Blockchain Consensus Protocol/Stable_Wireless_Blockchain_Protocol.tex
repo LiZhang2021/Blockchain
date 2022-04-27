@@ -1,0 +1,114 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{CJK,amsmath,amssymb,color,graphicx}
+\usepackage[top=1in,bottom=1in,left=1.1in,right=1in]{geometry}
+%------------------------------------------------------------------------%
+\makeatletter
+\newenvironment{breakablealgorithm}
+{% \begin{breakablealgorithm}
+	\begin{center}
+		\refstepcounter{algorithm}% New algorithm
+		\hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+		\renewcommand{\caption}[2][\relax]{% Make a new \caption
+			{\raggedright\textbf{\ALG@name~\thealgorithm} ##2\par}%
+			\ifx\relax##1\relax % #1 is \relax
+			\addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+			\else % #1 is not \relax
+			\addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+			\fi
+			\kern2pt\hrule\kern2pt
+		}
+	}{% \end{breakablealgorithm}
+		\kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+	\end{center}
+}
+\makeatother
+
+\begin{document}
+\begin{CJK*}{GBK}{song}
+
+\title{Consensus Algorithms in Wireless Blockchain System}
+\author{}
+\date{}
+\maketitle
+
+\section{Consensus Algorithm in Each Round}
+
+\newpage
+\begin{breakablealgorithm}
+	%\textsl{}\setstretch{1.8}
+	\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+	\renewcommand{\algorithmicensure}{\textbf{Output:}}
+	\caption{Stable Wireless Blockchain Protocol}
+	\label{alg1}
+	\begin{algorithmic}[1]
+		\State \textcolor{blue}{$\rhd$ Initialization}:
+        \State $Sortition(PKs^{r}, S^{r})$
+        \State $Rds^{r} = GenerateRandomness(r, B_{hash}^{r-1}, sig_{final}^{r})$
+		\State \textcolor{blue}{$\rhd$ Leader Election and Block Proposal}:
+        \State $result = BlockProposerSelection(sk, Rds^{r})$
+            \If {$result == True$}   \hfill\textcolor{red}{$\rhd$ As Block Proposer}
+            \State $B^{r} = GenerateBlock(B^{r-1}, Txs)$
+            \State $sig_{partial}^{r} = Sign(B_{hash}^{r})$
+            \State $broadcast(B^{r}, sig_{partial}^{r})$ with probability $p$
+            \Else  \hfill\textcolor{red}{$\rhd$ As Ordinary Nodes}
+            \State Waiting to receive new Block 
+            \EndIf
+        \State \textcolor{blue}{$\rhd$ Block Verification and Finalization}:
+        \While {$!finalized$} \hfill\textcolor{red}{$\rhd$ All Consensus Nodes}
+            \State $(B^{r}, Signs^{r}, sig_{full}^{r}, Tx) = RcvMSG()$
+                \State \textcolor{green}{//**Check the validation of new block}
+                \If {$isValid(B^{r})$ and $VerifyBlockProposer(pk_{BP}, Rds^{r})$}
+                    \State $sig_{v}^{r} = GenerateSignature(B_{hash}^{r}, sk_{v})$
+                \EndIf
+                \If {$isValid(sig_{full}^{r})$}
+                    \State $\sigma_{F}^{r} = sig_{full}^{r}$
+                    \State $broadcast(\sigma_{F}^{r})$ with probability $p$
+                    \State $Append(B^{r}, \sigma_{F}^{r})$
+                    \State $finalized = True$
+                \ElsIf {$Count(Signs^{r}) >= \lceil\frac{N}{2}\rceil$}
+                    \State $\sigma_{F}^{r} = RecoverFullSignature(Signs^{r})$
+                    \State $broadcast(\sigma_{F}^{r})$ with probability $p$
+                    \State $Append(B^{r}, \sigma_{F}^{r})$
+                    \State $finalized = True$
+                \ElsIf {$sig_{u}^{r} \notin Signs^{r}$}
+                    \State $Signs^{r} = AppendSignature(sig_{u}^{r})$
+                \ElsIf {$v$ did not broadcast its partial signature}
+                    \State $broadcast(sig_{v}^{r})$ with probability $p$
+                \Else
+                    \State $broadcast(Tx)$ with probability $p$
+                \EndIf
+            \State $count = count + 1$
+            \If {$count > T$}
+                \State $count = 1$
+                \If {Received $T$ consecutive transactions in the past $T$ rounds}
+                    \State $p = p * (1+\delta)^{-1}$
+                    \State $T = T + 2$
+                \EndIf
+            \EndIf
+        \EndWhile
+        \newpage
+        \Function{RecNewBlock}{$m_B, \sigma_v$}
+            \If{$\sigma_v \notin sigShares$}
+                \State $sigShares = AppendSignature(\sigma_v)$
+            \EndIf
+            \If{$Count(sigShares) > K$}
+                \State $FinalSig = RecoverFinalSig(sigShares)$
+            \Else
+                \State $FinalSig = null$
+            \EndIf
+            \State \Return $sigShares, FinalSig, B_v^{new}$
+        \EndFunction
+        \Function{AppendSignature}{$\sigma_v$}
+            \If{$\sigma_v \notin sigShares$}
+                \State $sigShares \leftarrow sigShares + \sigma_v)$
+            \EndIf
+            \State \Return $sigShares$
+        \EndFunction
+	\end{algorithmic}
+\end{breakablealgorithm}
+
+\end{CJK*}
+\end{document}
