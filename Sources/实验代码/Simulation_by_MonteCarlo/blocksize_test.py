@@ -58,9 +58,9 @@ if __name__== '__main__':
         N1.create_nodes(NUM_NODES, 200)
         N1.set_basic_info()
         N1.find_adjacent_nodes()
-        current_time = 0
+        N1.current_time = 0
         cblocks = 0 # 当前共识的次数
-        while current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
+        while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领     
@@ -109,14 +109,14 @@ if __name__== '__main__':
                 N1.update_information()
                 file_end_time = open("End_time_blocksize.txt","a")
                 if N1.leader.node_id == 0:
-                    file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                    file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 else:
-                    file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                    file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 file_end_time.close()
                 N1.leader_id = None
                 N1.leader = None
-                print('所有节点完成了一次区块确认', current_time, N1.nodes[0].blockchain[-1].block_id)
+                print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
-            N1.handle_event(current_time, SLOT, min_tx_num, signs_threshold)
-            N1.transmission(current_time, SLOT, TRANSMISSION_RATE)
-            current_time += SLOT
+            N1.handle_event(N1.current_time, SLOT, min_tx_num, signs_threshold)
+            N1.transmission(N1.current_time, SLOT, TRANSMISSION_RATE)
+            N1.current_time += SLOT
