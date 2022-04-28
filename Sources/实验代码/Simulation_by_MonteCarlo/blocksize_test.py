@@ -33,7 +33,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = np.arange(256, 5121, 256)  # 区块大小设置
-    NUM_NODES= 10  # 节点的数量
+    NUM_NODES= 700  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     print("时隙", SLOT)
@@ -117,6 +117,6 @@ if __name__== '__main__':
                 N1.leader = None
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
-            N1.handle_event(N1.current_time, SLOT, min_tx_num, signs_threshold)
-            N1.transmission(N1.current_time, SLOT, TRANSMISSION_RATE)
+            N1.handle_event(min_tx_num, signs_threshold)
+            N1.transmission(SLOT, TRANSMISSION_RATE)
             N1.current_time += SLOT

@@ -284,7 +284,7 @@ $$H_{Stable} = \left\{
 
 节点可以通过增加金额来延长活动时间，也可以重新注册新的节点来获得活动时间。记 $N$ 为共识节点集合，$T_{i}$ 是节点 $i\in N$ 的活动时间，用户增加活动时间有两种方式：一种是通过充值金钱延长节点 $i$ 的活动时间；一种是通过注册新节点延长用户的活动时间。
 * 第一种情况时用户的稳定度概率计算如下：
-  * 节点的活动时间比为 $\rho_{i} = \frac{T_{i} + \Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} $
+  * 节点的活动时间比为 $\rho_{i} = \frac{T_{i} + \Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}}$
   * 节点的共识比 $r_i = \frac{N_{i} + \Delta N_i}{K}$
   * 节点的稳定度为 $w_{i} = \alpha \rho_{i} + \beta r_{i} = \alpha \frac{T_{i} + \Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{N_{i} + \Delta N_i}{K}$
   * 节点被选中的概率为 $p_{i} = \frac{w_{i}}{\sum_{j\in N} w_{j} + \alpha \Delta \frac{\Delta T_{i}}{\sum_{j\in N}T_j + \Delta T_{i}} + \beta \frac{\Delta N_i}{K}}$
