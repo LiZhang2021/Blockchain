@@ -82,29 +82,32 @@
 	\label{alg1}
 \begin{algorithmic}[1]
     \While {$!finalized$}
-        \State $B^{r}, Sig_{u}^{r}, proof, sig_{full}^{r} = RcvMSG()$
+        \State $B^{r}, sig_{u}^{r}, proof, sig_{full}^{r} = RcvMSG()$
         \State \textcolor{green}{//**Check the validation of new block}
         \State $result = \text{Verify Block Proposer}(pk_{BP}, proof, Rds^{r})$
-        \If {$isValid(B^{r})\text{ and result}$}
+        \If {$isValid(B^{r})\text{ {\bf and} result == True}$}
             \State $sig_{v}^{r} = \text{Generate Signature}(B_{H}^{r}, sk_{v})$
         \EndIf
+        \State \textcolor{green}{//**Check the Finalization of new block}
         \If {$isValid(sig_{full}^{r})$}
             \State $AddSig(B^{r}, sig_{full}^{r})$
             \State $Append(BC, B^{r})$
             \State $finalized = True$
-        \ElsIf {$Count(Sigs^{r}) \geq \lceil\frac{N}{2}\rceil$}
+        \ElsIf {$Count(Sigs^{r}) \geq \lceil\frac{N+1}{2}\rceil$}
             \State $sig_{full}^{r} = \text{Recover Full Signature}(Sigs^{r})$
-            \State $broadcast(sig_{full}^{r})$ with probability $p$
+            \State $broadcast(sig_{full}^{r})$ with probability $p = p * (1+\delta)$
             \State $AddSig(B^{r}, sig_{full}^{r})$
             \State $Append(BC, B^{r})$
             \State $finalized = True$
         \ElsIf {$sig_{u}^{r} \notin Signs^{r}$}
             \State $\text{Append Signature}(Sigs^{r}, sig_{u}^{r})$
         \ElsIf {$v$ did not broadcast its partial signature}
-            \State $broadcast(sig_{v}^{r})$ with probability $p$
+            \State $\text{Append Signature}(Sigs^{r}, sig_{v}^{r})$
+            \State $broadcast(sig_{v}^{r})$ with probability $p = p * (1+\delta)$
         \Else
-            \State $broadcast(Tx)$ with probability $p$
+            \State $broadcast(Tx)$ with probability $p = p * (1+\delta)^{-1}$
         \EndIf
+        \State \textcolor{green}{//**maintain the estimate of adversary time window}
         \State $count = count + 1$
         \If {$count > T$}
             \State $count = 1$
