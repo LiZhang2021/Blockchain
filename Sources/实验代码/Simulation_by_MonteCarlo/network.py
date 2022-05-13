@@ -89,7 +89,7 @@ class Network(object):
         # 计算所有节点的近期生成区块数量
         sum_block = 0
         for node in self.nodes:
-            sum_block +=  node.lifetime
+            sum_block += node.recent_gen_blocks
         # 计算每个节点的稳定度
         for node in self.nodes:
             # 计算共识比
