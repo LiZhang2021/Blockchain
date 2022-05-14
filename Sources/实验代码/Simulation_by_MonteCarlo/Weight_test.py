@@ -58,35 +58,37 @@ if __name__ == '__main__':
     x = []
     y = []
     num_consensus = 100     # 共识次数
-    num_nodes = 100         # 节点数量
+    num_nodes = 500         # 节点数量
 
     # 随机生成节点并赋予不同的时间和共识区块
-
+    # file_stability = open("Stability.txt","a")
+    # file_stability.writelines(["Number of recent Blocks(change)\t", str(50), "\t Number of lifetime(change)\t", str(400), "\n"])
+    # file_stability.close()
     # 测试不同alpha值时，优质节点被选中的概率
     alphas = np.arange(0, 1.1, 0.1)
     for alpha in alphas:
         alpha = round(alpha, 4)
         print("alpha为:", alpha)
-        NodeList = []
-        for j in range(num_nodes):
-            if j%4 == 0:
-                TNode = Node(j, 100, 50)
-                NodeList.append(TNode)
-            elif j%4 == 1:
-                TNode = Node(j, 200, 50)
-                NodeList.append(TNode)
-            elif j%4 == 2:
-                TNode = Node(j, 500, 50)
-                NodeList.append(TNode)
-            elif j%4 == 3:
-                TNode = Node(j, 200, 50)
-                NodeList.append(TNode)
-        temp_nodelist = NodeList
         num_best = 0.0  # 记录在不同的alpha下优质节点被选中的次数
         # for node in temp_nodelist:
         #     print("节点", node.index, node.ttime,node.bnum)
         # 测试num_consensus 次数时，优质节点被选中的次数
         for nc in range(num_consensus):
+            NodeList = []
+            for j in range(num_nodes):
+                if j%4 == 0:
+                    TNode = Node(j, 500, 120)
+                    NodeList.append(TNode)
+                elif j%4 == 1:
+                    TNode = Node(j, 1000, 360)
+                    NodeList.append(TNode)
+                elif j%4 == 2:
+                    TNode = Node(j, 500, 120)
+                    NodeList.append(TNode)
+                elif j%4 == 3:
+                    TNode = Node(j, 1000, 360)
+                    NodeList.append(TNode)
+            temp_nodelist = NodeList
             # for node in temp_nodelist:
             #     print("节点", node.index, node.ttime,node.bnum)
             # 根据所有节点的稳定度绘制轮盘赌
@@ -107,26 +109,26 @@ if __name__ == '__main__':
                 sum_block += node.bnum
             ave_time = sum_time/num_nodes
             ave_block = sum_block/num_nodes
-            print("均值", ave_time, ave_block)
+            # print("均值", ave_time, ave_block)
             for node in temp_nodelist:
                 if node.index == temp:
-                    print("节点的信息", node.index, node.ttime, node.bnum)
+                    # print("节点的信息", node.index, node.ttime, node.bnum)
                     if (node.ttime >= ave_time)  and (node.bnum >= ave_block):
                         num_best = num_best + 1
                         #print("优质节点计数：", num_best)
                     # 更新节点的共识区块数量
-                    node.bnum = node.bnum + 1
+                    # node.bnum = node.bnum + 1
             # 更新所有节点的剩余活动时间
-            m = random.randint(0,num_nodes)
-            for node in temp_nodelist:
-                node.ttime = node.ttime - 1
-                if node.index == m:
-                    node.bnum = node.bnum - 1
+            # m = random.randint(0,num_nodes)
+            # for node in temp_nodelist:
+            #     node.ttime = node.ttime - 1
+            #     if node.index == m:
+            #         node.bnum = node.bnum - 1
         #计算选中优质节点次数与总共识次数占比
         bp = num_best/num_consensus
-        print("优质节点比为：", bp)
+        # print("优质节点比为：", bp)
         # file_stability = open("Stability.txt","a")
-        # file_stability.writelines(["alpha\t", str(alpha), "\tconsensus ratio\t", str(bp), "\n"])
+        # file_stability.writelines(["Num Nodes\t", str(num_nodes),"\t alpha\t", str(alpha), "\tconsensus ratio\t", str(bp), "\n"])
         # file_stability.close()
         # 添加对应的alpha和优质节点选中次数占比到数组中
         x. append(alpha)
@@ -140,7 +142,7 @@ if __name__ == '__main__':
     plt.yticks(fontsize=10)
     #标签设置字体大小设置
     plt.xlabel('alpha',fontsize=14)
-    plt.ylabel('best_ratio',fontsize=14)
+    plt.ylabel('Ratio',fontsize=14)
     plt.show()
 
 # 结论
