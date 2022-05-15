@@ -32,7 +32,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    NUM_NODES= 700  # 节点的数量
+    NUM_NODES= 300  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     print("时隙", SLOT)
@@ -40,7 +40,7 @@ if __name__== '__main__':
     ALPHA = 0.5
     # gammas = np.arange(0.45, 0.50, 0.01)
     gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.49]
-    # gammas = [0.45]
+    # gammas = [0.35, 0.4, 0.45, 0.49]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)
@@ -68,7 +68,8 @@ if __name__== '__main__':
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
-                prob = random.uniform(0, 1)
+                # prob = random.uniform(0, 1)
+                prob = cblocks/10.0
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 file_stability = open("Sybil_Stability.txt","a")

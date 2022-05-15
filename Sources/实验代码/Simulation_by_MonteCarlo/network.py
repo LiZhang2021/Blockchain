@@ -95,7 +95,7 @@ class Network(object):
             # 计算共识比
             bratio = node.recent_gen_blocks/sum_block
             # 计算时间比
-            tratio =  node.lifetime/sum_time
+            tratio = node.lifetime/sum_time
             # 计算稳定度
             node.stability =  (alpha * tratio +  (1- alpha) * bratio)
             # print("节点稳定度", node.node_id, node.lifetime, node.recent_gen_blocks, node.stability)
