@@ -33,7 +33,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = np.arange(256, 5121, 256)  # 区块大小设置
-    NUM_NODES= 700  # 节点的数量
+    NUM_NODES= 10  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     print("时隙", SLOT)

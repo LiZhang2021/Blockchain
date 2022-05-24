@@ -22,6 +22,7 @@ TRANSMISSION_RATE = 1*pow(10, 7)  # 信道传输速率
 MAX_SIMULATIOND_TIME = 100 # 仿真时间
 MAX_TRANSACTIONS = 2000
 SLOT = 512/float(TRANSMISSION_RATE) # 一个包大小为512bit，在当前传输速率下时隙长度
+# SLOT = 1
 NUM_BLOCKS = 10             # 计算共识比的区块数量
 ALPHA = 0.7                         # 稳定度
 
@@ -144,61 +145,122 @@ class Network(object):
      # 传输消息
     def transmission(self, slot, trans_rate):
         for node in self.nodes:
-            if node.channel_state == 0 and node.send_queue:
+            if node.channel_state == 0 and node.send_queue and self.current_time <= node.send_time <= (self.current_time + slot):
                 # 节点确定是否要发送消息
                 p_send = random.uniform(0,1)
-                if p_send <0.5:
+                if p_send <= node.send_prop:
                     node.channel_state = 1
-                    for tnode in node.neighbors:
-                        # 空闲接收节点决定是否接收消息
-                        if tnode.channel_state == 0 and self.current_time <= tnode.send_time <= (self.current_time + slot):
-
-                # 找到当前时隙所有要传输的节点
-                # tp = random.uniform(0,1)
-                # if node.send_prop > tp:
-                #     temp_nodes = [node]
-                # else:
-                #     temp_nodes = []
-                # for tnode in node.neighbors:
-                #     if tnode.channel_state == 0 and self.current_time <= tnode.send_time <= (self.current_time + slot):
-                #         tp = random.uniform(0,1)
-                #         if tnode.send_prop > tp:
-                #             temp_nodes.append(tnode)
-                # if not temp_nodes:
-                #     snode = node  
-                # else:
-                #     snode = random.choice(temp_nodes)
-                # # print("节点开始传输数据", snode.node_id, type(snode.send_queue[0]), snode.send_time) 
-                # snode.channel_state = 1
-                # # print("发送节点状态", snode.node_id, snode.channel_state)
-                # for rnode in snode.neighbors:
-                #     # 接收节点随机选择是否接收
-                #     rdm = random.uniform(0,1)
-                #     if rnode.channel_state == 0 and rdm >0.8:
-                #         rnode.channel_state = 2
-                #         # print("接收节点状态", rnode.node_id, rnode.channel_state)
-                #         rnode.transmission_node = [snode]
-                #         if not snode.transmission_node:
-                #             snode.transmission_node = [rnode]
-                #         else:
-                #             snode.transmission_node.append(rnode)
-                # # 如果发送节点没有接收节点接收消息，则发送节点状态发生变化
-                # if not snode.transmission_node:
-                #     snode.channel_state = 0
+                    
+                    # 确定接收节点集合
+                    for rnode in node.neighbors:
+                            if (data not in rnode.tx_pool)  and (data!=rnode.current_block)and (data !=rnode.current_sign) and (data !=rnode.final_sign):
+                                p_rec =  random.uniform(0,1) 
+                                # 空闲接收节点决定是否接收该节点的消息
+                                if rnode.channel_state == 0 and p_rec <= 0.5:                           
+                                    rnode.channel_state = 2
+                                    rnode.transmission_node = [node]
+                                    if not node.transmission_node:
+                                        node.transmission_node = [rnode]
+                                    else:
+                                        node.transmission_node.append(rnode)
+                    # 如果发送节点没有接收节点接收消息，则发送节点状态发生变化
+                    if  not node.transmission_node: 
+                        # print("节点不发送消息", node.node_id)
+                        node.channel_state = 0
+                    # else:
+                     # 确定传输数据
+                    if not node.current_block:
+                        # 当没有正在处理的区块时，就发送交易
+                        data = node.send_queue[0]
+                    else:
+                        if node.transmited_block ==0:
+                            # 有正在处理的区块，并且该节点还没有广播过区块时就发送区块
+                            data = node.current_block
+                        else:
+                            # 如果还没有生成最终签名，则发送部分签名
+                            if not node.final_sign:
+                                data = node.current_sign
+                            else:
+                                data = node.final_sign
+                        # print("节点确定发送消息", node.node_id, node.send_time)
             elif node.channel_state == 1 and node.send_queue: # 节点发送消息
                 # 查看节点发送消息是否结束
-                data = node.send_queue[0]
+                if not node.current_block:
+                        # 当没有正在处理的区块时，就发送交易
+                        data = node.send_queue[0]
+                else:
+                    if node.transmited_block ==0:
+                        # 有正在处理的区块，并且该节点还没有广播过区块时就发送区块
+                        data = node.current_block
+                    else:
+                        # 如果还没有生成最终签名，则发送部分签名
+                        if not node.final_sign:
+                            data = node.current_sign
+                        else:
+                            data = node.final_sign
                 t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
-                # print("节点开始传输的时间", curr_time, t_trans, curr_time + slot)
+                # print("节点开始传输的时间和结束的时间", node.node_id, node.send_time , t_trans)
                 if self.current_time <= t_trans < self.current_time + slot and node.transmission_node and node.transmission_node[0].send_queue:
                     # 传输完成，更新发送节点信息
-                    # print("节点在当前时隙传输完成", node.node_id, (curr_time + slot))                    
+                    # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
                     for rnode in node.transmission_node:
                         rnode.update_receivenode_info(data, self.current_time,slot, trans_rate)
                         # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                     # print("发送节点", node.node_id, len(node.tx_pool))
-                    node.update_sendnode_info(data, slot, trans_rate)
-    # 传输消息
+                    node.update_sendnode_info(data, slot, trans_rate, self.current_time)
+                    print("传输数据类型", type(data))
+        for node in self.nodes:
+            if node.channel_state==0 and node.send_time <self.current_time:
+                node.send_time = self.current_time + slot
+    
+
+     # 事件处理
+    def handle_event(self, min_tx_num, signs_threshold):
+        # print("当前时间", self.current_time)
+        for node in self.nodes:
+            if node.node_id == self.leader_id:  # 首领节点的操作
+                if not node.current_block:
+                    # 如果还没有生成区块，则需要生成区块和区块Hash的签名
+                    node.gen_valid_block(min_tx_num, self.current_time)
+                    node.gen_sign()
+                else:
+                    # 已经生成区块之后，判定区块是否被确认
+                    if not node.final_sign:
+                        if node.signs and len(node.signs) >= signs_threshold:
+                            node.gen_final_sign(signs_threshold)
+                        else:
+                            # if not node.signs:
+                            #     print("节点收集的签名还不够", node.node_id, 0)
+                            # else:
+                            #     print("节点收集的签名还不够", node.node_id, len(node.signs))
+                            if not node.current_sign:
+                                node.gen_sign()
+                                # print("首领节点生成签名成功了", node.node_id)
+                            # else:
+                            #     print("节点已经生成签名了，只能等待接收",node.node_id)
+            else:  # 非首领节点的操作
+                # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
+                if node.current_block:
+                    # 判断是否已经生成当前区块的最终签名
+                    if not node.final_sign:
+                        if node.signs:
+                            if len(node.signs) >= signs_threshold:
+                                # print("节点已经生成最终签名了",node.node_id)
+                                node.gen_final_sign(signs_threshold)
+                        else:
+                            if not node.current_sign:
+                                node.gen_sign()
+                            # else:
+                            #     print("节点已经生成签名了，只能等待接收",node.node_id)
+                else:
+                    if not node.tx_pool:
+                        node.gen_trans(self.current_time)
+                    else:
+                        if len(node.tx_pool) < 10000:
+                            node.gen_trans(self.current_time)
+   
+   
+    # Jamming传输消息
     def Jamming_trans(self, slot, trans_rate, gamma, T):
         for node in self.nodes:
             if node.channel_state == 0 and node.send_queue:
@@ -255,7 +317,7 @@ class Network(object):
                     # print("发送节点", node.node_id, len(node.tx_pool))
                     node.update_sendnode_info_jammer(data, slot, trans_rate)
                 
-    # 事件处理
+    # Jamming事件处理
     def handle_event_jamming(self, min_tx_num, signs_threshold):
         for node in self.nodes:
             if node.node_id == self.leader_id:  # 首领节点的操作
@@ -299,49 +361,7 @@ class Network(object):
                         if len(node.tx_pool) < 5000:
                             node.gen_trans(self.current_time)
     
-    # 事件处理
-    def handle_event(self, min_tx_num, signs_threshold):
-        for node in self.nodes:
-            if node.node_id == self.leader_id:  # 首领节点的操作
-                if not node.current_block:
-                    # 如果还没有生成区块，则需要生成区块和区块Hash的签名
-                    node.gen_valid_block(min_tx_num, self.current_time)
-                    node.gen_sign()
-                else:
-                    # 已经生成区块之后，判定区块是否被确认
-                    if not node.final_sign:
-                        if node.signs and len(node.signs) >= signs_threshold:
-                            node.gen_final_sign(signs_threshold)
-                        else:
-                            # if not node.signs:
-                            #     print("节点收集的签名还不够", node.node_id, 0)
-                            # else:
-                            #     print("节点收集的签名还不够", node.node_id, len(node.signs))
-                            if not node.current_sign:
-                                node.gen_sign()
-                                # print("首领节点生成签名成功了", node.node_id)
-                            # else:
-                            #     print("节点已经生成签名了，只能等待接收",node.node_id)
-            else:  # 非首领节点的操作
-                # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
-                if node.current_block:
-                    # 判断是否已经生成当前区块的最终签名
-                    if not node.final_sign:
-                        if node.signs:
-                            if len(node.signs) >= signs_threshold:
-                                # print("节点已经生成最终签名了",node.node_id)
-                                node.gen_final_sign(signs_threshold)
-                        else:
-                            if not node.current_sign:
-                                node.gen_sign()
-                            # else:
-                            #     print("节点已经生成签名了，只能等待接收",node.node_id)
-                else:
-                    if not node.tx_pool:
-                        node.gen_trans(self.current_time)
-                    else:
-                        if len(node.tx_pool) < 10000:
-                            node.gen_trans(self.current_time)
+   
 
     # 设置女巫节点
     def set_sybil_nodes(self, gamma):

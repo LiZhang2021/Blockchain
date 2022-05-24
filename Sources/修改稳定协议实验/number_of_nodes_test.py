@@ -31,12 +31,14 @@ if __name__== '__main__':
     from node import Node
     from network import Network
 
-    BLOCK_SIZE = 4096  # 区块大小设置1MB = 1024KB
-    NUM_NODES= np.arange(100, 1001, 100)  # 节点的数量
+    BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
+    # NUM_NODES= np.arange(100, 1001, 100)  # 节点的数量
+    NUM_NODES= [10] # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
+    # SLOT = 1
     print("时隙", SLOT)
-    MAX_SIMULATIOND_TIME = 10000 # 仿真时间
+    MAX_SIMULATIOND_TIME = 1 # 仿真时间
     ALPHA = 0.5
     for num_nodes in NUM_NODES:
         print("节点数量", num_nodes)

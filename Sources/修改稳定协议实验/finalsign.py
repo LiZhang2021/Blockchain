@@ -11,15 +11,20 @@ import numpy
 
 class Finalsign(object):
     def __init__(self, signer_id, sign_content, sign_threshold):
-        self.signer_id = signer_id  # 签名节点的id
+        # self.signer_id = signer_id  # 签名节点的id
         self.sign_content = sign_content  # 签名内容
         self.sign_threshold = sign_threshold  # 签名阈值
         self.signature = self.set_final_sign() # 签名
     
     def set_final_sign(self):
-        signature = str(self.signer_id) + " signs " + str(self.sign_content) +\
+        signature = str(0) + " signs " + str(self.sign_content) +\
             " with " + str(self.sign_threshold) + " signature shares!"
         return signature
+    
+    # def set_final_sign(self):
+    #     signature = str(self.signer_id) + " signs " + str(self.sign_content) +\
+    #         " with " + str(self.sign_threshold) + " signature shares!"
+    #     return signature
     
     def __str__(self):
         str_fmt = "signer_id:{}, sign_content:{}, sign_threshold:{}\n" + "signature:{}"
