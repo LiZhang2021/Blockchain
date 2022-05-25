@@ -46,11 +46,11 @@
         \While {true}
             \State \textcolor{green}{//** Iteration for round $r$}
     		\State \textcolor{blue}{$\rhd$ Initialization}:
-            \State $Rds^{r} = GenerateRandomValue(r, B_{H}^{r-1}, sig_{full}^{r-1})$
-            \For {$j < c\cdot v \text{ slots}$}
-                \State $BroadvastTrasanctions()$
+            \For {$j < K$ slots}
+                \State $BroadcastMSG()$
                 \State $j = j + 1$
             \EndFor
+            \State $Rds^{r} = GenerateRandomValue(r, B_{H}^{r-1}, sig_{full}^{r-1})$
             \State \textcolor{blue}{$\rhd$ Consensus Process}:
             \State $\text{Block Proposer Election}();$
             \State $\text{Block Verification}();$
@@ -64,26 +64,29 @@
 	%\textsl{}\setstretch{1.8}
 	\renewcommand{\algorithmicrequire}{\textbf{Input:}}
 	\renewcommand{\algorithmicensure}{\textbf{Output:}}
-	\caption{Broadcast Transactions for each node $v$}
+	\caption{BroadcastMSG subroutine}
 	\label{alg1}
 	\begin{algorithmic}[1]
         \If {$v \text{ decided to send a transaction based on }p_v$}
-            \State $broadcast(Tx)\text{ with power }P_t$
+            \State $broadcast(MSGs)\text{ with power }P_t$
         \Else
             \If {channel is idle}
-                \State $p_v = \min\{(1+\gamma)p_v, p_{max}\}$
-                \State $T_v = \max\{1, T_v - 1\}$
-            \ElsIf {receive a transaction}
-                \State {$p_v = (1+\gamma)^{-1}p_v$}
+                \State \textcolor{cyan}{//** Count idle slots within $T_v$}
+                \State $e_v = e_v + 1$
+            \Else
+                \State $\text{Receive a message from others}$
             \EndIf
         \EndIf
-        \State \textcolor{green}{//**maintain the estimate of adversary time window}
+        \State \textcolor{cyan}{//**maintain the estimate of adversary time window}
         \State $count_v = count_v + 1$
         \If {$count_v > T_v$}
             \State {$count_v = 1$}
-            \If {There is no idle slot in the past $T_v$ slots}
-                \State {$p_v = (1+\gamma)^{-1}p_v$,}
-                \State {$T_v = T_v + 2$,}
+            \If {$e_v == 0$}
+                \State {$p_v = p_v/(1+\gamma)$}
+                \State {$T_v = T_v + 2$}
+            \ElsIf {$e_v >= 10$}
+                \State {$p_v = p_v*(1+\gamma)$}
+                \State {$T_v = T_v - 1$}
             \EndIf
         \EndIf
 	\end{algorithmic}
@@ -96,14 +99,49 @@
 	\caption{Block Proposer Election for each node $v$}
 	\label{alg1}
 \begin{algorithmic}[1]
-    \State $result, proof = \text{Block Proposer Election}(sk, Rdm^{r})$
-    \If {$result == True$}   \hfill\textcolor{red}{$\rhd$ As Block Proposer}
-        \State $B^{r} = \text{Generate Block}(B^{r-1}, Txs)$
-        \State $sig_{v}^{r} = Sign(B_{H}^{r})$
-        \State {$broadcast(B^{r}, proof, sig_{v}^{r})$ with probability $p_{max}$ and transmission power $P_{max}$}
-    \Else  \hfill\textcolor{red}{$\rhd$ As Ordinary Nodes}
-        \State {Listen on the channel to receive the new block}
-    \EndIf
+    \While {true}
+        \State \textcolor{cyan}{//** Iteration for round $r$}
+		\State \textcolor{blue}{$\rhd$ Initialization}:
+        \State \textcolor{cyan}{//** Broadcast transactions}
+        \For {$j < K$ slots}
+            \State $BroadcastMSG()$
+            \State $j = j + 1$
+        \EndFor
+        \State \textcolor{blue}{$\rhd$ Consensus Process}:
+        \State $Rds^{r} = GenerateRandomValue(r, B_{H}^{r-1}, sig_{full}^{r-1})$
+        \State $result, proof = \text{Block Proposer Election}(sk, Rdm^{r})$ \hspace{1cm}\textcolor{red}{$\rhd$ Block Proposer Election}
+        \If {$result == True$}   \hspace{1cm}\textcolor{red}{$\rhd$ Block Generation}
+            \State $B^{r} = \text{Generate Block}(B^{r-1}, Txs)$
+            \State $sig_{v}^{r} = Sign(B_{H}^{r})$
+            %\State {$broadcast(B^{r}, proof, sig_{v}^{r})$ with probability $p_{max}$ and transmission power $P_{max}$}
+        %\Else  \hfill\textcolor{red}{$\rhd$ As Ordinary Nodes}
+        \EndIf
+        \While {$!finalized$}   \hspace{1cm}\textcolor{red}{$\rhd$ Block Verification and Finalization}
+            \State $BroadcastMSG()$
+            \State $B^r, proof, sig_{u}^{r},sig_{full}^{r} = RcvMSG()$
+            \State \textcolor{cyan}{//**Check the Finalization of new block}
+            \If {$isValid(sig_{full}^{r})$}
+                \State $AddSig(B^{r}, sig_{full}^{r})$
+                \State $Append(BC, B^{r})$
+                \State $finalized = True$
+            \ElsIf {$Count(Sigs^{r}) \geq \lceil\frac{N+1}{2}\rceil$}
+                \State $sig_{full}^{r} = \text{Recover Full Signature}(Sigs^{r})$
+                \State $broadcast(sig_{full}^{r})$ with probability $p_{max}$ and power $P_{max}$
+                \State $AddSig(B^{r}, sig_{full}^{r})$
+                \State $Append(BC, B^{r})$
+                \State $finalized = True$
+            \ElsIf {$sig_{u}^{r} \notin Signs^{r}$}
+                \State $\text{Append Signature}(Sigs^{r}, sig_{u}^{r})$
+            \Else
+                \State \textcolor{cyan}{//**Check the validation of new block}
+                \If {$isValid(B^r, pk_{BP}, proof, Rdm^{r})$}
+                    \State $sig_{v}^{r} = \text{Generate Signature}(B_{H}^{r}, sk_{v})$
+                \EndIf
+            \EndIf
+        \EndWhile
+        \State $r = r + 1$
+    \EndWhile
+
 	\end{algorithmic}
 \end{breakablealgorithm}
 
@@ -136,37 +174,21 @@
 	\label{alg1}
 \begin{algorithmic}[1]
     \While {$!finalized$}
-        \If {$v$ did not broadcast its partial signature and decided to send the partial signature}
-            \State {Broadcast $sig_{v}^{r}$ with power $P_t$}
-        \Else
-            \If {receive a message}
-                \State $sig_{u}^{r},sig_{full}^{r} = RcvMSG()$
-                \State \textcolor{green}{//**Check the Finalization of new block}
-                \If {$isValid(sig_{full}^{r})$}
-                    \State $AddSig(B^{r}, sig_{full}^{r})$
-                    \State $Append(BC, B^{r})$
-                    \State $finalized = True$
-                \ElsIf {$Count(Sigs^{r}) \geq \lceil\frac{N+1}{2}\rceil$}
-                    \State $sig_{full}^{r} = \text{Recover Full Signature}(Sigs^{r})$
-                    \State $broadcast(sig_{full}^{r})$ with probability $p_{max}$ and power $P_{max}$
-                    \State $AddSig(B^{r}, sig_{full}^{r})$
-                    \State $Append(BC, B^{r})$
-                    \State $finalized = True$
-                \ElsIf {$sig_{u}^{r} \notin Signs^{r}$}
-                    \State $\text{Append Signature}(Sigs^{r}, sig_{u}^{r})$
-                \EndIf
-            \Else { channel is idle}
-                \State $T_v = \max\{1, T_v - 1\}$
-            \EndIf
-        \EndIf
-        \State \textcolor{green}{//**maintain the estimate of adversary time window}
-        \State $count_v = count_v + 1$
-        \If {$count_v > T_v$}
-            \State $count_v = 1$
-            \If {There is no idle slot in the past $T_v$ slots}
-                \State $p_v = p_v * (1+\gamma)^{-1}$
-                \State $T_v = T_v + 2$
-            \EndIf
+        \State $BroadcastMSG()$
+        \State $sig_{u}^{r},sig_{full}^{r} = RcvMSG()$
+        \State \textcolor{green}{//**Check the Finalization of new block}
+        \If {$isValid(sig_{full}^{r})$}
+            \State $AddSig(B^{r}, sig_{full}^{r})$
+            \State $Append(BC, B^{r})$
+            \State $finalized = True$
+        \ElsIf {$Count(Sigs^{r}) \geq \lceil\frac{N+1}{2}\rceil$}
+            \State $sig_{full}^{r} = \text{Recover Full Signature}(Sigs^{r})$
+            \State $broadcast(sig_{full}^{r})$ with probability $p_{max}$ and power $P_{max}$
+            \State $AddSig(B^{r}, sig_{full}^{r})$
+            \State $Append(BC, B^{r})$
+            \State $finalized = True$
+        \ElsIf {$sig_{u}^{r} \notin Signs^{r}$}
+            \State $\text{Append Signature}(Sigs^{r}, sig_{u}^{r})$
         \EndIf
     \EndWhile
 	\end{algorithmic}
