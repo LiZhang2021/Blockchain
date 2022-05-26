@@ -166,8 +166,15 @@ class Network(object):
                         node.empty_slots += slot
                         node.send_time = self.current_time + slot
                     break
+                elif len(temp_sender) > 1:
+                    for node in self.nodes:
+                        # print("节点信息", node.node_id, node.channel_state, node.send_prop)
+                        node.channel_state = 0
+                        node.transmission_node = None
+                        node.send_time = self.current_time + slot
+                    break
                 else:
-                    snode = random.choice(temp_sender)
+                    snode = temp_sender[0]
                     snode.channel_state = 1
                     # 确定接收节点集合
                     for rnode in snode.neighbors:

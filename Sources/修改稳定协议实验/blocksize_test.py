@@ -32,8 +32,8 @@ if __name__== '__main__':
     from node import Node
     from network import Network
 
-    BLOCK_SIZE = np.arange(256, 5121, 256)  # 区块大小设置
-    NUM_NODES= 10  # 节点的数量
+    BLOCK_SIZE = np.arange(512, 5121, 512)  # 区块大小设置
+    NUM_NODES= 100  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT = 1
@@ -65,17 +65,10 @@ if __name__== '__main__':
                 prob = random.uniform(0, 1)
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
-                file_stability = open("Stability_blocksize.txt","a")
                 for node in N1.nodes:
-                    file_stability.writelines(["NODE_STABILITY\t Node_id\t", str(node.node_id), "\tStability\t", str(node.stability), "\t\n"])
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node
-                if N1.leader.node_id == 0:             
-                    file_stability.writelines(["LEADER_STABILITY\t", "0", "\tStability\t", str(N1.leader.stability), "\t\n"])
-                else:
-                    file_stability.writelines(["LEADER_STABILITY\t", str(N1.leader.node_id), "\tStability\t", str(N1.leader.stability), "\t\n"])
-                file_stability.close()
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
