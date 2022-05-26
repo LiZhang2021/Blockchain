@@ -43,10 +43,10 @@ if __name__== '__main__':
     print("所需签名数", signs_threshold)
     for block_size in BLOCK_SIZE:
         print("区块大小（KB）", block_size)
-        file_begin_time = open("Begin_time_blocksize.txt","a")
+        file_begin_time = open("Begin_time_blocksize.txt(PBFT)","a")
         file_begin_time.writelines(["BLOCK_SIZE(KB)\t", str(block_size), "\n"])
         file_begin_time.close()
-        file_end_time = open("End_time_blocksize.txt","a")
+        file_end_time = open("End_time_blocksize.txt(PBFT)","a")
         file_end_time.writelines(["BLOCK_SIZE(KB)\t", str(block_size), "\n"])
         file_end_time.close()
         min_tx_num = int((block_size * 1024 - 256)/512)  # 交易数量
@@ -86,7 +86,7 @@ if __name__== '__main__':
                     node.current_sign = None
                     node.current_block = None
                     node.current_leader_id = None
-                file_end_time = open("End_time_blocksize.txt","a")
+                file_end_time = open("End_time_blocksize(PBFT).txt","a")
                 if N1.leader.node_id == 0:
                     file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 else:
