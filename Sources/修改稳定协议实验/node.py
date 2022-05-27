@@ -60,7 +60,7 @@ class Node(object):
          self.current_leader_id = None  # 当前区块的出块节点id
          self.sybil = 0  # 标记女巫节点
          self.timeout = 0  # 超时
-         self.send_prop = 0.2  # 发送概率
+         self.send_prop = 0.05  # 发送概率
          self.time_window = 100  # 敌手攻击窗口
          self.count_slots = 0  # 时间窗口计数
          self.recent_receive_data = None  # 近期接收敌手窗口大小的数据
@@ -359,7 +359,7 @@ class Node(object):
         elif isinstance(data, Block):
             if data.leader_id == self.current_leader_id: 
                self.current_block = data
-               print("传输区块成功", self.node_id)
+            #    print("传输区块成功", self.node_id)
                self.transmited_block =1
         # elif isinstance(data, Sign):
         #     print("传输签名成功", self.node_id)
@@ -415,7 +415,7 @@ class Node(object):
                     #     print("已经在签名集合中", self.node_id, len(self.signs))
                     # else:
                         self.signs.append(data)
-                        print("节点接收签名成功", self.node_id, len(self.signs))
+                        # print("节点接收签名成功", self.node_id, len(self.signs))
             elif isinstance(data, Transaction):
                 if not self.tx_pool:
                     self.tx_pool = [data]

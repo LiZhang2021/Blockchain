@@ -31,8 +31,11 @@ if __name__== '__main__':
     from PBFT_node import Node
     from PBFT_network import Network
 
-    BLOCK_SIZE = np.arange(256, 5121, 256)  # 区块大小设置
-    NUM_NODES= 10  # 节点的数量
+    BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
+    prob_sucs = np.arange(0.1, 1, 0.1)  # 区块大小设置
+    # prob_sucs = [1]
+
+    NUM_NODES= 100  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT = 1
@@ -41,33 +44,46 @@ if __name__== '__main__':
     ALPHA = 0.7
     signs_threshold = int(2*NUM_NODES/3) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
-    for block_size in BLOCK_SIZE:
-        print("传输成功率", block_size)
-        file_begin_time = open("Begin_time_propagation.txt(PBFT)","a")
-        file_begin_time.writelines(["BLOCK_SIZE(KB)\t", str(block_size), "\n"])
+    for ps in prob_sucs:
+        print("传输成功率", ps)
+        file_begin_time = open("Begin_time_propagation(PBFT).txt","a")
+        file_begin_time.writelines(["propagation success probability\t", str(ps), "\n"])
         file_begin_time.close()
-        file_end_time = open("End_time_propagation.txt(PBFT)","a")
-        file_end_time.writelines(["BLOCK_SIZE(KB)\t", str(block_size), "\n"])
+        file_end_time = open("End_time_propagation(PBFT).txt","a")
+        file_end_time.writelines(["propagation success probability\t", str(ps), "\n"])
         file_end_time.close()
-        min_tx_num = int((block_size * 1024 - 256)/512)  # 交易数量
+        min_tx_num = int((BLOCK_SIZE * 1024 - 256)/512)  # 交易数量
         N1 = Network()
         N1.create_nodes(NUM_NODES, 200)
         # N1.set_basic_info()
         N1.find_adjacent_nodes()
         N1.current_time = 0
         cblocks = 0 # 当前共识的次数
-        while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
+        fail_times = 0  # 共识失败的次数
+        while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 100:
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
-                leader = random.choice(N1.nodes)
-                N1.leader = leader
-                N1.leader_id = leader.node_id
-                print("首领节点是", N1.leader_id)
-                for node in N1.nodes:
-                    node.current_leader_id = N1.leader_id
-                    # if node.node_id == N1.leader_id:
-                    #     N1.leader = node    
+                # leader = random.choice(N1.nodes)
+                rdm_leader = random.uniform(0,1)
+                begin_time = N1.current_time
+                print("开始时间", begin_time)
+                if rdm_leader <0.67:
+                    begin_time = N1.current_time
+                    leader = N1.nodes[0]
+                    N1.leader = leader
+                    N1.leader_id = leader.node_id
+                    print("首领节点是", N1.leader_id)
+                    for node in N1.nodes:
+                        node.current_leader_id = N1.leader_id
+                        # if node.node_id == N1.leader_id:
+                        #     N1.leader = node    
+                else:
+                    print("首领节点故障，当前轮共识失败", cblocks)
+                    N1.current_time += 25000
+                    print("结束时间", N1.current_time)
+                    fail_times +=1
+                    cblocks +=1
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
@@ -80,7 +96,13 @@ if __name__== '__main__':
                     else:
                         node.blockchain.append(node.current_block)
                     # 更新交易池中的信息
-                    node.update_transactions()
+                    # node.update_transactions()   
+                    node.send_queue = None
+                    node.tx_pool = None
+                    node.channel_state = 0
+                    node.transmission_node = None
+                    node.send_queue = None
+                    node.send_time = N1.current_time + SLOT
                     node.psigns = None
                     node.csigns = None
                     node.current_sign = None
@@ -96,6 +118,43 @@ if __name__== '__main__':
                 N1.leader = None
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
+            if ((N1.current_time - begin_time) == 30000) and cblocks <100:
+                print("共识失败", cblocks)
+                for node in N1.nodes:
+                    node.send_queue = None
+                    node.tx_pool = None
+                    node.channel_state = 0
+                    node.transmission_node = None
+                    node.send_time = N1.current_time + SLOT
+                    node.psigns = None
+                    node.csigns = None
+                    node.current_sign = None
+                    node.current_block = None
+                    node.current_leader_id = None
+                    file_end_time = open("End_time_propagation(PBFT).txt","a")
+                if N1.leader and N1.leader.node_id == 0:
+                    if not N1.leader.blockchain:
+                        file_end_time.writelines(["LEADER_ID\t", "0",  "\tFailed to generate the first block\t", "\tEnd_TIME\t", str(N1.current_time), "\n"])
+                    else:
+                        if N1.leader.blockchain[-1].tx_arr:
+                            file_end_time.writelines(["LEADER_ID\t", "0",  "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", "0", "\n"])
+                        else:
+                            file_end_time.writelines(["LEADER_ID\t", "0",  "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                elif N1.leader and N1.leader.node_id > 0:
+                    if not N1.leader.blockchain[-1].tx_arr:
+                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id),  "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", "0", "\n"])
+                    else:
+                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id),  "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                file_end_time.close()
+                print("结束时间", N1.current_time)
+                N1.leader_id = None
+                N1.leader = None
+                fail_times +=1
+                cblocks +=1
             N1.handle_event(min_tx_num, signs_threshold)
-            N1.transmission(SLOT, TRANSMISSION_RATE)
+            N1.transmission(SLOT, TRANSMISSION_RATE, ps)
             N1.current_time += SLOT
+        
+        file_end_time = open("summary_propagation_End_time(PBFT).txt","a")
+        file_end_time.writelines(["propagation success probability\t", str(ps), "\t Consensus times\t", str(cblocks), "\t Failed times\t", str(fail_times), "\n"])
+        file_end_time.close()

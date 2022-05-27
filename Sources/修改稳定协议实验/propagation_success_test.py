@@ -37,10 +37,10 @@ if __name__== '__main__':
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
     print("时隙", SLOT)
-    MAX_SIMULATIOND_TIME = 10000000 # 仿真时间
+    MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
-    # p_success = np.arange(0.1, 1, 0.1)
-    p_success = [1]
+    p_success = np.arange(0.1, 1, 0.1)
+    # p_success = [1]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     for ps in p_success:
@@ -60,7 +60,7 @@ if __name__== '__main__':
         N1.current_time = 0
         cblocks = 0 # 当前共识的次数
         fail_times = 0  # 共识失败次数
-        while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
+        while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 100:
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
@@ -102,8 +102,8 @@ if __name__== '__main__':
                     node.current_block = None
                     node.current_leader_id = None
                     node.recent_receive_data = None
-                    node.send_prop = 0.2
-                    node.time_window = 100
+                    # node.send_prop = 0.2
+                    # node.time_window = 100
                 # N1.update_information()               
                 file_end_time = open("propagation_End_time.txt","a")
                 if N1.leader.node_id == 0:
@@ -119,10 +119,10 @@ if __name__== '__main__':
                 file_end_time.close()
                 N1.leader_id = None
                 N1.leader = None
-                print()
+                
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
-            if ((N1.current_time - begin_time) == 100000) and cblocks <10:
+            if ((N1.current_time - begin_time) == 25000) and cblocks <100:
                 print("共识失败", fail_times)
                 for node in N1.nodes:
                     node.send_queue = None
@@ -137,8 +137,8 @@ if __name__== '__main__':
                     node.current_block = None
                     node.current_leader_id = None
                     node.recent_receive_data = None
-                    node.send_prop = 0.2
-                    node.time_window = 100
+                    # node.send_prop = 0.2
+                    # node.time_window = 100
                 # N1.update_information()               
                 file_end_time = open("propagation_End_time.txt","a")
                 if N1.leader.node_id == 0:

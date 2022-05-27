@@ -64,7 +64,7 @@ class Node(object):
          self.current_leader_id = None  # 当前区块的出块节点id
         #  self.sybil = 0  # 标记女巫节点
         #  self.timeout = 0  # 超时
-         self.send_prop = 0.2  # 发送概率
+         self.send_prop = 0.05  # 发送概率
         #  self.time_window = 100  # 敌手攻击窗口
         #  self.count_slots = 0  # 时间窗口计数
         #  self.recent_receive_data = None  # 近期接收敌手窗口大小的数据
@@ -110,6 +110,9 @@ class Node(object):
             # self.send_prop = self.send_prop*(1 + 0.1)
             # if self.send_prop > 1:
             #     self.send_prop = 1
+            self.send_prop = 1
+            for rnode in self.neighbors:
+                rnode.send_prop = 0
             print("节点生成区块",self.node_id, block.block_id, len(block.tx_arr))
             if not self.send_queue:
                 self.send_queue = [block]
@@ -138,7 +141,7 @@ class Node(object):
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
             # file_begin_time.close()    
-            file_begin_time = open("Begin_time_nodes(PBFT).txt","a")
+            file_begin_time = open("Begin_time_propagation(PBFT).txt","a")
             if self.node_id == 0:
                 file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             else:
@@ -334,11 +337,15 @@ class Node(object):
     def update_sendnode_info(self, data, slot, trans_rate, current_time):
         t_trans = self.commpute_trans_time(data, trans_rate)
         t_prop =  t_trans  + self.send_time + slot
+        if  isinstance(data, Block):
+            self.send_prop = 0.05
+            for rnode in self.neighbors:
+                rnode.send_prop = 0.05
         # 更新消息传输完成后发送节点的区块状态
         if isinstance(data, Block):
             if data.leader_id == self.current_leader_id: 
                self.current_block = data
-        #        print("传输区块成功", self.node_id)
+               print("传输区块成功", self.node_id)
         # elif data == 'Prepared Message':
         #     print("传输Prepared Message成功", self.node_id, len(self.psigns))
         elif data == 'Commit Message':
@@ -370,12 +377,12 @@ class Node(object):
         # print("节点的传输时间", self.node_id, self.send_time)
 
     # 接收消息成功后，更新本地消息
-    def update_receivenode_info(self, data, current_time, slot, trans_rate):
+    def update_receivenode_info(self, data, current_time, slot, trans_rate, prob_suc):
         # 判定节点是否接收成功
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
         self.compute_trans_prob(snode)
-        if rdm <= self.prob_suc :
+        if rdm <= prob_suc :
             # print("接收消息成功", self.node_id, self.transmission_node[0].node_id)
             # 更新消息传输完成后接收节点的状态
             if isinstance(data, Block):
