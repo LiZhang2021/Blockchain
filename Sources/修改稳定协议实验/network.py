@@ -143,7 +143,7 @@ class Network(object):
         dnode.recent_gen_blocks -= 1
 
      # 传输消息
-    def transmission(self, slot, trans_rate):
+    def transmission(self, slot, trans_rate, prob_suc):
         for node in self.nodes:
             if node.channel_state == 0 and node.send_queue and self.current_time <= node.send_time < (self.current_time + slot):
                 # 节点确定是否要发送消息
@@ -167,6 +167,7 @@ class Network(object):
                         node.send_time = self.current_time + slot
                     break
                 elif len(temp_sender) > 1:
+                    # print("当前时隙信道忙碌",self.current_time)
                     for node in self.nodes:
                         # print("节点信息", node.node_id, node.channel_state, node.send_prop)
                         node.channel_state = 0
@@ -194,7 +195,7 @@ class Network(object):
                     # 传输完成，更新发送节点信息
                     # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
                     for rnode in node.transmission_node:
-                        rnode.update_receivenode_info(data, self.current_time,slot, trans_rate)
+                        rnode.update_receivenode_info(data, self.current_time,slot, trans_rate, prob_suc)
                         # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                     # print("发送节点", node.node_id, len(node.tx_pool))
                     node.update_sendnode_info(data, slot, trans_rate, self.current_time)
@@ -209,8 +210,8 @@ class Network(object):
                     node.send_prop = node.send_prop/(1 + 0.1)
                     if node.send_prop > 0.3:
                         node.send_prop = 0.3
-                    elif node.send_prop < 0.01:
-                        node.send_prop = 0.01
+                    elif node.send_prop < 0.05:
+                        node.send_prop = 0.05
                     node.time_window +=2
                 elif node.empty_slots > 10:
                     # 如果空闲时隙超过阈值，则增加传输概率，降低窗口估计

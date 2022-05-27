@@ -102,10 +102,6 @@ class Node(object):
                 str(block.pre_hash) + "".join([str(tx) for tx in block.tx_arr])
             block.hash = hashlib.sha256(block_content.encode("utf-8")).hexdigest()
             self.current_block = block
-            # 提升节点传输概率
-            # self.send_prop = self.send_prop*(1 + 0.1)
-            # if self.send_prop > 1:
-            #     self.send_prop = 1
             print("节点生成区块",self.node_id, block.block_id, len(block.tx_arr))
             if not self.send_queue:
                 self.send_queue = [block]
@@ -116,6 +112,12 @@ class Node(object):
                     self.send_queue.insert(1, block)
             # print("首领的发送时间",  self.send_time)
             # print("当前时间",  current_time)
+            file_begin_time = open("propagation_Begin_time.txt","a")
+            if self.node_id == 0:
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            else:
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            file_begin_time.close() 
             # file_begin_time = open("Jamming_Begin_time.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -128,12 +130,12 @@ class Node(object):
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # file_begin_time.close() 
-            file_begin_time = open("Begin_time_blocksize.txt","a")
-            if self.node_id == 0:
-                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            else:
-                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
-            file_begin_time.close()    
+            # file_begin_time = open("Begin_time_blocksize.txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
+            # file_begin_time.close()    
             # file_begin_time = open("Begin_time_nodes.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -195,10 +197,6 @@ class Node(object):
         if not self.current_sign and self.current_block and self.verify_block():
             tsign = Sign(self.node_id, self.current_block.hash)
             self.current_sign = tsign
-            # 提升节点传输概率
-            # self.send_prop = self.send_prop * (1+0.1)
-            # if self.send_prop > 0.9:
-            #     self.send_prop = 0.9
             # 添加签名到签名列表中
             if not self.signs:
                 self.signs = [tsign]
@@ -361,7 +359,7 @@ class Node(object):
         elif isinstance(data, Block):
             if data.leader_id == self.current_leader_id: 
                self.current_block = data
-            #    print("传输区块成功", self.node_id)
+               print("传输区块成功", self.node_id)
                self.transmited_block =1
         # elif isinstance(data, Sign):
         #     print("传输签名成功", self.node_id)
@@ -379,13 +377,72 @@ class Node(object):
         # print("节点的传输时间", self.node_id, self.send_time)
 
     # 接收消息成功后，更新本地消息
-    def update_receivenode_info(self, data, current_time, slot, trans_rate):
-        
+    def update_receivenode_info(self, data, current_time, slot, trans_rate, prob_suc):      
         # 判定节点是否接收成功
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
         self.compute_trans_prob(snode)
-        if rdm <= self.prob_suc :
+        if isinstance(data, Block):
+            temp_prob = 1
+        else:
+            temp_prob = prob_suc
+        if rdm <= temp_prob :
+            # print("接收消息成功", self.node_id, self.transmission_node[0].node_id)
+            # 更新消息传输完成后接收节点的状态
+            if isinstance(data, Finalsign):
+                if self.current_block and self.current_block.hash == data.sign_content:
+                    self.current_block.final_sig = data
+                    self.final_sign = data
+                    # print("接收最终签名成功", self.node_id)
+                    if self.send_queue and isinstance(self.send_queue[0], Finalsign):
+                        del self.send_queue[0]
+                    if len(self.send_queue) >1 and isinstance(self.send_queue[1], Finalsign):
+                        del self.send_queue[1]
+                    if self.send_queue and isinstance(self.send_queue[0], Sign):
+                        del self.send_queue[0]
+                    if len(self.send_queue)>1 and  isinstance(self.send_queue[1], Sign):
+                        del self.send_queue[1]
+                    if len(self.send_queue)>2 and  isinstance(self.send_queue[2], Sign):
+                        del self.send_queue[2]
+            elif isinstance(data, Block):
+                if not self.current_block and data.leader_id == self.current_leader_id: 
+                    self.current_block = data
+            elif isinstance(data, Sign):
+                if not self.signs:
+                    self.signs = [data]
+                else:
+                    if data not in self.signs:
+                    #     print("已经在签名集合中", self.node_id, len(self.signs))
+                    # else:
+                        self.signs.append(data)
+                        print("节点接收签名成功", self.node_id, len(self.signs))
+            elif isinstance(data, Transaction):
+                if not self.tx_pool:
+                    self.tx_pool = [data]
+                else:
+                    if data not in self.tx_pool:
+                    #     print("已经在交易池中")
+                    # else:
+                        # print("接收交易成功", self.node_id)
+                        self.tx_pool.append(data)
+            # 更新所有接收节点发送队列的时间和信道状态       
+            self.send_time = current_time + slot
+            self.channel_state = 0
+            self.transmission_node = None
+        else:
+        # 更新所有接收节点发送队列的时间和信道状态    
+            # print("接收消息失败", self.node_id)   
+            self.send_time = current_time + slot 
+            self.channel_state = 0
+            self.transmission_node = None
+        # print("节点的传输时间", self.node_id, self.send_time)
+
+    def update_receivenode_info0(self, data, current_time, slot, trans_rate):       
+        # 判定节点是否接收成功
+        rdm = random.uniform(0,1)
+        snode = self.transmission_node[0]
+        self.compute_trans_prob(snode)
+        if rdm <= self.prob_suc:
             # print("接收消息成功", self.node_id, self.transmission_node[0].node_id)
             # 更新消息传输完成后接收节点的状态
             if isinstance(data, Finalsign):
@@ -455,7 +512,7 @@ class Node(object):
             self.transmission_node = None
         else:
         # 更新所有接收节点发送队列的时间和信道状态    
-            print("接收消息失败", self.node_id)   
+            # print("接收消息失败", self.node_id)   
             self.send_time = current_time + slot 
             self.channel_state = 0
             self.transmission_node = None
