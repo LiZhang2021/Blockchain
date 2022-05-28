@@ -32,9 +32,9 @@ if __name__== '__main__':
     from PBFT_network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    prob_sucs = np.arange(0, 1.1, 0.1)  # 区块大小设置
-    # prob_sucs = [1]
-
+    # prob_sucs = np.arange(0.1, 1.1, 0.1)  # 区块大小设置
+    prob_sucs = [0]
+    TIMEOUT = 25000
     NUM_NODES= 100  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
@@ -80,7 +80,7 @@ if __name__== '__main__':
                     #     N1.leader = node    
                 # else:
                 #     print("首领节点故障，当前轮共识失败", cblocks)
-                #     N1.current_time += 30000
+                #     N1.current_time += TIMEOUT
                 #     print("结束时间", N1.current_time)
                 #     fail_times +=1
                 #     cblocks +=1
@@ -101,6 +101,7 @@ if __name__== '__main__':
                     node.tx_pool = None
                     node.channel_state = 0
                     node.transmission_node = None
+                    node.send_prop = 0.05
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
                     node.psigns = None
@@ -118,7 +119,7 @@ if __name__== '__main__':
                 N1.leader = None
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
-            if ((N1.current_time - begin_time) == 30000) and cblocks <100:
+            if ((N1.current_time - begin_time) == TIMEOUT) and cblocks <100:
                 print("共识失败", cblocks)
                 for node in N1.nodes:
                     node.send_queue = None

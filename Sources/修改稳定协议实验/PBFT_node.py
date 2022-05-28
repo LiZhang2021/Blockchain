@@ -345,10 +345,12 @@ class Node(object):
         if isinstance(data, Block):
             if data.leader_id == self.current_leader_id: 
                self.current_block = data
-               print("传输区块成功", self.node_id)
+               self.send_prop = 0
+            #    print("传输区块成功", self.node_id)
         # elif data == 'Prepared Message':
         #     print("传输Prepared Message成功", self.node_id, len(self.psigns))
         elif data == 'Commit Message':
+            self.send_prop = 0
             # print("传输Commit Message成功",self.node_id, len(self.csigns))
             if self.send_queue[0] == 'Prepared Message':
                 del self.send_queue[0]
@@ -382,23 +384,21 @@ class Node(object):
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
         self.compute_trans_prob(snode)
-        if  isinstance(data, Block):
-            self.send_prop = 0.05
-            for rnode in self.neighbors:
-                rnode.send_prop = 0.05
         if rdm <= prob_suc :
             # print("接收消息成功", self.node_id, self.transmission_node[0].node_id)
             # 更新消息传输完成后接收节点的状态
             if isinstance(data, Block):
                 if not self.current_block and data.leader_id == self.current_leader_id: 
                     self.current_block = data
-                    # print("接收区块成功",self.node_id)
+                    self.send_prop = 0.05
+                    print("接收区块成功",self.node_id)
             elif data == 'Prepared Message':
                 if not self.psigns:
                     self.psigns = [data]
                 else:
                     self.psigns.append(data)
-                # print("接收Prepared Message成功", self.node_id, len(self.psigns))
+                self.send_prop = 0.05
+                print("接收Prepared Message成功", self.node_id, len(self.psigns))
             elif data == 'Commit Message':
                 if not self.csigns:
                     self.csigns = [data]
@@ -410,9 +410,11 @@ class Node(object):
                     del self.send_queue[1]
                 if self.send_queue[2] == 'Prepared Message':
                     del self.send_queue[2]
-                # print("接收Commit Message成功", self.node_id, len(self.csigns))
+                self.send_prop = 0.05
+                print("接收Commit Message成功", self.node_id, len(self.csigns))
             elif data == 'Pre-prepare Message':
                 self.current_sign = 'Pre-prepare Message'
+                self.send_prop = 0.05
                 # print("接收Pre-prepare Message成功", self.node_id, self.current_sign)
                 if self.send_queue[0] == 'Commit Message':
                     del self.send_queue[0]
