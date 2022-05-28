@@ -1,0 +1,1111 @@
+propagation success probability	0.0
+LEADER_ID	0	Failed to generate the first block		End_TIME	25000
+LEADER_ID	0	Failed to generate the first block		End_TIME	50001
+LEADER_ID	0	Failed to generate the first block		End_TIME	75002
+LEADER_ID	0	Failed to generate the first block		End_TIME	100003
+LEADER_ID	0	Failed to generate the first block		End_TIME	125004
+LEADER_ID	0	Failed to generate the first block		End_TIME	150005
+LEADER_ID	0	Failed to generate the first block		End_TIME	175006
+LEADER_ID	0	Failed to generate the first block		End_TIME	200007
+LEADER_ID	0	Failed to generate the first block		End_TIME	225008
+LEADER_ID	0	Failed to generate the first block		End_TIME	250009
+LEADER_ID	0	Failed to generate the first block		End_TIME	275010
+LEADER_ID	0	Failed to generate the first block		End_TIME	300011
+LEADER_ID	0	Failed to generate the first block		End_TIME	325012
+LEADER_ID	0	Failed to generate the first block		End_TIME	350013
+LEADER_ID	0	Failed to generate the first block		End_TIME	375014
+LEADER_ID	0	Failed to generate the first block		End_TIME	400015
+LEADER_ID	0	Failed to generate the first block		End_TIME	425016
+LEADER_ID	0	Failed to generate the first block		End_TIME	450017
+LEADER_ID	0	Failed to generate the first block		End_TIME	475018
+LEADER_ID	0	Failed to generate the first block		End_TIME	500019
+LEADER_ID	0	Failed to generate the first block		End_TIME	525020
+LEADER_ID	0	Failed to generate the first block		End_TIME	550021
+LEADER_ID	0	Failed to generate the first block		End_TIME	575022
+LEADER_ID	0	Failed to generate the first block		End_TIME	600023
+LEADER_ID	0	Failed to generate the first block		End_TIME	625024
+LEADER_ID	0	Failed to generate the first block		End_TIME	650025
+LEADER_ID	0	Failed to generate the first block		End_TIME	675026
+LEADER_ID	0	Failed to generate the first block		End_TIME	700027
+LEADER_ID	0	Failed to generate the first block		End_TIME	725028
+LEADER_ID	0	Failed to generate the first block		End_TIME	750029
+LEADER_ID	0	Failed to generate the first block		End_TIME	775030
+LEADER_ID	0	Failed to generate the first block		End_TIME	800031
+LEADER_ID	0	Failed to generate the first block		End_TIME	825032
+LEADER_ID	0	Failed to generate the first block		End_TIME	850033
+LEADER_ID	0	Failed to generate the first block		End_TIME	875034
+LEADER_ID	0	Failed to generate the first block		End_TIME	900035
+LEADER_ID	0	Failed to generate the first block		End_TIME	925036
+LEADER_ID	0	Failed to generate the first block		End_TIME	950037
+LEADER_ID	0	Failed to generate the first block		End_TIME	975038
+LEADER_ID	0	Failed to generate the first block		End_TIME	1000039
+LEADER_ID	0	Failed to generate the first block		End_TIME	1025040
+LEADER_ID	0	Failed to generate the first block		End_TIME	1050041
+LEADER_ID	0	Failed to generate the first block		End_TIME	1075042
+LEADER_ID	0	Failed to generate the first block		End_TIME	1100043
+LEADER_ID	0	Failed to generate the first block		End_TIME	1125044
+LEADER_ID	0	Failed to generate the first block		End_TIME	1150045
+LEADER_ID	0	Failed to generate the first block		End_TIME	1175046
+LEADER_ID	0	Failed to generate the first block		End_TIME	1200047
+LEADER_ID	0	Failed to generate the first block		End_TIME	1225048
+LEADER_ID	0	Failed to generate the first block		End_TIME	1250049
+LEADER_ID	0	Failed to generate the first block		End_TIME	1275050
+LEADER_ID	0	Failed to generate the first block		End_TIME	1300051
+LEADER_ID	0	Failed to generate the first block		End_TIME	1325052
+LEADER_ID	0	Failed to generate the first block		End_TIME	1350053
+LEADER_ID	0	Failed to generate the first block		End_TIME	1375054
+LEADER_ID	0	Failed to generate the first block		End_TIME	1400055
+LEADER_ID	0	Failed to generate the first block		End_TIME	1425056
+LEADER_ID	0	Failed to generate the first block		End_TIME	1450057
+LEADER_ID	0	Failed to generate the first block		End_TIME	1475058
+LEADER_ID	0	Failed to generate the first block		End_TIME	1500059
+LEADER_ID	0	Failed to generate the first block		End_TIME	1525060
+LEADER_ID	0	Failed to generate the first block		End_TIME	1550061
+LEADER_ID	0	Failed to generate the first block		End_TIME	1575062
+LEADER_ID	0	Failed to generate the first block		End_TIME	1600063
+LEADER_ID	0	Failed to generate the first block		End_TIME	1625064
+LEADER_ID	0	Failed to generate the first block		End_TIME	1650065
+LEADER_ID	0	Failed to generate the first block		End_TIME	1675066
+LEADER_ID	0	Failed to generate the first block		End_TIME	1700067
+LEADER_ID	0	Failed to generate the first block		End_TIME	1725068
+LEADER_ID	0	Failed to generate the first block		End_TIME	1750069
+LEADER_ID	0	Failed to generate the first block		End_TIME	1775070
+LEADER_ID	0	Failed to generate the first block		End_TIME	1800071
+LEADER_ID	0	Failed to generate the first block		End_TIME	1825072
+LEADER_ID	0	Failed to generate the first block		End_TIME	1850073
+LEADER_ID	0	Failed to generate the first block		End_TIME	1875074
+LEADER_ID	0	Failed to generate the first block		End_TIME	1900075
+LEADER_ID	0	Failed to generate the first block		End_TIME	1925076
+LEADER_ID	0	Failed to generate the first block		End_TIME	1950077
+LEADER_ID	0	Failed to generate the first block		End_TIME	1975078
+LEADER_ID	0	Failed to generate the first block		End_TIME	2000079
+LEADER_ID	0	Failed to generate the first block		End_TIME	2025080
+LEADER_ID	0	Failed to generate the first block		End_TIME	2050081
+LEADER_ID	0	Failed to generate the first block		End_TIME	2075082
+LEADER_ID	0	Failed to generate the first block		End_TIME	2100083
+LEADER_ID	0	Failed to generate the first block		End_TIME	2125084
+LEADER_ID	0	Failed to generate the first block		End_TIME	2150085
+LEADER_ID	0	Failed to generate the first block		End_TIME	2175086
+LEADER_ID	0	Failed to generate the first block		End_TIME	2200087
+LEADER_ID	0	Failed to generate the first block		End_TIME	2225088
+LEADER_ID	0	Failed to generate the first block		End_TIME	2250089
+LEADER_ID	0	Failed to generate the first block		End_TIME	2275090
+LEADER_ID	0	Failed to generate the first block		End_TIME	2300091
+LEADER_ID	0	Failed to generate the first block		End_TIME	2325092
+LEADER_ID	0	Failed to generate the first block		End_TIME	2350093
+LEADER_ID	0	Failed to generate the first block		End_TIME	2375094
+LEADER_ID	0	Failed to generate the first block		End_TIME	2400095
+LEADER_ID	0	Failed to generate the first block		End_TIME	2425096
+LEADER_ID	0	Failed to generate the first block		End_TIME	2450097
+LEADER_ID	0	Failed to generate the first block		End_TIME	2475098
+LEADER_ID	0	Failed to generate the first block		End_TIME	2500099
+propagation success probability	0.1
+LEADER_ID	0	Failed to generate the first block		End_TIME	25000
+LEADER_ID	0	Failed to generate the first block		End_TIME	50001
+LEADER_ID	0	Failed to generate the first block		End_TIME	75002
+LEADER_ID	0	Failed to generate the first block		End_TIME	100003
+LEADER_ID	0	Failed to generate the first block		End_TIME	125004
+LEADER_ID	0	Failed to generate the first block		End_TIME	150005
+LEADER_ID	0	Failed to generate the first block		End_TIME	175006
+LEADER_ID	0	Failed to generate the first block		End_TIME	200007
+LEADER_ID	0	Failed to generate the first block		End_TIME	225008
+LEADER_ID	0	Failed to generate the first block		End_TIME	250009
+LEADER_ID	0	Failed to generate the first block		End_TIME	275010
+LEADER_ID	0	Failed to generate the first block		End_TIME	300011
+LEADER_ID	0	Failed to generate the first block		End_TIME	325012
+LEADER_ID	0	Failed to generate the first block		End_TIME	350013
+LEADER_ID	0	Failed to generate the first block		End_TIME	375014
+LEADER_ID	0	Failed to generate the first block		End_TIME	400015
+LEADER_ID	0	Failed to generate the first block		End_TIME	425016
+LEADER_ID	0	Failed to generate the first block		End_TIME	450017
+LEADER_ID	0	Failed to generate the first block		End_TIME	475018
+LEADER_ID	0	Failed to generate the first block		End_TIME	500019
+LEADER_ID	0	Failed to generate the first block		End_TIME	525020
+LEADER_ID	0	Failed to generate the first block		End_TIME	550021
+LEADER_ID	0	Failed to generate the first block		End_TIME	575022
+LEADER_ID	0	Failed to generate the first block		End_TIME	600023
+LEADER_ID	0	Failed to generate the first block		End_TIME	625024
+LEADER_ID	0	Failed to generate the first block		End_TIME	650025
+LEADER_ID	0	Failed to generate the first block		End_TIME	675026
+LEADER_ID	0	Failed to generate the first block		End_TIME	700027
+LEADER_ID	0	Failed to generate the first block		End_TIME	725028
+LEADER_ID	0	Failed to generate the first block		End_TIME	750029
+LEADER_ID	0	Failed to generate the first block		End_TIME	775030
+LEADER_ID	0	Failed to generate the first block		End_TIME	800031
+LEADER_ID	0	Failed to generate the first block		End_TIME	825032
+LEADER_ID	0	Failed to generate the first block		End_TIME	850033
+LEADER_ID	0	Failed to generate the first block		End_TIME	875034
+LEADER_ID	0	Failed to generate the first block		End_TIME	900035
+LEADER_ID	0	Failed to generate the first block		End_TIME	925036
+LEADER_ID	0	Failed to generate the first block		End_TIME	950037
+LEADER_ID	0	Failed to generate the first block		End_TIME	975038
+LEADER_ID	0	Failed to generate the first block		End_TIME	1000039
+LEADER_ID	0	Failed to generate the first block		End_TIME	1025040
+LEADER_ID	0	Failed to generate the first block		End_TIME	1050041
+LEADER_ID	0	Failed to generate the first block		End_TIME	1075042
+LEADER_ID	0	Failed to generate the first block		End_TIME	1100043
+LEADER_ID	0	Failed to generate the first block		End_TIME	1125044
+LEADER_ID	0	Failed to generate the first block		End_TIME	1150045
+LEADER_ID	0	Failed to generate the first block		End_TIME	1175046
+LEADER_ID	0	Failed to generate the first block		End_TIME	1200047
+LEADER_ID	0	Failed to generate the first block		End_TIME	1225048
+LEADER_ID	0	Failed to generate the first block		End_TIME	1250049
+LEADER_ID	0	Failed to generate the first block		End_TIME	1275050
+LEADER_ID	0	Failed to generate the first block		End_TIME	1300051
+LEADER_ID	0	Failed to generate the first block		End_TIME	1325052
+LEADER_ID	0	Failed to generate the first block		End_TIME	1350053
+LEADER_ID	0	Failed to generate the first block		End_TIME	1375054
+LEADER_ID	0	Failed to generate the first block		End_TIME	1400055
+LEADER_ID	0	Failed to generate the first block		End_TIME	1425056
+LEADER_ID	0	Failed to generate the first block		End_TIME	1450057
+LEADER_ID	0	Failed to generate the first block		End_TIME	1475058
+LEADER_ID	0	Failed to generate the first block		End_TIME	1500059
+LEADER_ID	0	Failed to generate the first block		End_TIME	1525060
+LEADER_ID	0	Failed to generate the first block		End_TIME	1550061
+LEADER_ID	0	Failed to generate the first block		End_TIME	1575062
+LEADER_ID	0	Failed to generate the first block		End_TIME	1600063
+LEADER_ID	0	Failed to generate the first block		End_TIME	1625064
+LEADER_ID	0	Failed to generate the first block		End_TIME	1650065
+LEADER_ID	0	Failed to generate the first block		End_TIME	1675066
+LEADER_ID	0	Failed to generate the first block		End_TIME	1700067
+LEADER_ID	0	Failed to generate the first block		End_TIME	1725068
+LEADER_ID	0	Failed to generate the first block		End_TIME	1750069
+LEADER_ID	0	Failed to generate the first block		End_TIME	1775070
+LEADER_ID	0	Failed to generate the first block		End_TIME	1800071
+LEADER_ID	0	Failed to generate the first block		End_TIME	1825072
+LEADER_ID	0	Failed to generate the first block		End_TIME	1850073
+LEADER_ID	0	Failed to generate the first block		End_TIME	1875074
+LEADER_ID	0	Failed to generate the first block		End_TIME	1900075
+LEADER_ID	0	Failed to generate the first block		End_TIME	1925076
+LEADER_ID	0	Failed to generate the first block		End_TIME	1950077
+LEADER_ID	0	Failed to generate the first block		End_TIME	1975078
+LEADER_ID	0	Failed to generate the first block		End_TIME	2000079
+LEADER_ID	0	Failed to generate the first block		End_TIME	2025080
+LEADER_ID	0	Failed to generate the first block		End_TIME	2050081
+LEADER_ID	0	Failed to generate the first block		End_TIME	2075082
+LEADER_ID	0	Failed to generate the first block		End_TIME	2100083
+LEADER_ID	0	Failed to generate the first block		End_TIME	2125084
+LEADER_ID	0	Failed to generate the first block		End_TIME	2150085
+LEADER_ID	0	Failed to generate the first block		End_TIME	2175086
+LEADER_ID	0	Failed to generate the first block		End_TIME	2200087
+LEADER_ID	0	Failed to generate the first block		End_TIME	2225088
+LEADER_ID	0	Failed to generate the first block		End_TIME	2250089
+LEADER_ID	0	Failed to generate the first block		End_TIME	2275090
+LEADER_ID	0	Failed to generate the first block		End_TIME	2300091
+LEADER_ID	0	Failed to generate the first block		End_TIME	2325092
+LEADER_ID	0	Failed to generate the first block		End_TIME	2350093
+LEADER_ID	0	Failed to generate the first block		End_TIME	2375094
+LEADER_ID	0	Failed to generate the first block		End_TIME	2400095
+LEADER_ID	0	Failed to generate the first block		End_TIME	2425096
+LEADER_ID	0	Failed to generate the first block		End_TIME	2450097
+LEADER_ID	0	Failed to generate the first block		End_TIME	2475098
+LEADER_ID	0	Failed to generate the first block		End_TIME	2500099
+propagation success probability	0.2
+LEADER_ID	0	Failed to generate the first block		End_TIME	25000
+LEADER_ID	0	Failed to generate the first block		End_TIME	50001
+LEADER_ID	0	Failed to generate the first block		End_TIME	75002
+LEADER_ID	0	Failed to generate the first block		End_TIME	100003
+LEADER_ID	0	Failed to generate the first block		End_TIME	125004
+LEADER_ID	0	Failed to generate the first block		End_TIME	150005
+LEADER_ID	0	Failed to generate the first block		End_TIME	175006
+LEADER_ID	0	Failed to generate the first block		End_TIME	200007
+LEADER_ID	0	Failed to generate the first block		End_TIME	225008
+LEADER_ID	0	Failed to generate the first block		End_TIME	250009
+LEADER_ID	0	Failed to generate the first block		End_TIME	275010
+LEADER_ID	0	Failed to generate the first block		End_TIME	300011
+LEADER_ID	0	Failed to generate the first block		End_TIME	325012
+LEADER_ID	0	Failed to generate the first block		End_TIME	350013
+LEADER_ID	0	Failed to generate the first block		End_TIME	375014
+LEADER_ID	0	Failed to generate the first block		End_TIME	400015
+LEADER_ID	0	Failed to generate the first block		End_TIME	425016
+LEADER_ID	0	Failed to generate the first block		End_TIME	450017
+LEADER_ID	0	Failed to generate the first block		End_TIME	475018
+LEADER_ID	0	Failed to generate the first block		End_TIME	500019
+LEADER_ID	0	Failed to generate the first block		End_TIME	525020
+LEADER_ID	0	Failed to generate the first block		End_TIME	550021
+LEADER_ID	0	Failed to generate the first block		End_TIME	575022
+LEADER_ID	0	Failed to generate the first block		End_TIME	600023
+LEADER_ID	0	Failed to generate the first block		End_TIME	625024
+LEADER_ID	0	Failed to generate the first block		End_TIME	650025
+LEADER_ID	0	Failed to generate the first block		End_TIME	675026
+LEADER_ID	0	Failed to generate the first block		End_TIME	700027
+LEADER_ID	0	Failed to generate the first block		End_TIME	725028
+LEADER_ID	0	Failed to generate the first block		End_TIME	750029
+LEADER_ID	0	Failed to generate the first block		End_TIME	775030
+LEADER_ID	0	Failed to generate the first block		End_TIME	800031
+LEADER_ID	0	Failed to generate the first block		End_TIME	825032
+LEADER_ID	0	Failed to generate the first block		End_TIME	850033
+LEADER_ID	0	Failed to generate the first block		End_TIME	875034
+LEADER_ID	0	Failed to generate the first block		End_TIME	900035
+LEADER_ID	0	Failed to generate the first block		End_TIME	925036
+LEADER_ID	0	Failed to generate the first block		End_TIME	950037
+LEADER_ID	0	Failed to generate the first block		End_TIME	975038
+LEADER_ID	0	Failed to generate the first block		End_TIME	1000039
+LEADER_ID	0	Failed to generate the first block		End_TIME	1025040
+LEADER_ID	0	Failed to generate the first block		End_TIME	1050041
+LEADER_ID	0	Failed to generate the first block		End_TIME	1075042
+LEADER_ID	0	Failed to generate the first block		End_TIME	1100043
+LEADER_ID	0	Failed to generate the first block		End_TIME	1125044
+LEADER_ID	0	Failed to generate the first block		End_TIME	1150045
+LEADER_ID	0	Failed to generate the first block		End_TIME	1175046
+LEADER_ID	0	Failed to generate the first block		End_TIME	1200047
+LEADER_ID	0	Failed to generate the first block		End_TIME	1225048
+LEADER_ID	0	Failed to generate the first block		End_TIME	1250049
+LEADER_ID	0	Failed to generate the first block		End_TIME	1275050
+LEADER_ID	0	Failed to generate the first block		End_TIME	1300051
+LEADER_ID	0	Failed to generate the first block		End_TIME	1325052
+LEADER_ID	0	Failed to generate the first block		End_TIME	1350053
+LEADER_ID	0	Failed to generate the first block		End_TIME	1375054
+LEADER_ID	0	Failed to generate the first block		End_TIME	1400055
+LEADER_ID	0	Failed to generate the first block		End_TIME	1425056
+LEADER_ID	0	Failed to generate the first block		End_TIME	1450057
+LEADER_ID	0	Failed to generate the first block		End_TIME	1475058
+LEADER_ID	0	Failed to generate the first block		End_TIME	1500059
+LEADER_ID	0	Failed to generate the first block		End_TIME	1525060
+LEADER_ID	0	Failed to generate the first block		End_TIME	1550061
+LEADER_ID	0	Failed to generate the first block		End_TIME	1575062
+LEADER_ID	0	Failed to generate the first block		End_TIME	1600063
+LEADER_ID	0	Failed to generate the first block		End_TIME	1625064
+LEADER_ID	0	Failed to generate the first block		End_TIME	1650065
+LEADER_ID	0	Failed to generate the first block		End_TIME	1675066
+LEADER_ID	0	Failed to generate the first block		End_TIME	1700067
+LEADER_ID	0	Failed to generate the first block		End_TIME	1725068
+LEADER_ID	0	Failed to generate the first block		End_TIME	1750069
+LEADER_ID	0	Failed to generate the first block		End_TIME	1775070
+LEADER_ID	0	Failed to generate the first block		End_TIME	1800071
+LEADER_ID	0	Failed to generate the first block		End_TIME	1825072
+LEADER_ID	0	Failed to generate the first block		End_TIME	1850073
+LEADER_ID	0	Failed to generate the first block		End_TIME	1875074
+LEADER_ID	0	Failed to generate the first block		End_TIME	1900075
+LEADER_ID	0	Failed to generate the first block		End_TIME	1925076
+LEADER_ID	0	Failed to generate the first block		End_TIME	1950077
+LEADER_ID	0	Failed to generate the first block		End_TIME	1975078
+LEADER_ID	0	Failed to generate the first block		End_TIME	2000079
+LEADER_ID	0	Failed to generate the first block		End_TIME	2025080
+LEADER_ID	0	Failed to generate the first block		End_TIME	2050081
+LEADER_ID	0	Failed to generate the first block		End_TIME	2075082
+LEADER_ID	0	Failed to generate the first block		End_TIME	2100083
+LEADER_ID	0	Failed to generate the first block		End_TIME	2125084
+LEADER_ID	0	Failed to generate the first block		End_TIME	2150085
+LEADER_ID	0	Failed to generate the first block		End_TIME	2175086
+LEADER_ID	0	Failed to generate the first block		End_TIME	2200087
+LEADER_ID	0	Failed to generate the first block		End_TIME	2225088
+LEADER_ID	0	Failed to generate the first block		End_TIME	2250089
+LEADER_ID	0	Failed to generate the first block		End_TIME	2275090
+LEADER_ID	0	Failed to generate the first block		End_TIME	2300091
+LEADER_ID	0	Failed to generate the first block		End_TIME	2325092
+LEADER_ID	0	Failed to generate the first block		End_TIME	2350093
+LEADER_ID	0	Failed to generate the first block		End_TIME	2375094
+LEADER_ID	0	Failed to generate the first block		End_TIME	2400095
+LEADER_ID	0	Failed to generate the first block		End_TIME	2425096
+LEADER_ID	0	Failed to generate the first block		End_TIME	2450097
+LEADER_ID	0	Failed to generate the first block		End_TIME	2475098
+LEADER_ID	0	Failed to generate the first block		End_TIME	2500099
+propagation success probability	0.3
+LEADER_ID	0	Failed to generate the first block		End_TIME	25000
+LEADER_ID	0	Failed to generate the first block		End_TIME	50001
+LEADER_ID	0	Failed to generate the first block		End_TIME	75002
+LEADER_ID	0	Failed to generate the first block		End_TIME	100003
+LEADER_ID	0	Failed to generate the first block		End_TIME	125004
+LEADER_ID	0	Failed to generate the first block		End_TIME	150005
+LEADER_ID	0	Failed to generate the first block		End_TIME	175006
+LEADER_ID	0	Failed to generate the first block		End_TIME	200007
+LEADER_ID	0	Failed to generate the first block		End_TIME	225008
+LEADER_ID	0	Failed to generate the first block		End_TIME	250009
+LEADER_ID	0	Failed to generate the first block		End_TIME	275010
+LEADER_ID	0	Failed to generate the first block		End_TIME	300011
+LEADER_ID	0	Failed to generate the first block		End_TIME	325012
+LEADER_ID	0	Failed to generate the first block		End_TIME	350013
+LEADER_ID	0	Failed to generate the first block		End_TIME	375014
+LEADER_ID	0	Failed to generate the first block		End_TIME	400015
+LEADER_ID	0	Failed to generate the first block		End_TIME	425016
+LEADER_ID	0	Failed to generate the first block		End_TIME	450017
+LEADER_ID	0	Failed to generate the first block		End_TIME	475018
+LEADER_ID	0	Failed to generate the first block		End_TIME	500019
+LEADER_ID	0	Failed to generate the first block		End_TIME	525020
+LEADER_ID	0	Failed to generate the first block		End_TIME	550021
+LEADER_ID	0	Failed to generate the first block		End_TIME	575022
+LEADER_ID	0	Failed to generate the first block		End_TIME	600023
+LEADER_ID	0	Failed to generate the first block		End_TIME	625024
+LEADER_ID	0	Failed to generate the first block		End_TIME	650025
+LEADER_ID	0	Failed to generate the first block		End_TIME	675026
+LEADER_ID	0	Failed to generate the first block		End_TIME	700027
+LEADER_ID	0	Failed to generate the first block		End_TIME	725028
+LEADER_ID	0	Failed to generate the first block		End_TIME	750029
+LEADER_ID	0	Failed to generate the first block		End_TIME	775030
+LEADER_ID	0	Failed to generate the first block		End_TIME	800031
+LEADER_ID	0	Failed to generate the first block		End_TIME	825032
+LEADER_ID	0	Failed to generate the first block		End_TIME	850033
+LEADER_ID	0	Failed to generate the first block		End_TIME	875034
+LEADER_ID	0	Failed to generate the first block		End_TIME	900035
+LEADER_ID	0	Failed to generate the first block		End_TIME	925036
+LEADER_ID	0	Failed to generate the first block		End_TIME	950037
+LEADER_ID	0	Failed to generate the first block		End_TIME	975038
+LEADER_ID	0	Failed to generate the first block		End_TIME	1000039
+LEADER_ID	0	Failed to generate the first block		End_TIME	1025040
+LEADER_ID	0	Failed to generate the first block		End_TIME	1050041
+LEADER_ID	0	Failed to generate the first block		End_TIME	1075042
+LEADER_ID	0	Failed to generate the first block		End_TIME	1100043
+LEADER_ID	0	Failed to generate the first block		End_TIME	1125044
+LEADER_ID	0	Failed to generate the first block		End_TIME	1150045
+LEADER_ID	0	Failed to generate the first block		End_TIME	1175046
+LEADER_ID	0	Failed to generate the first block		End_TIME	1200047
+LEADER_ID	0	Failed to generate the first block		End_TIME	1225048
+LEADER_ID	0	Failed to generate the first block		End_TIME	1250049
+LEADER_ID	0	Failed to generate the first block		End_TIME	1275050
+LEADER_ID	0	Failed to generate the first block		End_TIME	1300051
+LEADER_ID	0	Failed to generate the first block		End_TIME	1325052
+LEADER_ID	0	Failed to generate the first block		End_TIME	1350053
+LEADER_ID	0	Failed to generate the first block		End_TIME	1375054
+LEADER_ID	0	Failed to generate the first block		End_TIME	1400055
+LEADER_ID	0	Failed to generate the first block		End_TIME	1425056
+LEADER_ID	0	Failed to generate the first block		End_TIME	1450057
+LEADER_ID	0	Failed to generate the first block		End_TIME	1475058
+LEADER_ID	0	Failed to generate the first block		End_TIME	1500059
+LEADER_ID	0	Failed to generate the first block		End_TIME	1525060
+LEADER_ID	0	Failed to generate the first block		End_TIME	1550061
+LEADER_ID	0	Failed to generate the first block		End_TIME	1575062
+LEADER_ID	0	Failed to generate the first block		End_TIME	1600063
+LEADER_ID	0	Failed to generate the first block		End_TIME	1625064
+LEADER_ID	0	Failed to generate the first block		End_TIME	1650065
+LEADER_ID	0	Failed to generate the first block		End_TIME	1675066
+LEADER_ID	0	Failed to generate the first block		End_TIME	1700067
+LEADER_ID	0	Failed to generate the first block		End_TIME	1725068
+LEADER_ID	0	Failed to generate the first block		End_TIME	1750069
+LEADER_ID	0	Failed to generate the first block		End_TIME	1775070
+LEADER_ID	0	Failed to generate the first block		End_TIME	1800071
+LEADER_ID	0	Failed to generate the first block		End_TIME	1825072
+LEADER_ID	0	Failed to generate the first block		End_TIME	1850073
+LEADER_ID	0	Failed to generate the first block		End_TIME	1875074
+LEADER_ID	0	Failed to generate the first block		End_TIME	1900075
+LEADER_ID	0	Failed to generate the first block		End_TIME	1925076
+LEADER_ID	0	Failed to generate the first block		End_TIME	1950077
+LEADER_ID	0	Failed to generate the first block		End_TIME	1975078
+LEADER_ID	0	Failed to generate the first block		End_TIME	2000079
+LEADER_ID	0	Failed to generate the first block		End_TIME	2025080
+LEADER_ID	0	Failed to generate the first block		End_TIME	2050081
+LEADER_ID	0	Failed to generate the first block		End_TIME	2075082
+LEADER_ID	0	Failed to generate the first block		End_TIME	2100083
+LEADER_ID	0	Failed to generate the first block		End_TIME	2125084
+LEADER_ID	0	Failed to generate the first block		End_TIME	2150085
+LEADER_ID	0	Failed to generate the first block		End_TIME	2175086
+LEADER_ID	0	Failed to generate the first block		End_TIME	2200087
+LEADER_ID	0	Failed to generate the first block		End_TIME	2225088
+LEADER_ID	0	Failed to generate the first block		End_TIME	2250089
+LEADER_ID	0	Failed to generate the first block		End_TIME	2275090
+LEADER_ID	0	Failed to generate the first block		End_TIME	2300091
+LEADER_ID	0	Failed to generate the first block		End_TIME	2325092
+LEADER_ID	0	Failed to generate the first block		End_TIME	2350093
+LEADER_ID	0	Failed to generate the first block		End_TIME	2375094
+LEADER_ID	0	Failed to generate the first block		End_TIME	2400095
+LEADER_ID	0	Failed to generate the first block		End_TIME	2425096
+LEADER_ID	0	Failed to generate the first block		End_TIME	2450097
+LEADER_ID	0	Failed to generate the first block		End_TIME	2475098
+LEADER_ID	0	Failed to generate the first block		End_TIME	2500099
+propagation success probability	0.4
+LEADER_ID	0	BLOCK_ID	0	End_TIME	23581	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	1	End_TIME	42306	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	2	End_TIME	59225	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	3	End_TIME	76099	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	4	End_TIME	94419	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	4	End_TIME	119420	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	4	End_TIME	144421	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	4	End_TIME	169422	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	4	End_TIME	194423	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	4	End_TIME	219424	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	5	End_TIME	241644	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	6	End_TIME	262238	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	6	End_TIME	287239	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	310005	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	7	End_TIME	335006	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	360007	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	385008	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	410009	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	435010	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	460011	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	485012	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	510013	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	535014	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	560015	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	585016	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	610017	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	635018	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	660019	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	685020	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	710021	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	8	End_TIME	733171	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	8	End_TIME	758172	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	8	End_TIME	783173	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	9	End_TIME	801046	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	9	End_TIME	826047	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	850905	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	10	End_TIME	875906	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	900907	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	925908	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	950909	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	975910	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1000911	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1025912	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1050913	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1075914	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1100915	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1125916	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1150917	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1175918	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1200919	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1225920	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	10	End_TIME	1250921	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1272238	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1297239	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1322240	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1347241	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1372242	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1397243	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1422244	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1447245	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1472246	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1497247	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1522248	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1547249	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1572250	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1597251	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1622252	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1647253	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1672254	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1697255	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1722256	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1747257	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1772258	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1797259	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1822260	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1847261	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1872262	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1897263	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1922264	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1947265	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1972266	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	1997267	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2022268	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2047269	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2072270	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2097271	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2122272	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2147273	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2172274	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2197275	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2222276	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2247277	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2272278	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2297279	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2322280	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2347281	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2372282	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	11	End_TIME	2397283	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	12	End_TIME	2416464	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	12	End_TIME	2441465	 NUM_TXS	0
+propagation success probability	0.5
+LEADER_ID	0	BLOCK_ID	0	End_TIME	13962	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	1	End_TIME	32541	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	2	End_TIME	44616	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	3	End_TIME	57290	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	4	End_TIME	71581	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	5	End_TIME	85971	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	6	End_TIME	100905	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	7	End_TIME	118472	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	7	End_TIME	143473	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	7	End_TIME	168474	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	8	End_TIME	183464	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	9	End_TIME	207981	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	10	End_TIME	224001	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	11	End_TIME	241401	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	12	End_TIME	253453	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	13	End_TIME	271618	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	14	End_TIME	292443	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	15	End_TIME	309120	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	16	End_TIME	327865	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	17	End_TIME	347011	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	18	End_TIME	362772	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	19	End_TIME	376990	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	20	End_TIME	398878	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	21	End_TIME	413990	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	22	End_TIME	435139	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	23	End_TIME	449405	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	24	End_TIME	461757	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	25	End_TIME	482237	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	26	End_TIME	504030	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	26	End_TIME	529031	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	27	End_TIME	546620	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	28	End_TIME	562508	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	29	End_TIME	579137	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	29	End_TIME	604138	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	29	End_TIME	629139	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	29	End_TIME	654140	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	30	End_TIME	671339	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	30	End_TIME	696340	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	31	End_TIME	712981	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	32	End_TIME	730816	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	33	End_TIME	747809	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	34	End_TIME	766365	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	35	End_TIME	787217	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	35	End_TIME	812218	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	35	End_TIME	837219	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	35	End_TIME	862220	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	36	End_TIME	876975	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	37	End_TIME	894670	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	38	End_TIME	911443	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	39	End_TIME	930434	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	39	End_TIME	955435	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	980436	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1005437	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1030438	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1055439	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1080440	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1105441	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1130442	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1155443	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1180444	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1205445	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1230446	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1255447	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1280448	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	39	End_TIME	1305449	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	40	End_TIME	1326250	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	41	End_TIME	1345027	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	41	End_TIME	1370028	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	41	End_TIME	1395029	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	41	End_TIME	1420030	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	42	End_TIME	1439551	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	42	End_TIME	1464552	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	42	End_TIME	1489553	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	43	End_TIME	1508634	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	44	End_TIME	1523575	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	45	End_TIME	1544712	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	45	End_TIME	1569713	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	45	End_TIME	1594714	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	46	End_TIME	1610308	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	47	End_TIME	1633675	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	48	End_TIME	1658419	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	49	End_TIME	1675506	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	49	End_TIME	1700507	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	49	End_TIME	1725508	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	49	End_TIME	1750509	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	49	End_TIME	1775510	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	49	End_TIME	1800511	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	50	End_TIME	1820224	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	51	End_TIME	1840805	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	52	End_TIME	1860099	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	52	End_TIME	1885100	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	52	End_TIME	1910101	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	52	End_TIME	1935102	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	53	End_TIME	1949029	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	54	End_TIME	1961944	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	55	End_TIME	1979061	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	56	End_TIME	1998196	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	57	End_TIME	2016810	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	58	End_TIME	2033344	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	59	End_TIME	2053401	 NUM_TXS	2047
+propagation success probability	0.6
+LEADER_ID	0	BLOCK_ID	0	End_TIME	11217	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	1	End_TIME	22678	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	2	End_TIME	33474	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	3	End_TIME	45230	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	4	End_TIME	57333	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	5	End_TIME	69985	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	6	End_TIME	81796	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	7	End_TIME	95249	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	8	End_TIME	110189	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	9	End_TIME	123252	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	10	End_TIME	135106	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	11	End_TIME	148209	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	12	End_TIME	165162	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	13	End_TIME	177471	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	14	End_TIME	191298	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	15	End_TIME	205622	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	16	End_TIME	218069	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	17	End_TIME	231683	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	18	End_TIME	242007	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	19	End_TIME	256652	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	20	End_TIME	277148	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	21	End_TIME	289326	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	22	End_TIME	303402	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	23	End_TIME	319625	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	24	End_TIME	328891	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	25	End_TIME	353825	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	26	End_TIME	374616	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	27	End_TIME	394442	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	28	End_TIME	410083	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	28	End_TIME	435084	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	29	End_TIME	456840	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	30	End_TIME	472445	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	31	End_TIME	489766	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	32	End_TIME	505814	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	33	End_TIME	519748	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	34	End_TIME	534811	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	35	End_TIME	550039	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	36	End_TIME	564097	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	37	End_TIME	580952	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	38	End_TIME	599741	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	39	End_TIME	617171	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	40	End_TIME	641480	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	41	End_TIME	652597	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	42	End_TIME	667661	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	43	End_TIME	682904	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	44	End_TIME	701241	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	45	End_TIME	715454	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	46	End_TIME	728910	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	47	End_TIME	744255	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	48	End_TIME	766900	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	49	End_TIME	781308	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	50	End_TIME	802306	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	50	End_TIME	827307	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	51	End_TIME	845725	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	52	End_TIME	864295	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	53	End_TIME	878412	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	54	End_TIME	901997	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	55	End_TIME	921084	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	56	End_TIME	940423	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	57	End_TIME	958808	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	58	End_TIME	976348	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	59	End_TIME	992527	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	60	End_TIME	1007855	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	61	End_TIME	1026665	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	62	End_TIME	1041535	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	63	End_TIME	1057179	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	64	End_TIME	1079570	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	64	End_TIME	1104571	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	65	End_TIME	1127544	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	65	End_TIME	1152545	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	65	End_TIME	1177546	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	65	End_TIME	1202547	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	66	End_TIME	1223726	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	67	End_TIME	1237192	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	68	End_TIME	1252951	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	69	End_TIME	1269181	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	70	End_TIME	1280555	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	71	End_TIME	1294393	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	72	End_TIME	1310077	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	73	End_TIME	1325126	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	74	End_TIME	1342481	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	75	End_TIME	1359164	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	76	End_TIME	1371299	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	77	End_TIME	1386006	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	78	End_TIME	1399720	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	79	End_TIME	1415639	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	80	End_TIME	1429340	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	81	End_TIME	1446106	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	82	End_TIME	1457251	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	83	End_TIME	1468228	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	84	End_TIME	1485632	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	85	End_TIME	1500731	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	86	End_TIME	1515159	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	87	End_TIME	1525791	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	88	End_TIME	1539612	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	89	End_TIME	1560788	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	90	End_TIME	1583623	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	91	End_TIME	1595919	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	92	End_TIME	1613894	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	92	End_TIME	1638895	 NUM_TXS	0
+propagation success probability	0.7
+LEADER_ID	0	BLOCK_ID	0	End_TIME	11413	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	1	End_TIME	23261	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	2	End_TIME	33706	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	3	End_TIME	44636	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	4	End_TIME	59348	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	5	End_TIME	70175	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	6	End_TIME	81163	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	7	End_TIME	94699	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	8	End_TIME	109510	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	9	End_TIME	125202	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	10	End_TIME	144444	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	11	End_TIME	166331	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	12	End_TIME	184719	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	13	End_TIME	198361	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	14	End_TIME	208969	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	15	End_TIME	219119	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	16	End_TIME	229916	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	17	End_TIME	241775	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	18	End_TIME	258542	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	19	End_TIME	270075	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	20	End_TIME	281374	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	21	End_TIME	294002	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	22	End_TIME	307136	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	23	End_TIME	319647	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	24	End_TIME	330685	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	25	End_TIME	346161	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	26	End_TIME	358583	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	27	End_TIME	372570	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	28	End_TIME	385151	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	29	End_TIME	405068	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	30	End_TIME	425763	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	31	End_TIME	448722	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	32	End_TIME	462766	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	33	End_TIME	477215	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	34	End_TIME	490503	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	35	End_TIME	502909	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	36	End_TIME	518886	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	37	End_TIME	538235	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	38	End_TIME	550699	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	39	End_TIME	565366	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	40	End_TIME	579849	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	41	End_TIME	591089	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	42	End_TIME	604612	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	43	End_TIME	621585	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	44	End_TIME	641955	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	45	End_TIME	655492	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	46	End_TIME	665058	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	47	End_TIME	678177	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	48	End_TIME	690561	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	49	End_TIME	703331	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	50	End_TIME	719283	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	51	End_TIME	731520	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	52	End_TIME	745456	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	53	End_TIME	756950	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	54	End_TIME	774369	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	55	End_TIME	797096	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	56	End_TIME	809734	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	57	End_TIME	820713	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	58	End_TIME	830404	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	59	End_TIME	841143	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	60	End_TIME	853668	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	61	End_TIME	876661	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	62	End_TIME	888510	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	63	End_TIME	899937	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	64	End_TIME	909719	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	65	End_TIME	919358	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	66	End_TIME	933033	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	67	End_TIME	953825	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	68	End_TIME	975113	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	69	End_TIME	995192	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	70	End_TIME	1016848	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	71	End_TIME	1030701	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	72	End_TIME	1045108	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	73	End_TIME	1055708	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	74	End_TIME	1070375	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	75	End_TIME	1086149	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	76	End_TIME	1095444	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	77	End_TIME	1109035	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	77	End_TIME	1134036	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	78	End_TIME	1155622	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	79	End_TIME	1171439	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	80	End_TIME	1182578	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	81	End_TIME	1198940	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	82	End_TIME	1216139	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	83	End_TIME	1225619	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	84	End_TIME	1236239	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	85	End_TIME	1250051	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	86	End_TIME	1261788	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	87	End_TIME	1280262	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	88	End_TIME	1300774	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	89	End_TIME	1321796	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	89	End_TIME	1346797	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	90	End_TIME	1368892	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	91	End_TIME	1387357	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	92	End_TIME	1400441	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	93	End_TIME	1415722	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	94	End_TIME	1436428	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	94	End_TIME	1461429	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	95	End_TIME	1470735	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	96	End_TIME	1483125	 NUM_TXS	2047
+propagation success probability	0.8
+LEADER_ID	0	BLOCK_ID	0	End_TIME	8967	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	1	End_TIME	19271	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	2	End_TIME	28301	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	3	End_TIME	39339	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	4	End_TIME	50263	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	5	End_TIME	61119	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	6	End_TIME	70328	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	7	End_TIME	79542	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	8	End_TIME	89764	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	9	End_TIME	99020	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	10	End_TIME	108609	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	11	End_TIME	119678	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	12	End_TIME	129492	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	13	End_TIME	143984	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	14	End_TIME	153601	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	15	End_TIME	163583	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	16	End_TIME	174005	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	17	End_TIME	187339	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	18	End_TIME	201409	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	19	End_TIME	211997	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	20	End_TIME	222873	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	21	End_TIME	238243	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	22	End_TIME	248856	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	23	End_TIME	259024	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	24	End_TIME	267982	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	25	End_TIME	278932	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	26	End_TIME	287449	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	27	End_TIME	299144	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	28	End_TIME	310298	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	29	End_TIME	320428	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	30	End_TIME	334739	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	31	End_TIME	343277	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	32	End_TIME	354510	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	33	End_TIME	367205	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	34	End_TIME	376173	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	35	End_TIME	387658	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	36	End_TIME	399628	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	37	End_TIME	417537	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	38	End_TIME	433112	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	39	End_TIME	444696	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	40	End_TIME	459913	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	41	End_TIME	473574	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	42	End_TIME	491942	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	43	End_TIME	508663	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	44	End_TIME	520353	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	45	End_TIME	531442	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	46	End_TIME	547440	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	47	End_TIME	562546	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	48	End_TIME	583002	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	49	End_TIME	605599	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	50	End_TIME	617891	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	51	End_TIME	634862	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	51	End_TIME	659863	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	52	End_TIME	676022	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	53	End_TIME	691755	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	54	End_TIME	712125	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	55	End_TIME	722575	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	56	End_TIME	738423	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	56	End_TIME	763424	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	56	End_TIME	788425	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	57	End_TIME	800950	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	58	End_TIME	813449	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	59	End_TIME	822549	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	60	End_TIME	831716	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	61	End_TIME	845792	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	62	End_TIME	859439	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	63	End_TIME	879591	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	64	End_TIME	896862	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	65	End_TIME	908708	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	66	End_TIME	920415	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	67	End_TIME	930906	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	68	End_TIME	942230	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	69	End_TIME	955659	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	70	End_TIME	965706	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	71	End_TIME	979084	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	72	End_TIME	990779	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	73	End_TIME	1004948	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	74	End_TIME	1018405	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	75	End_TIME	1033284	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	76	End_TIME	1048002	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	77	End_TIME	1059400	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	78	End_TIME	1069581	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	79	End_TIME	1083401	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	80	End_TIME	1094667	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	81	End_TIME	1105821	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	82	End_TIME	1121377	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	83	End_TIME	1132724	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	84	End_TIME	1145894	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	85	End_TIME	1160982	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	86	End_TIME	1180227	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	87	End_TIME	1198550	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	88	End_TIME	1219865	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	88	End_TIME	1244866	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	88	End_TIME	1269867	 NUM_TXS	0
+LEADER_ID	0	BLOCK_ID	89	End_TIME	1289140	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	90	End_TIME	1305696	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	91	End_TIME	1322091	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	92	End_TIME	1339209	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	93	End_TIME	1363063	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	93	End_TIME	1388064	 NUM_TXS	0
+propagation success probability	0.9
+LEADER_ID	0	BLOCK_ID	0	End_TIME	8217	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	1	End_TIME	16736	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	2	End_TIME	25536	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	3	End_TIME	34680	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	4	End_TIME	45229	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	5	End_TIME	54486	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	6	End_TIME	62550	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	7	End_TIME	71433	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	8	End_TIME	80350	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	9	End_TIME	91140	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	10	End_TIME	102935	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	11	End_TIME	112626	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	12	End_TIME	123780	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	13	End_TIME	132608	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	14	End_TIME	142833	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	15	End_TIME	151499	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	16	End_TIME	164580	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	17	End_TIME	175907	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	18	End_TIME	185559	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	19	End_TIME	197398	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	20	End_TIME	208339	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	21	End_TIME	221123	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	22	End_TIME	230425	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	23	End_TIME	239626	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	24	End_TIME	250123	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	25	End_TIME	262245	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	26	End_TIME	273098	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	27	End_TIME	284037	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	28	End_TIME	292721	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	29	End_TIME	302167	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	30	End_TIME	311631	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	31	End_TIME	320592	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	32	End_TIME	329159	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	33	End_TIME	338670	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	34	End_TIME	349043	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	35	End_TIME	361131	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	36	End_TIME	370179	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	37	End_TIME	379722	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	38	End_TIME	389267	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	39	End_TIME	398221	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	40	End_TIME	408702	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	41	End_TIME	421788	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	42	End_TIME	432942	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	43	End_TIME	442197	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	44	End_TIME	456680	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	45	End_TIME	466553	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	46	End_TIME	479554	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	47	End_TIME	490145	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	48	End_TIME	499019	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	49	End_TIME	511216	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	50	End_TIME	530062	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	51	End_TIME	544485	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	52	End_TIME	555974	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	53	End_TIME	568588	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	54	End_TIME	583512	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	55	End_TIME	596142	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	56	End_TIME	604820	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	57	End_TIME	614979	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	58	End_TIME	625321	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	59	End_TIME	635678	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	60	End_TIME	647196	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	61	End_TIME	659029	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	62	End_TIME	669699	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	63	End_TIME	679152	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	64	End_TIME	692433	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	65	End_TIME	708895	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	66	End_TIME	723402	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	67	End_TIME	742415	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	68	End_TIME	756697	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	69	End_TIME	769238	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	70	End_TIME	781273	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	71	End_TIME	792950	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	72	End_TIME	804601	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	73	End_TIME	814751	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	74	End_TIME	831999	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	75	End_TIME	847070	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	76	End_TIME	864354	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	77	End_TIME	876960	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	78	End_TIME	886410	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	79	End_TIME	899099	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	80	End_TIME	909637	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	81	End_TIME	922104	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	82	End_TIME	932250	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	83	End_TIME	941157	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	84	End_TIME	950098	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	85	End_TIME	963541	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	86	End_TIME	981532	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	87	End_TIME	996968	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	88	End_TIME	1009040	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	89	End_TIME	1028817	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	90	End_TIME	1048191	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	91	End_TIME	1058284	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	92	End_TIME	1067159	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	93	End_TIME	1079174	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	94	End_TIME	1091476	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	95	End_TIME	1110077	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	96	End_TIME	1119904	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	97	End_TIME	1129289	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	98	End_TIME	1143481	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	99	End_TIME	1158203	 NUM_TXS	2047
+propagation success probability	1.0
+LEADER_ID	0	BLOCK_ID	0	End_TIME	8418	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	1	End_TIME	17633	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	2	End_TIME	29172	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	3	End_TIME	37930	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	4	End_TIME	46430	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	5	End_TIME	54683	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	6	End_TIME	65465	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	7	End_TIME	79380	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	8	End_TIME	88146	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	9	End_TIME	97263	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	10	End_TIME	105819	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	11	End_TIME	117266	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	12	End_TIME	127986	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	13	End_TIME	137874	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	14	End_TIME	148643	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	15	End_TIME	157295	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	16	End_TIME	169656	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	17	End_TIME	181603	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	18	End_TIME	190658	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	19	End_TIME	200444	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	20	End_TIME	209702	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	21	End_TIME	220478	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	22	End_TIME	232280	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	23	End_TIME	244055	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	24	End_TIME	252734	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	25	End_TIME	262899	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	26	End_TIME	276039	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	27	End_TIME	291538	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	28	End_TIME	308719	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	29	End_TIME	320515	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	30	End_TIME	329846	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	31	End_TIME	338192	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	32	End_TIME	350029	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	33	End_TIME	362062	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	34	End_TIME	371496	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	35	End_TIME	382002	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	36	End_TIME	393093	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	37	End_TIME	401910	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	38	End_TIME	410592	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	39	End_TIME	423745	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	40	End_TIME	437802	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	41	End_TIME	452988	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	42	End_TIME	467730	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	43	End_TIME	481531	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	44	End_TIME	493010	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	45	End_TIME	505935	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	46	End_TIME	520968	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	47	End_TIME	534700	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	48	End_TIME	549987	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	49	End_TIME	564260	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	50	End_TIME	577861	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	51	End_TIME	588010	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	52	End_TIME	599874	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	53	End_TIME	609128	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	54	End_TIME	627113	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	55	End_TIME	636396	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	56	End_TIME	646798	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	57	End_TIME	658529	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	58	End_TIME	668005	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	59	End_TIME	679982	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	60	End_TIME	693932	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	61	End_TIME	706695	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	62	End_TIME	715496	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	63	End_TIME	728377	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	64	End_TIME	738393	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	65	End_TIME	750484	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	66	End_TIME	760019	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	67	End_TIME	769521	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	68	End_TIME	780946	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	69	End_TIME	790928	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	70	End_TIME	807520	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	71	End_TIME	823334	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	72	End_TIME	836625	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	73	End_TIME	849959	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	74	End_TIME	862276	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	75	End_TIME	872292	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	76	End_TIME	887472	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	77	End_TIME	902467	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	78	End_TIME	910689	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	79	End_TIME	919983	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	80	End_TIME	930148	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	81	End_TIME	939516	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	82	End_TIME	951634	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	83	End_TIME	961330	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	84	End_TIME	971548	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	85	End_TIME	985211	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	86	End_TIME	1003465	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	87	End_TIME	1017642	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	88	End_TIME	1034117	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	89	End_TIME	1056173	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	90	End_TIME	1071213	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	91	End_TIME	1086315	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	92	End_TIME	1099077	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	93	End_TIME	1112616	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	94	End_TIME	1121809	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	95	End_TIME	1132303	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	96	End_TIME	1148803	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	97	End_TIME	1166606	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	98	End_TIME	1180760	 NUM_TXS	2047
+LEADER_ID	0	BLOCK_ID	99	End_TIME	1192923	 NUM_TXS	2047

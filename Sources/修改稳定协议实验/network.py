@@ -291,8 +291,8 @@ class Network(object):
                                     node.send_prop = node.send_prop/(1 + 0.1)
                                     if node.send_prop > 0.3:
                                         node.send_prop = 0.3
-                                    elif node.send_prop < 0.01:
-                                        node.send_prop = 0.01
+                                    elif node.send_prop < 0.05:
+                                        node.send_prop = 0.05
                                     node.time_window +=2
                                 elif node.empty_slots > 10:
                                     # 如果空闲时隙超过阈值，则增加传输概率，降低窗口估计
