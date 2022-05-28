@@ -7,8 +7,8 @@ from scipy.interpolate import make_interp_spline
 N = 100
 # epsilon = 0.5
 x = np.arange(0, 1.1, 0.1)
-y1 = [0, 0, 0, 0, 0.03, 0.6, 0.83, ]
-y2 = []
+y1 = [0, 0, 0.06, 0.03, 0.07, 0.4, 0.87, 1, 1, 1, 1]
+y2 = [0, 0, 0, ]
 
 # y = savgol_filter(y,15, 3,  mode= 'nearest')
 plt.plot(x, y)

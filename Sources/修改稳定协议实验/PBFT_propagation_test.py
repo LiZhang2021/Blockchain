@@ -32,7 +32,7 @@ if __name__== '__main__':
     from PBFT_network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    prob_sucs = np.arange(0.1, 1, 0.1)  # 区块大小设置
+    prob_sucs = np.arange(0, 1.1, 0.1)  # 区块大小设置
     # prob_sucs = [1]
 
     NUM_NODES= 100  # 节点的数量
@@ -68,22 +68,22 @@ if __name__== '__main__':
                 rdm_leader = random.uniform(0,1)
                 begin_time = N1.current_time
                 print("开始时间", begin_time)
-                if rdm_leader <0.67:
-                    begin_time = N1.current_time
-                    leader = N1.nodes[0]
-                    N1.leader = leader
-                    N1.leader_id = leader.node_id
-                    print("首领节点是", N1.leader_id)
-                    for node in N1.nodes:
-                        node.current_leader_id = N1.leader_id
-                        # if node.node_id == N1.leader_id:
-                        #     N1.leader = node    
-                else:
-                    print("首领节点故障，当前轮共识失败", cblocks)
-                    N1.current_time += 25000
-                    print("结束时间", N1.current_time)
-                    fail_times +=1
-                    cblocks +=1
+                # if rdm_leader <=1:
+                begin_time = N1.current_time
+                leader = N1.nodes[0]
+                N1.leader = leader
+                N1.leader_id = leader.node_id
+                print("首领节点是", N1.leader_id)
+                for node in N1.nodes:
+                    node.current_leader_id = N1.leader_id
+                    # if node.node_id == N1.leader_id:
+                    #     N1.leader = node    
+                # else:
+                #     print("首领节点故障，当前轮共识失败", cblocks)
+                #     N1.current_time += 30000
+                #     print("结束时间", N1.current_time)
+                #     fail_times +=1
+                #     cblocks +=1
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:

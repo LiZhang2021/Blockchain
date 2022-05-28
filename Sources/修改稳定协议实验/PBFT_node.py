@@ -195,13 +195,13 @@ class Node(object):
     def gen_pre_pre_msg(self):
         tsign = 'Pre-prepare Message'
         self.current_sign = tsign
-        if not self.send_queue:
-            self.send_queue = [tsign]
-        else:
-            if self.channel_state == 1:
-                self.send_queue.insert(1, tsign)
-            else:
-                self.send_queue.insert(0, tsign)
+        # if not self.send_queue:
+        #     self.send_queue = [tsign]
+        # else:
+        #     if self.channel_state == 1:
+        #         self.send_queue.insert(1, tsign)
+        #     else:
+        #         self.send_queue.insert(0, tsign)
         # print("节点生成签名",self.node_id)
     # 生成Prepared 消息
     def gen_prepared_msg(self):
@@ -382,6 +382,10 @@ class Node(object):
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
         self.compute_trans_prob(snode)
+        if  isinstance(data, Block):
+            self.send_prop = 0.05
+            for rnode in self.neighbors:
+                rnode.send_prop = 0.05
         if rdm <= prob_suc :
             # print("接收消息成功", self.node_id, self.transmission_node[0].node_id)
             # 更新消息传输完成后接收节点的状态
@@ -431,7 +435,7 @@ class Node(object):
             self.transmission_node = None
         else:
         # 更新所有接收节点发送队列的时间和信道状态    
-            print("接收消息失败", self.node_id)   
+            # print("接收消息失败", self.node_id)   
             self.send_time = current_time + slot 
             self.channel_state = 0
             self.transmission_node = None
