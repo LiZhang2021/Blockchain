@@ -32,8 +32,8 @@ if __name__== '__main__':
     from PBFT_network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    # prob_sucs = np.arange(0.1, 1.1, 0.1)  # 区块大小设置
-    prob_sucs = [0]
+    prob_sucs = np.arange(0.1, 1.1, 0.1)  # 区块大小设置
+    # prob_sucs = [0]
     TIMEOUT = 25000
     NUM_NODES= 100  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率

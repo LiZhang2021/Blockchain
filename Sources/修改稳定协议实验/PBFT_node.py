@@ -110,9 +110,9 @@ class Node(object):
             # self.send_prop = self.send_prop*(1 + 0.1)
             # if self.send_prop > 1:
             #     self.send_prop = 1
-            self.send_prop = 1
-            for rnode in self.neighbors:
-                rnode.send_prop = 0
+            # self.send_prop = 1
+            # for rnode in self.neighbors:
+            #     rnode.send_prop = 0
             print("节点生成区块",self.node_id, block.block_id, len(block.tx_arr))
             if not self.send_queue:
                 self.send_queue = [block]
@@ -391,14 +391,14 @@ class Node(object):
                 if not self.current_block and data.leader_id == self.current_leader_id: 
                     self.current_block = data
                     self.send_prop = 0.05
-                    print("接收区块成功",self.node_id)
+                    # print("接收区块成功",self.node_id)
             elif data == 'Prepared Message':
                 if not self.psigns:
                     self.psigns = [data]
                 else:
                     self.psigns.append(data)
                 self.send_prop = 0.05
-                print("接收Prepared Message成功", self.node_id, len(self.psigns))
+                # print("接收Prepared Message成功", self.node_id, len(self.psigns))
             elif data == 'Commit Message':
                 if not self.csigns:
                     self.csigns = [data]
@@ -411,7 +411,7 @@ class Node(object):
                 if self.send_queue[2] == 'Prepared Message':
                     del self.send_queue[2]
                 self.send_prop = 0.05
-                print("接收Commit Message成功", self.node_id, len(self.csigns))
+                # print("接收Commit Message成功", self.node_id, len(self.csigns))
             elif data == 'Pre-prepare Message':
                 self.current_sign = 'Pre-prepare Message'
                 self.send_prop = 0.05
