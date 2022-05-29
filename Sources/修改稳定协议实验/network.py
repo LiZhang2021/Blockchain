@@ -143,7 +143,7 @@ class Network(object):
         dnode.recent_gen_blocks -= 1
 
      # 传输消息
-    def transmission(self, slot, trans_rate, prob_suc):
+    def transmission(self, slot, trans_rate):
         for node in self.nodes:
             if node.channel_state == 0 and node.send_queue and self.current_time <= node.send_time < (self.current_time + slot):
                 # 节点确定是否要发送消息
@@ -195,8 +195,8 @@ class Network(object):
                     # 传输完成，更新发送节点信息
                     # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
                     for rnode in node.transmission_node:
-                        rnode.update_receivenode_info(data, self.current_time,slot, trans_rate, prob_suc)
-                        # print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
+                        rnode.update_receivenode_info0(data, self.current_time,slot, trans_rate)
+                        # rnode.update_receivenode_info(data, self.current_time,slot, trans_rate, prob_suc)# print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                     # print("发送节点", node.node_id, len(node.tx_pool))
                     node.update_sendnode_info(data, slot, trans_rate, self.current_time)
         # 更新时间窗口

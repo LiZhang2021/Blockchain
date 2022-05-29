@@ -284,8 +284,8 @@ class Network(object):
                     elif node.current_sign == 'Prepared Message' and node.psigns and len(node.psigns) >= signs_threshold:
                             node.gen_commit_msg()    
                             # print("生成Commit message", node.node_id)    
-                    elif node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
-                            node.gen_pre_pre_msg()
+                    # elif node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
+                    #         node.gen_pre_pre_msg()
                 else:
                     # print("还没有收到区块")
                     if not node.tx_pool:

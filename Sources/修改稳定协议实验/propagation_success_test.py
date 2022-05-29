@@ -36,10 +36,11 @@ if __name__== '__main__':
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
+    TIMEOUT = 20000
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
-    p_success = np.arange(0, 1.1, 0.1)
+    p_success = np.arange(0.1, 1, 0.1)
     # p_success = [1]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
@@ -122,7 +123,7 @@ if __name__== '__main__':
                 
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
-            if ((N1.current_time - begin_time) == 25000) and cblocks <100:
+            if ((N1.current_time - begin_time) == TIMEOUT) and cblocks <100:
                 print("共识失败", fail_times)
                 for node in N1.nodes:
                     node.send_queue = None

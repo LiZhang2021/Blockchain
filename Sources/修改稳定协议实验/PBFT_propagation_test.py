@@ -32,9 +32,10 @@ if __name__== '__main__':
     from PBFT_network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    prob_sucs = np.arange(0.1, 1.1, 0.1)  # 区块大小设置
-    # prob_sucs = [0]
-    TIMEOUT = 25000
+    # prob_sucs = np.arange(0.1, 1, 0.1)  # 区块大小设置
+    prob_sucs = [0.9]
+    # prob_sucs = [1]
+    TIMEOUT = 15000
     NUM_NODES= 100  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
@@ -45,6 +46,7 @@ if __name__== '__main__':
     signs_threshold = int(2*NUM_NODES/3) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     for ps in prob_sucs:
+        ps = round(ps,2)
         print("传输成功率", ps)
         file_begin_time = open("Begin_time_propagation(PBFT).txt","a")
         file_begin_time.writelines(["propagation success probability\t", str(ps), "\n"])
@@ -65,7 +67,7 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 # leader = random.choice(N1.nodes)
-                rdm_leader = random.uniform(0,1)
+                # rdm_leader = random.uniform(0,1)
                 begin_time = N1.current_time
                 print("开始时间", begin_time)
                 # if rdm_leader <=1:
@@ -84,12 +86,8 @@ if __name__== '__main__':
                 #     print("结束时间", N1.current_time)
                 #     fail_times +=1
                 #     cblocks +=1
-            # 计算当前完成区块确认的节点数量
-            count = 0
-            for node in N1.nodes:
-                if N1.leader and node.current_block and node.current_sign == 'Pre-prepare Message':
-                    count += 1
-            if count >= int(2*NUM_NODES/3):
+            # 计算当前完成区块确认的节点数量      
+            if N1.leader.current_sign == 'Pre-prepare Message':
                 for node in N1.nodes:
                     if not node.blockchain:
                         node.blockchain = [node.current_block]
@@ -127,6 +125,7 @@ if __name__== '__main__':
                     node.channel_state = 0
                     node.transmission_node = None
                     node.send_time = N1.current_time + SLOT
+                    node.send_prop = 0.05
                     node.psigns = None
                     node.csigns = None
                     node.current_sign = None

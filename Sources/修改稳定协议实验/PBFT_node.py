@@ -106,13 +106,7 @@ class Node(object):
                 str(block.pre_hash) + "".join([str(tx) for tx in block.tx_arr])
             block.hash = hashlib.sha256(block_content.encode("utf-8")).hexdigest()
             self.current_block = block
-            # 提升节点传输概率
-            # self.send_prop = self.send_prop*(1 + 0.1)
-            # if self.send_prop > 1:
-            #     self.send_prop = 1
-            # self.send_prop = 1
-            # for rnode in self.neighbors:
-            #     rnode.send_prop = 0
+            self.send_prop = 0.05
             print("节点生成区块",self.node_id, block.block_id, len(block.tx_arr))
             if not self.send_queue:
                 self.send_queue = [block]
@@ -195,6 +189,7 @@ class Node(object):
     def gen_pre_pre_msg(self):
         tsign = 'Pre-prepare Message'
         self.current_sign = tsign
+        self.send_prop = 0.05
         # if not self.send_queue:
         #     self.send_queue = [tsign]
         # else:
@@ -207,6 +202,7 @@ class Node(object):
     def gen_prepared_msg(self):
         tsign = 'Prepared Message'
         self.current_sign = tsign
+        self.send_prop = 0.05
         if not self.psigns:
             self.psigns = [tsign]
         else:
@@ -229,6 +225,7 @@ class Node(object):
     def gen_commit_msg(self):
         tsign = 'Commit Message'
         self.current_sign = tsign
+        self.send_prop = 0.05
         if not self.csigns:
             self.csigns = [tsign]
         else:
@@ -337,18 +334,15 @@ class Node(object):
     def update_sendnode_info(self, data, slot, trans_rate, current_time):
         t_trans = self.commpute_trans_time(data, trans_rate)
         t_prop =  t_trans  + self.send_time + slot
-        if  isinstance(data, Block):
-            self.send_prop = 0.05
-            for rnode in self.neighbors:
-                rnode.send_prop = 0.05
         # 更新消息传输完成后发送节点的区块状态
         if isinstance(data, Block):
             if data.leader_id == self.current_leader_id: 
                self.current_block = data
                self.send_prop = 0
             #    print("传输区块成功", self.node_id)
-        # elif data == 'Prepared Message':
-        #     print("传输Prepared Message成功", self.node_id, len(self.psigns))
+        elif data == 'Prepared Message':
+            self.send_prop = 0
+            # print("传输Prepared Message成功", self.node_id, len(self.psigns))
         elif data == 'Commit Message':
             self.send_prop = 0
             # print("传输Commit Message成功",self.node_id, len(self.csigns))
@@ -384,7 +378,7 @@ class Node(object):
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
         self.compute_trans_prob(snode)
-        if rdm <= prob_suc :
+        if rdm <= prob_suc:
             # print("接收消息成功", self.node_id, self.transmission_node[0].node_id)
             # 更新消息传输完成后接收节点的状态
             if isinstance(data, Block):
@@ -397,7 +391,6 @@ class Node(object):
                     self.psigns = [data]
                 else:
                     self.psigns.append(data)
-                self.send_prop = 0.05
                 # print("接收Prepared Message成功", self.node_id, len(self.psigns))
             elif data == 'Commit Message':
                 if not self.csigns:
@@ -410,7 +403,6 @@ class Node(object):
                     del self.send_queue[1]
                 if self.send_queue[2] == 'Prepared Message':
                     del self.send_queue[2]
-                self.send_prop = 0.05
                 # print("接收Commit Message成功", self.node_id, len(self.csigns))
             elif data == 'Pre-prepare Message':
                 self.current_sign = 'Pre-prepare Message'

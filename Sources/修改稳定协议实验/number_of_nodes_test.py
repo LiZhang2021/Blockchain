@@ -32,8 +32,8 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024 # 区块大小设置1MB = 1024KB
-    # NUM_NODES= np.arange(50, 501, 50)  # 节点的数量
-    NUM_NODES= [100] # 节点的数量
+    NUM_NODES= np.arange(50, 501, 50)  # 节点的数量
+    # NUM_NODES= [150] # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT = 1
@@ -63,14 +63,17 @@ if __name__== '__main__':
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
-                prob = random.uniform(0, 1)
-                # prob = cblocks/11.0
+                # prob = random.uniform(0, 1)
+                prob = cblocks/11.0
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 for node in N1.nodes:
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
-                        N1.leader = node   
+                        N1.leader = node
+                        node.send_prop = 1
+                    else:
+                        node.send_prop = 0 
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
@@ -84,6 +87,12 @@ if __name__== '__main__':
                         node.blockchain.append(node.current_block)
                     # 更新交易池中的信息
                     node.update_transactions()
+                    node.tx_pool = None
+                    node.channel_state = 0
+                    node.transmission_node = None
+                    node.send_queue = None
+                    node.send_time = N1.current_time + SLOT
+                    node.send_prop = 0.05
                     node.signs = None
                     node.final_sign = None
                     node.current_sign = None

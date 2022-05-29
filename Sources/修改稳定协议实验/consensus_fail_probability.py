@@ -7,7 +7,7 @@ from scipy.interpolate import make_interp_spline
 
 
 N = 100
-p_hard = 0.33
+p_hard = 0
 # N = np.arange(100, 1501, 50)
 x = []
 y1 = []

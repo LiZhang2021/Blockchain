@@ -33,7 +33,8 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = np.arange(512, 5121, 512)  # 区块大小设置
-    NUM_NODES= 500  # 节点的数量
+    NUM_NODES= 100  # 节点的数量
+    TIMEOUT = 200000000
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT = 1
@@ -58,6 +59,7 @@ if __name__== '__main__':
         N1.find_adjacent_nodes()
         N1.current_time = 0
         cblocks = 0 # 当前共识的次数
+        fail_times = 0  # 共识失败次数
         while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
             # 确定当前是否有首领节点
             if not N1.leader: 
@@ -65,10 +67,19 @@ if __name__== '__main__':
                 prob = random.uniform(0, 1)
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
+                begin_time = N1.current_time
+                print("开始时间", begin_time)
+                # for node in N1.nodes:
+                #     node.current_leader_id = N1.leader_id
+                #     if node.node_id == N1.leader_id:
+                #         N1.leader = node
                 for node in N1.nodes:
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node
+                        node.send_prop = 1
+                    else:
+                        node.send_prop = 0
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
@@ -82,13 +93,19 @@ if __name__== '__main__':
                         node.blockchain.append(node.current_block)
                     # 更新交易池中的信息
                     node.update_transactions()
+                    node.tx_pool = None
+                    node.channel_state = 0
+                    node.transmission_node = None
+                    node.send_queue = None
+                    node.send_time = N1.current_time + SLOT
+                    node.send_prop = 0.05
                     node.signs = None
                     node.final_sign = None
                     node.current_sign = None
                     node.current_block = None
                     node.current_leader_id = None
                     node.recent_receive_data = None
-                N1.update_information()
+                # N1.update_information()
                 file_end_time = open("End_time_blocksize.txt","a")
                 if N1.leader.node_id == 0:
                     file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
@@ -99,6 +116,32 @@ if __name__== '__main__':
                 N1.leader = None
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
+            # if ((N1.current_time - begin_time) == TIMEOUT) and cblocks <100:
+            #     print("共识失败", fail_times)
+            #     for node in N1.nodes:
+            #         node.send_queue = None
+            #         node.tx_pool = None
+            #         node.channel_state = 0
+            #         node.transmission_node = None
+            #         node.send_queue = None
+            #         node.send_time = N1.current_time + SLOT
+            #         node.signs = None
+            #         node.final_sign = None
+            #         node.current_sign = None
+            #         node.current_block = None
+            #         node.current_leader_id = None
+            #         node.recent_receive_data = None
+            #     file_end_time = open("End_time_blocksize.txt","a")
+            #     if N1.leader.node_id == 0:
+            #         file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+            #     else:
+            #         file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+            #     file_end_time.close()
+            #     N1.leader_id = None
+            #     N1.leader = None
+            #     fail_times +=1
+            #     cblocks +=1
             N1.handle_event(min_tx_num, signs_threshold)
+            # N1.transmission(SLOT, TRANSMISSION_RATE, 1)
             N1.transmission(SLOT, TRANSMISSION_RATE)
             N1.current_time += SLOT
