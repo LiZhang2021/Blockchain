@@ -33,7 +33,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = np.arange(512, 5121, 512)  # 区块大小设置
-    NUM_NODES= 100  # 节点的数量
+    NUM_NODES= 500  # 节点的数量
     TIMEOUT = 200000000
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
@@ -68,7 +68,7 @@ if __name__== '__main__':
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 begin_time = N1.current_time
-                print("开始时间", begin_time)
+                # print("开始时间", begin_time)
                 # for node in N1.nodes:
                 #     node.current_leader_id = N1.leader_id
                 #     if node.node_id == N1.leader_id:
@@ -77,9 +77,6 @@ if __name__== '__main__':
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node
-                        node.send_prop = 1
-                    else:
-                        node.send_prop = 0
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
@@ -98,7 +95,7 @@ if __name__== '__main__':
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
-                    node.send_prop = 0.05
+                    # node.send_prop = 0.05
                     node.signs = None
                     node.final_sign = None
                     node.current_sign = None

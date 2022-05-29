@@ -32,8 +32,8 @@ if __name__== '__main__':
     from PBFT_network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    # prob_sucs = np.arange(0.1, 1, 0.1)  # 区块大小设置
-    prob_sucs = [0.9]
+    prob_sucs = np.arange(0.05, 1, 0.05)  # 区块大小设置
+    # prob_sucs = [0.9]
     # prob_sucs = [1]
     TIMEOUT = 15000
     NUM_NODES= 100  # 节点的数量
@@ -94,12 +94,12 @@ if __name__== '__main__':
                     else:
                         node.blockchain.append(node.current_block)
                     # 更新交易池中的信息
-                    # node.update_transactions()   
+                    node.update_transactions()   
                     node.send_queue = None
                     node.tx_pool = None
                     node.channel_state = 0
                     node.transmission_node = None
-                    node.send_prop = 0.05
+                    # node.send_prop = 0.0125
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
                     node.psigns = None
@@ -125,7 +125,7 @@ if __name__== '__main__':
                     node.channel_state = 0
                     node.transmission_node = None
                     node.send_time = N1.current_time + SLOT
-                    node.send_prop = 0.05
+                    # node.send_prop = 0.0125
                     node.psigns = None
                     node.csigns = None
                     node.current_sign = None

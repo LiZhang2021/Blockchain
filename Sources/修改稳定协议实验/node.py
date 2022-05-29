@@ -60,7 +60,7 @@ class Node(object):
          self.current_leader_id = None  # 当前区块的出块节点id
          self.sybil = 0  # 标记女巫节点
          self.timeout = 0  # 超时
-         self.send_prop = 0.05  # 发送概率
+         self.send_prop = 0.0125  # 发送概率
          self.time_window = 100  # 敌手攻击窗口
          self.count_slots = 0  # 时间窗口计数
          self.recent_receive_data = None  # 近期接收敌手窗口大小的数据
@@ -103,7 +103,9 @@ class Node(object):
             block.hash = hashlib.sha256(block_content.encode("utf-8")).hexdigest()
             self.current_block = block
             print("节点生成区块",self.node_id, block.block_id, len(block.tx_arr))
-            # self.send_prop = 0.05
+            self.send_prop = 1
+            for rnode in self.neighbors:
+                rnode.send_prop = 0
             if not self.send_queue:
                 self.send_queue = [block]
             else:
@@ -113,12 +115,12 @@ class Node(object):
                     self.send_queue.insert(1, block)
             # print("首领的发送时间",  self.send_time)
             # print("当前时间",  current_time)
-            # file_begin_time = open("propagation_Begin_time.txt","a")
-            # if self.node_id == 0:
-            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # else:
-            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # file_begin_time.close() 
+            file_begin_time = open("propagation_Begin_time.txt","a")
+            if self.node_id == 0:
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            else:
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            file_begin_time.close() 
             # file_begin_time = open("Jamming_Begin_time.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -131,12 +133,12 @@ class Node(object):
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # file_begin_time.close() 
-            file_begin_time = open("Begin_time_blocksize.txt","a")
-            if self.node_id == 0:
-                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            else:
-                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
-            file_begin_time.close()    
+            # file_begin_time = open("Begin_time_blocksize.txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
+            # file_begin_time.close()    
             # file_begin_time = open("Begin_time_nodes.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -195,7 +197,7 @@ class Node(object):
         
     # 生成部分签名
     def gen_sign(self):
-        self.send_prop = 0.05
+        self.send_prop = 0.0125
         if not self.current_sign and self.current_block and self.verify_block():
             tsign = Sign(self.node_id, self.current_block.hash)
             self.current_sign = tsign
@@ -220,7 +222,7 @@ class Node(object):
             # print("节点生成签名",self.node_id)
     # 生成最终签名
     def gen_final_sign(self, sign_threshold):
-        self.send_prop = 0.05
+        self.send_prop = 0.0125
         if not self.final_sign:
             if self.current_block and self.current_leader_id == self.current_block.leader_id and self.signs and len(self.signs) >= sign_threshold:
                 fsign = Finalsign(self.node_id, self.current_block.hash, sign_threshold)
@@ -354,7 +356,7 @@ class Node(object):
         t_prop =  t_trans  + self.send_time + slot
         # 更新消息传输完成后发送节点的区块状态
         if isinstance(data, Finalsign):
-            self.send_prop = 0.05
+            self.send_prop = 0.0125
             if self.current_block and self.current_block.hash == data.sign_content:
                 self.current_block.final_sig = data
                 # print("传输最终签名成功", self.node_id)
@@ -367,10 +369,10 @@ class Node(object):
             #    print("传输区块成功", self.node_id)
                self.transmited_block =1
         elif isinstance(data, Sign):
-            self.send_prop = 0
-            # print("传输签名成功", self.node_id)
+            # print("传输签名成功", self.node_id, self.send_prop)
             if data not in self.signs:
                 self.signs.append(data)
+            self.send_prop = 0
         # elif isinstance(data, Transaction):
             # print("传输交易成功", self.node_id)
             

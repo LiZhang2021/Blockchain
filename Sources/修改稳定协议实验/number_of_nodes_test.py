@@ -31,7 +31,7 @@ if __name__== '__main__':
     from node import Node
     from network import Network
 
-    BLOCK_SIZE = 1024 # 区块大小设置1MB = 1024KB
+    BLOCK_SIZE = 512 # 区块大小设置1MB = 1024KB
     NUM_NODES= np.arange(50, 501, 50)  # 节点的数量
     # NUM_NODES= [150] # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
@@ -111,5 +111,5 @@ if __name__== '__main__':
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
             N1.handle_event(min_tx_num, signs_threshold)
-            N1.transmission(SLOT, TRANSMISSION_RATE, 1)
+            N1.transmission(SLOT, TRANSMISSION_RATE)
             N1.current_time += SLOT

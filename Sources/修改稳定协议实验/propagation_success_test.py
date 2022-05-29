@@ -36,7 +36,7 @@ if __name__== '__main__':
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
-    TIMEOUT = 20000
+    TIMEOUT = 15000
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
@@ -90,9 +90,9 @@ if __name__== '__main__':
                     else:
                         node.blockchain.append(node.current_block)
                     # 更新交易池中的信息
-                    # node.update_transactions()
+                    node.update_transactions()
                     node.send_queue = None
-                    node.tx_pool = None
+                    # node.tx_pool = None
                     node.channel_state = 0
                     node.transmission_node = None
                     node.send_queue = None
