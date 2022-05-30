@@ -32,8 +32,8 @@ if __name__== '__main__':
     from PBFT_network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    prob_sucs = np.arange(0.05, 1, 0.05)  # 区块大小设置
-    # prob_sucs = [0.9]
+    # prob_sucs = np.arange(0.05, 1, 0.05)  # 区块大小设置
+    prob_sucs = [0.8, 0.85, 0.9, 0.95]
     # prob_sucs = [1]
     TIMEOUT = 15000
     NUM_NODES= 100  # 节点的数量
@@ -86,8 +86,12 @@ if __name__== '__main__':
                 #     print("结束时间", N1.current_time)
                 #     fail_times +=1
                 #     cblocks +=1
-            # 计算当前完成区块确认的节点数量      
-            if N1.leader.current_sign == 'Pre-prepare Message':
+            # 计算当前完成区块确认的节点数量 
+            count = 0
+            for node in N1.nodes:  
+                if node.current_sign == 'Pre-prepare Message':
+                    count +=1
+            if count >1:
                 for node in N1.nodes:
                     if not node.blockchain:
                         node.blockchain = [node.current_block]
@@ -99,7 +103,7 @@ if __name__== '__main__':
                     node.tx_pool = None
                     node.channel_state = 0
                     node.transmission_node = None
-                    # node.send_prop = 0.0125
+                    node.send_prop = 0.0125
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
                     node.psigns = None
