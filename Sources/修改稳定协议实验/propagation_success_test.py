@@ -40,7 +40,7 @@ if __name__== '__main__':
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
-    p_success = np.arange(0.1, 1, 0.1)
+    p_success = np.arange(0.05, 1.01, 0.05)
     # p_success = [1]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
