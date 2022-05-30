@@ -64,7 +64,8 @@ if __name__== '__main__':
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领     
-                prob = random.uniform(0, 1)
+                # prob = random.uniform(0, 1)
+                prob = cblocks/11.0
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 begin_time = N1.current_time

@@ -31,7 +31,7 @@ if __name__== '__main__':
     from node import Node
     from network import Network
 
-    BLOCK_SIZE = 512 # 区块大小设置1MB = 1024KB
+    BLOCK_SIZE = 2048 # 区块大小设置1MB = 1024KB
     NUM_NODES= np.arange(50, 501, 50)  # 节点的数量
     # NUM_NODES= [150] # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
@@ -71,9 +71,7 @@ if __name__== '__main__':
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node
-                        node.send_prop = 1
-                    else:
-                        node.send_prop = 0 
+                         
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
@@ -92,7 +90,7 @@ if __name__== '__main__':
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
-                    node.send_prop = 0.05
+                    # node.send_prop = 0.025
                     node.signs = None
                     node.final_sign = None
                     node.current_sign = None

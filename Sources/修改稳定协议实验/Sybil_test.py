@@ -32,7 +32,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    NUM_NODES= 100  # 节点的数量
+    NUM_NODES= 500  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
@@ -73,7 +73,8 @@ if __name__== '__main__':
                 for node in N1.nodes:
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
-                        N1.leader = node 
+                        N1.leader = node
+                
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
@@ -87,13 +88,18 @@ if __name__== '__main__':
                         node.blockchain.append(node.current_block)
                     # 更新交易池中的信息
                     node.update_transactions()
+                    node.tx_pool = None
+                    node.channel_state = 0
+                    node.transmission_node = None
+                    node.send_queue = None
+                    node.send_time = N1.current_time + SLOT
                     node.signs = None
                     node.final_sign = None
                     node.current_sign = None
                     node.current_block = None
                     node.current_leader_id = None
                     node.recent_receive_data = None
-                N1.update_information()               
+                # N1.update_information()               
                 file_end_time = open("Sybil_End_time.txt","a")
                 if N1.leader.node_id == 0:
                     if not N1.leader.blockchain[-1].tx_arr:
@@ -110,6 +116,6 @@ if __name__== '__main__':
                 N1.leader = None
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
-            N1.Sybil_event(min_tx_num, signs_threshold)
-            N1.transmission(SLOT, TRANSMISSION_RATE)
+            N1.Sybil_event(min_tx_num, signs_threshold, N1.current_time)
+            N1.transmission_Sybil(SLOT, TRANSMISSION_RATE)
             N1.current_time += SLOT

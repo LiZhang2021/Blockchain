@@ -32,14 +32,14 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    NUM_NODES= 10  # 节点的数量
+    NUM_NODES= 100  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
     print("时隙", SLOT)
-    MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
+    MAX_SIMULATIOND_TIME = 10000000000 # 仿真时间
     ALPHA = 0.7
-    TIME_WINDOW = 100
+    TIME_WINDOW = 500
     # gammas = np.arange(0.01, 0.50, 0.01)  # 诚实节点能够发送的轮数的时间窗口占比
     gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
     # gammas = [0.05]
@@ -67,7 +67,8 @@ if __name__== '__main__':
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
-                prob = random.uniform(0, 1)
+                # prob = random.uniform(0, 1)
+                prob = cblocks/10.0
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 for node in N1.nodes:
@@ -88,15 +89,18 @@ if __name__== '__main__':
                         node.blockchain.append(node.current_block)
                     # 更新交易池中的信息
                     node.update_transactions()
+                    node.tx_pool = None
+                    node.channel_state = 0
+                    node.transmission_node = None
+                    node.send_queue = None
+                    node.send_time = N1.current_time + SLOT
                     node.signs = None
                     node.final_sign = None
                     node.current_sign = None
                     node.current_block = None
                     node.current_leader_id = None
-                    node.send_prop = 0.5
-                    node.time_window = 10
                     node.recent_receive_data = None
-                N1.update_information()               
+                # N1.update_information()               
                 file_end_time = open("Jamming_End_time.txt","a")
                 if N1.leader.node_id == 0:
                     if not N1.leader.blockchain[-1].tx_arr:
