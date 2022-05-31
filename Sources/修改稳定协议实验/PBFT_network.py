@@ -267,24 +267,24 @@ class Network(object):
                     # 如果还没有生成区块，则需要生成区块和区块Hash的签名
                     node.gen_valid_block(min_tx_num, self.current_time)
                 else:
-                    if not node.current_sign and node.psigns and len(node.psigns) >= signs_threshold:
+                    if node.current_block and node.current_sign and node.psigns and len(node.psigns) >= signs_threshold:
                         node.gen_commit_msg()
-                        # print("生成Commit message", node.node_id)
-                    elif node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
-                            node.gen_pre_pre_msg()
+                        print("生成Commit message", node.node_id)
+                    elif node.current_block and node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
+                        node.gen_pre_pre_msg()
                             # print("生成Pre-Prepare message", node.node_id)
             else:  # 非首领节点的操作
                 # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
                 if node.current_block:
                     # print("接收节点信息", node.node_id, node.current_sign, node.psigns)
-                    if not node.current_sign:
+                    if node.current_block and not node.current_sign:
                         # 还没有传输prepared 消息
                         node.gen_prepared_msg()
                         # print("生成Prepared message", node.node_id)
-                    elif node.current_sign == 'Prepared Message' and node.psigns and len(node.psigns) >= signs_threshold:
+                    elif node.current_block and node.current_sign == 'Prepared Message' and node.psigns and len(node.psigns) >= signs_threshold:
                             node.gen_commit_msg()    
                             # print("生成Commit message", node.node_id)    
-                    elif node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
+                    elif node.current_block and node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
                             node.gen_pre_pre_msg()
                 else:
                     # print("还没有收到区块")
@@ -293,7 +293,120 @@ class Network(object):
                     else:
                         if len(node.tx_pool) < 10000:
                             node.gen_trans(self.current_time)
-   
+
+    # 设置故障节点
+    def set_aversary(self, gamma):
+        # 设置故障节点，gamma 是故障节点所占系统的比例
+        num_adversary = int(gamma*len(self.nodes))
+        print("故障节点的数量", num_adversary)
+        t = 0
+        for node in self.nodes:
+            if node.sybil == 0 and node.node_id % 2==0 and t < num_adversary:
+                node.sybil = 1
+                node.lifetime = 15
+                node.recent_gen_blocks = 10
+                # print("节点被设置为故障节点", node.node_id, t)
+                t = t + 1
+                # print("t=", t)
+                if t >=num_adversary:
+                    break
+
+                    # 故障节点事件处理
+    def Adversary_event(self, min_tx_num, signs_threshold):
+        # print("当前时间", self.current_time)
+        for node in self.nodes:
+            if node.node_id == self.leader_id:  # 首领节点的操作
+                if not node.current_block:                   
+                    node.gen_valid_block(min_tx_num, self.current_time)
+                    # node.gen_sign()
+                    # print("首领生成签名成功了", node.node_id)
+                else:
+                    if node.sybil == 0:
+                        if not node.current_sign and node.psigns and len(node.psigns) >= signs_threshold:
+                            node.gen_commit_msg()
+                            # print("生成Commit message", node.node_id)
+                        elif node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
+                                node.gen_pre_pre_msg()
+            else:  # 非首领节点的操作
+                # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
+                if node.current_block and node.sybil == 0:
+                    # print("接收节点信息", node.node_id, node.current_sign, node.psigns)
+                    if not node.current_sign and node.current_block:
+                        # 还没有传输prepared 消息
+                        node.gen_prepared_msg()
+                        node.send_prop = 0.0125
+                        # print("生成Prepared message", node.node_id)
+                    elif node.current_sign == 'Prepared Message' and node.psigns and len(node.psigns) >= signs_threshold:
+                            node.gen_commit_msg()    
+                            node.send_prop = 0.0125
+                            # print("生成Commit message", node.node_id)    
+                    elif node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
+                            node.gen_pre_pre_msg()
+                else:
+                    if not node.tx_pool:
+                        node.gen_trans(self.current_time)
+                    else:
+                        if len(node.tx_pool) < 10000:
+                            node.gen_trans(self.current_time)
+
+     # 故障传输消息
+    def transmission_Adversary(self, slot, trans_rate):
+        for node in self.nodes:
+            if node.channel_state == 0 and node.send_queue and self.current_time <= node.send_time < (self.current_time + slot):
+                # 节点确定是否要发送消息
+                p_send = random.uniform(0,1)
+                if p_send <= node.send_prop:
+                    temp_sender = [node]
+                else:
+                    temp_sender = []
+                    for tnode in node.neighbors:
+                        if tnode.channel_state == 0 and self.current_time <= tnode.send_time < (self.current_time + slot):
+                            p_send = random.uniform(0,1)
+                            if p_send <= tnode.send_prop:
+                                temp_sender.append(tnode)
+                if not temp_sender:
+                    # print("当前时隙为空",self.current_time)
+                    for node in self.nodes:
+                        # print("节点信息", node.node_id, node.channel_state, node.send_prop)
+                        node.channel_state = 0
+                        node.transmission_node = None
+                        node.send_time = self.current_time + slot
+                    break
+                elif len(temp_sender) > 1:
+                    print("当前时隙信道忙碌",self.current_time)
+                    for node in self.nodes:
+                        # print("节点信息", node.node_id, node.channel_state, node.send_prop)
+                        node.channel_state = 0
+                        node.transmission_node = None
+                        node.send_time = self.current_time + slot
+                    break
+                else:
+                    snode = temp_sender[0]
+                    snode.channel_state = 1
+                    # 确定接收节点集合
+                    for rnode in snode.neighbors:
+                        # 空闲接收节点决定是否接收该节点的消息
+                        if rnode.channel_state == 0:                           
+                            rnode.channel_state = 2
+                            rnode.transmission_node = [snode]
+                            if not snode.transmission_node:
+                                snode.transmission_node = [rnode]
+                            else:
+                                snode.transmission_node.append(rnode)
+            elif node.channel_state == 1 and node.send_queue: # 节点发送消息
+                data = node.send_queue[0]
+                t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
+                # print("节点开始传输的时间和结束的时间", node.node_id, node.send_time , t_trans)
+                if self.current_time <= t_trans < self.current_time + slot:
+                    # 传输完成，更新发送节点信息
+                    # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
+                    for rnode in node.transmission_node:
+                        rnode.update_receivenode_info0(data, self.current_time,slot, trans_rate)
+                        # rnode.update_receivenode_info(data, self.current_time,slot, trans_rate, prob_suc)# print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
+                    # print("发送节点", node.node_id, len(node.tx_pool))
+                    node.update_sendnode_info(data, slot, trans_rate, self.current_time)
+        
+
     
 if __name__== '__main__':
     N1 = Network()

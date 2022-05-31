@@ -46,31 +46,20 @@ class Node(object):
          self.tx_pool = None  # 交易池
          self.blockchain = None  # 区块链
          self.neighbors = None  # 存储所有在线邻节点信息
-        #  self.lifetime = 0  # 剩余寿命
-        #  self.recent_gen_blocks = 0   # 最近生成的区块数量
-        #  self.stability = 0  # 稳定度
          self.channel_state = 0  # 信道状态（空闲0/发送1/接收2）
          self.transmission_node = None  # 传输节点信息(如果节点信道状态是1则记录该节点发送消息的所有目标节点，信道是2则记录该节点接收消息的源节点)
          self.send_queue = None  # 发送消息的队列
          self.send_time = 0  # 节点消息的发送时间
          self.psigns = None
          self.csigns = None
-        #  self.signs = None  # 部分签名
-        #  self.final_sign = None  # 最终签名
          self.current_sign = None  # 当前区块的签名
          self.current_block = None  # 正在确认的区块
-        #  self.count_slots = 0
          self.count_votes = 0  # 投票计数
          self.current_leader_id = None  # 当前区块的出块节点id
-        #  self.sybil = 0  # 标记女巫节点
+         self.sybil = 0  # 标记女巫节点
         #  self.timeout = 0  # 超时
          self.send_prop = 0.0125  # 发送概率
-        #  self.time_window = 100  # 敌手攻击窗口
-        #  self.count_slots = 0  # 时间窗口计数
-        #  self.recent_receive_data = None  # 近期接收敌手窗口大小的数据
-        #  self.jamming = 0  # Jamming 节点状态(不发起攻击0/发起攻击1)
          self.prob_suc = 0  # 从其他节点接收消息成功的概率（传输消息成功的时候计算）
-        #  self.empty_slots = 0 # 记录以及传输过区块的节点
     # 定义输出
     def __str__(self):
         str_fmt = "node_id:{}, lifetime:{}, recent_gen_blocks:{}, neighbors:{}, stability:{}\n" +\
@@ -109,6 +98,7 @@ class Node(object):
             self.send_prop = 1
             for rnode in self.neighbors:
                 rnode.send_prop = 0
+            # self.send_time = current_time + 1
             print("节点生成区块",self.node_id, block.block_id, len(block.tx_arr))
             if not self.send_queue:
                 self.send_queue = [block]
@@ -137,12 +127,18 @@ class Node(object):
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
             # file_begin_time.close()    
-            file_begin_time = open("Begin_time_propagation(PBFT).txt","a")
+            # file_begin_time = open("Begin_time_propagation(PBFT).txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # file_begin_time.close()  
+            file_begin_time = open("Adversary_Begin_time_PBFT.txt","a")
             if self.node_id == 0:
-                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             else:
-                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            file_begin_time.close()  
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            file_begin_time.close() 
         else:
             self.gen_trans(current_time)
 
@@ -191,7 +187,7 @@ class Node(object):
     def gen_pre_pre_msg(self):
         tsign = 'Pre-prepare Message'
         self.current_sign = tsign
-        self.send_prop = 0.0125
+        # self.send_prop = 0.0125
         # if not self.send_queue:
         #     self.send_queue = [tsign]
         # else:
@@ -236,9 +232,9 @@ class Node(object):
             self.send_queue = [tsign]
         else:
             if self.channel_state > 0:
-                if isinstance(self.send_queue[1], Transaction):
+                if self.send_queue and len(self.send_queue) >1 and isinstance(self.send_queue[1], Transaction):
                     self.send_queue.insert(1, tsign)
-                else:
+                elif self.send_queue and len(self.send_queue) >2 and isinstance(self.send_queue[1], Transaction):
                     self.send_queue.insert(2, tsign)
             else:
                 if isinstance(self.send_queue[0], Transaction):
@@ -341,26 +337,27 @@ class Node(object):
             if data.leader_id == self.current_leader_id: 
                self.current_block = data
                self.send_prop = 0
-            #    print("传输区块成功", self.node_id)
+               print("传输区块成功", self.node_id)
         elif data == 'Prepared Message':
             self.send_prop = 0
-            # print("传输Prepared Message成功", self.node_id, len(self.psigns))
+            print("传输Prepared Message成功", self.node_id, len(self.psigns))
         elif data == 'Commit Message':
             self.send_prop = 0
-            # print("传输Commit Message成功",self.node_id, len(self.csigns))
-            if self.send_queue[0] == 'Prepared Message':
+            print(self.node_id)
+            print("传输Commit Message成功",self.node_id, self.current_sign, len(self.csigns))
+            if self.send_queue and self.send_queue[0] == 'Prepared Message':
                 del self.send_queue[0]
-            if self.send_queue[1] == 'Prepared Message':
+            if self.send_queue and len(self.send_queue) >1 and self.send_queue[1] == 'Prepared Message':
                 del self.send_queue[1]
-            if self.send_queue[2] == 'Prepared Message':
+            if self.send_queue and len(self.send_queue) >2 and self.send_queue[2] == 'Prepared Message':
                 del self.send_queue[2]
         elif data == 'Pre-prepare Message':
-            # print("传输Pre-prepare Message成功", self.node_id)
-            if self.send_queue[0] == 'Commit Message':
+            print("传输Pre-prepare Message成功", self.node_id)
+            if self.send_queue and self.send_queue[0] == 'Commit Message':
                 del self.send_queue[0]
-            if self.send_queue[1] == 'Commit Message':
+            if self.send_queue and len(self.send_queue) >1 and self.send_queue[1] == 'Commit Message':
                 del self.send_queue[1]
-            if self.send_queue[2] == 'Commit Message':
+            if self.send_queue and len(self.send_queue) >2 and self.send_queue[2] == 'Commit Message':
                 del self.send_queue[2]
         # elif isinstance(data, Transaction):
         #     print("传输交易成功", self.node_id)
@@ -386,7 +383,7 @@ class Node(object):
             if isinstance(data, Block):
                 if not self.current_block and data.leader_id == self.current_leader_id: 
                     self.current_block = data
-                    self.send_prop = 0.05
+                    # self.send_prop = 0.0125
                     # print("接收区块成功",self.node_id)
             elif data == 'Prepared Message':
                 if not self.psigns:
@@ -408,7 +405,72 @@ class Node(object):
                 # print("接收Commit Message成功", self.node_id, len(self.csigns))
             elif data == 'Pre-prepare Message':
                 self.current_sign = 'Pre-prepare Message'
-                self.send_prop = 0.05
+                # self.send_prop = 0.0125
+                # print("接收Pre-prepare Message成功", self.node_id, self.current_sign)
+                if self.send_queue and self.send_queue[0] == 'Commit Message':
+                    del self.send_queue[0]
+                if self.send_queue and self.send_queue[1] == 'Commit Message':
+                    del self.send_queue[1]
+                if self.send_queue and self.send_queue[2] == 'Commit Message':
+                    del self.send_queue[2]
+            elif isinstance(data, Transaction):
+                if not self.tx_pool:
+                    self.tx_pool = [data]
+                else:
+                    if data not in self.tx_pool:
+                    #     print("已经在交易池中")
+                    # else:
+                        # print("接收交易成功", self.node_id)
+                        self.tx_pool.append(data)
+            # 更新所有接收节点发送队列的时间和信道状态       
+            self.send_time = current_time + slot
+            self.channel_state = 0
+            self.transmission_node = None
+        else:
+        # 更新所有接收节点发送队列的时间和信道状态    
+            # print("接收消息失败", self.node_id)   
+            self.send_time = current_time + slot 
+            self.channel_state = 0
+            self.transmission_node = None
+        # print("节点的传输时间", self.node_id, self.send_time)
+    
+    # 接收消息成功后，更新本地消息
+    def update_receivenode_info0(self, data, current_time, slot, trans_rate):
+        # 判定节点是否接收成功
+        # if self.sybil == 1:
+        #     self.send_prop = 0.0125
+        rdm = random.uniform(0,1)
+        snode = self.transmission_node[0]
+        self.compute_trans_prob(snode)
+        if rdm <= 1:
+            # print("接收消息成功", self.node_id, self.transmission_node[0].node_id)
+            # 更新消息传输完成后接收节点的状态
+            if isinstance(data, Block):
+                if not self.current_block and data.leader_id == self.current_leader_id: 
+                    self.current_block = data
+                    # print("接收区块成功",self.node_id, self.send_prop)
+                    if self.sybil == 1:
+                        self.send_prop = 0.0025
+            elif data == 'Prepared Message':
+                if not self.psigns:
+                    self.psigns = [data]
+                else:
+                    self.psigns.append(data)
+                # print("接收Prepared Message成功", self.node_id, len(self.psigns), self.sybil, self.send_prop)
+            elif data == 'Commit Message':
+                if not self.csigns:
+                    self.csigns = [data]
+                else:
+                    self.csigns.append(data)
+                if self.send_queue and self.send_queue[0] == 'Prepared Message':
+                    del self.send_queue[0]
+                if self.send_queue and len(self.send_queue)>1 and self.send_queue[1] == 'Prepared Message':
+                    del self.send_queue[1]
+                if self.send_queue and len(self.send_queue)>2 and self.send_queue[2] == 'Prepared Message':
+                    del self.send_queue[2]
+                # print("接收Commit Message成功", self.node_id, len(self.csigns), self.sybil, self.send_prop)
+            elif data == 'Pre-prepare Message':
+                self.current_sign = 'Pre-prepare Message'
                 # print("接收Pre-prepare Message成功", self.node_id, self.current_sign)
                 if self.send_queue and self.send_queue[0] == 'Commit Message':
                     del self.send_queue[0]

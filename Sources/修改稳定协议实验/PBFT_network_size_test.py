@@ -33,7 +33,7 @@ if __name__== '__main__':
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
     # NUM_NODES= np.arange(50, 501, 50)  # 节点的数量
-    NUM_NODES= [100] # 节点的数量
+    NUM_NODES= [10] # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT = 1
@@ -62,14 +62,12 @@ if __name__== '__main__':
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
-                leader = random.choice(N1.nodes)
-                N1.leader = leader
-                N1.leader_id = leader.node_id
+                N1.leader_id = cblocks
                 print("首领节点是", N1.leader_id)
                 for node in N1.nodes:
                     node.current_leader_id = N1.leader_id
-                    # if node.node_id == N1.leader_id:
-                    #     N1.leader = node    
+                    if node.node_id == N1.leader_id:
+                        N1.leader = node    
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:

@@ -36,12 +36,13 @@ if __name__== '__main__':
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
-    TIMEOUT = 15000
+    TIMEOUT = 10000
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
-    p_success = np.arange(0.05, 1.01, 0.05)
-    # p_success = [1]
+    # p_success = np.arange(0.05, 1.01, 0.05)
+    # p_success = [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35]
+    p_success =[0.35, 0.3, 0.25, 0.2, 0.15, 0.1, 0.05]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     for ps in p_success:
@@ -66,8 +67,8 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 # prob = random.uniform(0, 1)
-                # prob = cblocks/10.0
-                prob = 0
+                prob = cblocks/100.0
+                # prob = 0
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 begin_time = N1.current_time
@@ -83,12 +84,14 @@ if __name__== '__main__':
                 if N1.leader and node.current_block and node.current_block.final_sig:
                     count += 1
             # print("当前时间成功接收最终签名节点的数量", N1.current_time, count)
-            if count >= int(NUM_NODES/2):
+            # if count >= int(NUM_NODES/2):
+            if count >= 1:
+                insert_block = N1.leader.current_block
                 for node in N1.nodes:
                     if not node.blockchain:
-                        node.blockchain = [node.current_block]
+                        node.blockchain = [insert_block]
                     else:
-                        node.blockchain.append(node.current_block)
+                        node.blockchain.append(insert_block)
                     # 更新交易池中的信息
                     node.update_transactions()
                     node.send_queue = None
@@ -151,10 +154,14 @@ if __name__== '__main__':
                         else:
                             file_end_time.writelines(["LEADER_ID\t", "0",  "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 else:
-                    if not N1.leader.blockchain[-1].tx_arr:
-                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id),  "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", "0", "\n"])
+                    if not N1.leader.blockchain:
+                        file_end_time.writelines(["LEADER_ID\t", "0",  "\tFailed to generate the first block\t", "\tEnd_TIME\t", str(N1.current_time), "\n"])
+                    
                     else:
-                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id),  "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                        if not N1.leader.blockchain[-1].tx_arr:
+                            file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id),  "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", "0", "\n"])
+                        else:
+                            file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id),  "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 file_end_time.close()
                 print("结束时间", N1.current_time)
                 N1.leader_id = None

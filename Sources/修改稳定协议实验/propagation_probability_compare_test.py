@@ -9,9 +9,9 @@ from scipy.interpolate import make_interp_spline
 N = 100
 p_hard = 0.33
 # N = np.arange(100, 1501, 50)
-x = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-y1 = [0, 0, 0, 0, 0, 0, 0.16, 1, 1, 1, 1]
-y2 = [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+x = np.arange(0, 1.01, 0.05)
+y1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.14, 0.93, 1, 1, 1, 1, 1, 1, 1, 1]
+y2 = [0, 0.87, 0.98, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 
 fig, ax1 = mp.subplots()
@@ -19,7 +19,7 @@ fig, ax1 = mp.subplots()
 plt.plot(x, y1, 'o-', c='orange', label ='SWIB', linewidth=1)
 # plt.legend(loc=2, ncol = 1, mode='None')
 plt.plot(x, y2, 'o-', c='blue', label ='PBFT', linewidth=1)
-plt.legend(loc=2, ncol = 1, mode='None')
+plt.legend(loc=4, ncol = 1, mode='None')
 ax1.set_xlabel('Probability of Communication Interruption',fontsize=10)
 ax1.set_ylabel('Probability of Consensus Interruption',fontsize=10)
 plt.gcf().autofmt_xdate()

@@ -644,15 +644,16 @@ class Network(object):
         print("故障节点的数量", num_adversary)
         t = 0
         for node in self.nodes:
-            if node.node_id != 0 and node.sybil == 0 and node.lifetime <= 20:
+            if node.sybil == 0 and node.lifetime <= 20:
                 node.sybil = 1
                 node.lifetime = 15
                 node.recent_gen_blocks = 10
-                # print("节点被设置为女巫节点", node.node_id, node.sybil)
+                # print("节点被设置为故障节点", node.node_id, node.sybil, t)
                 t = t + 1
-                # print("t=", t)
-                if t >=num_adversary:
+                if t >= num_adversary:
                     break
+                    
+    
     # 设置女巫节点
     def set_sybil_nodes(self, gamma):
         # 设置女巫节点，gamma 是女巫节点所占系统的比例
@@ -671,7 +672,145 @@ class Network(object):
                 if t >=num_sybil:
                     break
             
-        
+    # 故障节点事件处理
+    def Adversary_event(self, min_tx_num, signs_threshold, current_time):
+        # print("当前时间", self.current_time)
+        for node in self.nodes:
+            if node.node_id == self.leader_id:  # 首领节点的操作
+                if not node.current_block:                   
+                    # 如果首领节点是女巫节点
+                    if node.sybil == 1:
+                        node.timeout += 1
+                        # if node.timeout >= numpy.log(500)*4*slot: # log(500)*4*slot
+                        # if node.timeout >= node.time_window: # log(500)*4*slot
+                        if node.timeout >= 4500: 
+                            node.gen_empty_block(self.current_time)
+                            node.timeout = 0
+                        else:
+                            node.gen_trans(self.current_time)
+                    else:
+                        # 首领节点不是女巫节点
+                        # print("节点要生成区块", node.node_id)
+                        # 如果还没有生成区块，则需要生成区块和区块Hash的签名
+                        node.gen_valid_block(min_tx_num, self.current_time)
+                        # node.gen_sign()
+                        # print("首领生成签名成功了", node.node_id)
+                else:
+                    if node.sybil == 0:
+                        # 已经生成区块之后，判定区块是否被确认
+                        if not node.final_sign:
+                            if node.signs and len(node.signs) >= signs_threshold:
+                                # print("节点生成最终签名了", node.node_id)
+                                node.gen_final_sign(signs_threshold)
+                            else:
+                                if not node.current_sign:
+                                    node.gen_sign()
+            else:  # 非首领节点的操作
+                # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
+                if node.current_block and node.sybil == 0:
+                    # 判断是否已经生成当前区块的最终签名
+                    if not node.final_sign:
+                        if node.signs:
+                            if len(node.signs) >= signs_threshold:
+                                node.gen_final_sign(signs_threshold)
+                                # print("节点生成最终签名了", node.node_id)
+                        else:
+                            # print("节点收集的签名还不够")
+                            if not node.current_sign:
+                                node.gen_sign()
+                                # print("普通节点生成签名成功了", node.node_id)
+                            # else:
+                            #     print("节点已经生成签名了，只能等待接收",node.node_id)
+                else:
+                    if not node.tx_pool:
+                        node.gen_trans(self.current_time)
+                    else:
+                        if len(node.tx_pool) < 10000:
+                            node.gen_trans(self.current_time)
+
+     # 故障传输消息
+    def transmission_Adversary(self, slot, trans_rate):
+        for node in self.nodes:
+            if node.channel_state == 0 and node.send_queue and self.current_time <= node.send_time < (self.current_time + slot):
+                # 节点确定是否要发送消息
+                p_send = random.uniform(0,1)
+                if p_send <= node.send_prop:
+                    temp_sender = [node]
+                else:
+                    temp_sender = []
+                    for tnode in node.neighbors:
+                        if tnode.channel_state == 0 and self.current_time <= tnode.send_time < (self.current_time + slot):
+                            p_send = random.uniform(0,1)
+                            if p_send <= tnode.send_prop:
+                                temp_sender.append(tnode)
+                if not temp_sender:
+                    # print("当前时隙为空",self.current_time)
+                    for node in self.nodes:
+                        # print("节点信息", node.node_id, node.channel_state, node.send_prop)
+                        node.channel_state = 0
+                        node.transmission_node = None
+                        node.empty_slots += slot
+                        node.send_time = self.current_time + slot
+                    break
+                elif len(temp_sender) > 1:
+                    # print("当前时隙信道忙碌",self.current_time)
+                    for node in self.nodes:
+                        # print("节点信息", node.node_id, node.channel_state, node.send_prop)
+                        node.channel_state = 0
+                        node.transmission_node = None
+                        node.send_time = self.current_time + slot
+                    break
+                else:
+                    snode = temp_sender[0]
+                    snode.channel_state = 1
+                    # 确定接收节点集合
+                    for rnode in snode.neighbors:
+                        # 空闲接收节点决定是否接收该节点的消息
+                        if rnode.channel_state == 0:                           
+                            rnode.channel_state = 2
+                            rnode.transmission_node = [snode]
+                            if not snode.transmission_node:
+                                snode.transmission_node = [rnode]
+                            else:
+                                snode.transmission_node.append(rnode)
+            elif node.channel_state == 1 and node.send_queue: # 节点发送消息
+                data = node.send_queue[0]
+                t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
+                # print("节点开始传输的时间和结束的时间", node.node_id, node.send_time , t_trans)
+                if self.current_time <= t_trans < self.current_time + slot:
+                    # 传输完成，更新发送节点信息
+                    # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
+                    for rnode in node.transmission_node:
+                        rnode.update_receivenode_info0(data, self.current_time,slot, trans_rate)
+                        # rnode.update_receivenode_info(data, self.current_time,slot, trans_rate, prob_suc)# print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
+                    # print("发送节点", node.node_id, len(node.tx_pool))
+                    node.update_sendnode_info(data, slot, trans_rate, self.current_time)
+        # 更新时间窗口
+        for node in self.nodes:
+            node.count_slots += 1
+            # 如果在时间窗口估计中没有空时隙。则更新时间窗口
+            if node.count_slots > node.time_window:
+                node.count_slots = 1
+                if node.sybil == 0 and node.empty_slots == 0:
+                    # 过去都没有空闲时隙，则增加时间窗口，降低传输概率
+                    node.send_prop = node.send_prop/(1 + 0.1)
+                    if node.send_prop > 0.3:
+                        node.send_prop = 0.3
+                    elif node.send_prop < 0.0001:
+                        node.send_prop = 0.0001
+                    node.time_window +=2
+                elif node.sybil == 0 and node.empty_slots > 10:
+                    # 如果空闲时隙超过阈值，则增加传输概率，降低窗口估计
+                    node.send_prop = node.send_prop*(1 + 0.1)
+                    if node.send_prop > 0.3:
+                        node.send_prop = 0.3
+                    if node.time_window <=2:
+                        node.time_window =1
+                    else:
+                        node.time_window -= 1
+                    node.empty_slots = 0
+        # print("节点的时间窗口", self.nodes[0].time_window, self.nodes[0].send_prop)
+
 
     # 女巫节点事件处理
     def Sybil_event(self, min_tx_num, signs_threshold, current_time):
@@ -728,6 +867,7 @@ class Network(object):
                     else:
                         if len(node.tx_pool) < 10000:
                             node.gen_trans(self.current_time)
+
 
      # 传输消息
     def transmission_Sybil(self, slot, trans_rate):
