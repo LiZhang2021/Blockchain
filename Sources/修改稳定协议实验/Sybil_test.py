@@ -32,7 +32,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    NUM_NODES= 100  # 节点的数量
+    NUM_NODES= 300  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
@@ -67,14 +67,19 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 # prob = random.uniform(0, 1)
-                # prob = cblocks/11.0
-                # N1.leader_election(prob, ALPHA)
-                N1.leader_id = cblocks+2
+                prob = cblocks/10.0
+                N1.leader_election(prob, ALPHA)
+                # N1.leader_id = cblocks*10
                 print("首领节点是", N1.leader_id)
                 for node in N1.nodes:
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node
+                if N1.leader.sybil == 1:
+                    max =0
+                    for node in N1.nodes:
+                        node.send_time += 1800
+                        node.channel_state = 0
             count = 0
             for node in N1.nodes:
                 if N1.leader and node.current_block and node.current_block.final_sig:
@@ -115,6 +120,6 @@ if __name__== '__main__':
                 N1.leader = None
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
-            N1.Sybil_event(min_tx_num, signs_threshold, N1.current_time)
+            N1.Sybil_event(min_tx_num, signs_threshold)
             N1.transmission_Sybil(SLOT, TRANSMISSION_RATE)
             N1.current_time += SLOT

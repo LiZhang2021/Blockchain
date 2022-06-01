@@ -205,9 +205,9 @@ class Node(object):
         # file_begin_time.close() 
         file_begin_time = open("Sybil_Begin_time.txt","a")
         if self.node_id == 0:
-            file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-4000), "\tNUM_TXS\t", str(0), "\n"])
+            file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
         else:
-            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-4000), "\tNUM_TXS\t", str(0), "\n"])
+            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
         file_begin_time.close() 
         # file_begin_time = open("Begin_time_blocksize.txt","a")
         # if self.node_id == 0:
