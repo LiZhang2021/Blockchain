@@ -32,7 +32,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    NUM_NODES= 500  # 节点的数量
+    NUM_NODES= 100  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
@@ -40,7 +40,7 @@ if __name__== '__main__':
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
     # gammas = np.arange(0.45, 0.50, 0.01)
-    gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.49]
+    gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.48]
     # gammas = [0.15, 0.4, 0.45, 0.49]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
@@ -67,15 +67,14 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 # prob = random.uniform(0, 1)
-                prob = cblocks/10.0
-                N1.leader_election(prob, ALPHA)
+                # prob = cblocks/11.0
+                # N1.leader_election(prob, ALPHA)
+                N1.leader_id = cblocks+2
                 print("首领节点是", N1.leader_id)
                 for node in N1.nodes:
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node
-                
-            # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
                 if N1.leader and node.current_block and node.current_block.final_sig:

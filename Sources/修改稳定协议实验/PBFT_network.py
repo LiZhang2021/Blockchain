@@ -320,13 +320,12 @@ class Network(object):
                     # 如果还没有生成区块，则需要生成区块和区块Hash的签名
                     node.gen_valid_block(min_tx_num, self.current_time)
                 else:
-                    if node.sybil == 0:
-                        if node.current_block and node.current_sign and node.psigns and len(node.psigns) >= signs_threshold:
-                            node.gen_commit_msg()
-                            print("生成Commit message", node.node_id)
-                        elif node.current_block and node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
-                            node.gen_pre_pre_msg()
-                                # print("生成Pre-Prepare message", node.node_id)
+                    if node.current_block and node.current_sign and node.psigns and len(node.psigns) >= signs_threshold:
+                        node.gen_commit_msg()
+                        print("生成Commit message", node.node_id)
+                    elif node.current_block and node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
+                        node.gen_pre_pre_msg()
+                            # print("生成Pre-Prepare message", node.node_id)
             else:  # 非首领节点的操作
                 # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
                 if node.current_block:

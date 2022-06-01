@@ -41,7 +41,7 @@ if __name__== '__main__':
     ALPHA = 0.7
     # gammas = np.arange(0, 0.51, 0.05)
     gammas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35]
-    # gammas = [0.3]
+    # gammas = [0.05]
     signs_threshold = int(2*NUM_NODES/3) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)
@@ -61,7 +61,7 @@ if __name__== '__main__':
         N1.find_adjacent_nodes()
         N1.set_aversary(gamma)
         N1.current_time = 0
-        TIMEOUT = 60000
+        TIMEOUT = 120000
         fail_times = 0
         cblocks = 0 # 当前共识的次数
         while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
@@ -69,22 +69,26 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 # leader = random.choice(N1.nodes)
-                N1.leader_id = cblocks*10
+                N1.leader_id = cblocks*50
                 begin_time = N1.current_time
                 print("首领节点是", N1.leader_id, begin_time)
-                for node in N1.nodes:
-                    node.current_leader_id = N1.leader_id
-                    if node.node_id == N1.leader_id:
-                        N1.leader = node
                 # 首领节点是故障节点，则直接跳过当前轮
-                if N1.leader.sybil == 1:
-                    N1.current_time += 20000
+                adversary = 0
+                for node in N1.nodes:
+                    if node.node_id == N1.leader_id:
+                        adversary = node.sybil
+                if adversary == 1:
+                    file_begin_time = open("Adversary_Begin_time_PBFT.txt","a")
+                    file_begin_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tLEADER_ID_type\t", str(adversary), "\tBLOCK_ID\t", "没有生成区块", "\tBEGIN_TIME\t", str(N1.current_time), "\tNUM_TXS\t", "0", "\n"])
+                    file_begin_time.close() 
+                    N1.current_time += 25000
                     for node in N1.nodes:
                         # 更新交易池中的信息
                         node.channel_state = 0
                         node.transmission_node = None
                         node.send_queue = None
-                        node.send_time = N1.current_time + SLOT
+                        node.send_time = N1.current_time
+                        node.send_prop = 0.0125
                         node.psigns = None
                         node.csigns = None
                         node.current_sign = None
@@ -92,18 +96,18 @@ if __name__== '__main__':
                         node.count_votes = 0 
                         node.current_leader_id = None
                     file_end_time = open("Adversary_End_time_PBFT.txt","a")
-                    if N1.leader.node_id == 0:
-                        file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", "Leader is faulty", "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(0), "\n"])
-                    else:
-                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", "Leader is faulty", "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(0), "\n"])
+                    file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", "Leader is faulty", "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(0), "\n"])
                     file_end_time.close()
                     N1.leader_id = None
                     N1.leader = None
                     print('当前任期无法生成区块', N1.current_time)
                     cblocks +=1
                 else:
-                    print("当前阶段生成有效区块")
-            
+                    print("当前轮生成有效区块",N1.current_time)
+                    for node in N1.nodes:
+                        node.current_leader_id = N1.leader_id
+                        if node.node_id == N1.leader_id:
+                            N1.leader = node
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
@@ -117,11 +121,12 @@ if __name__== '__main__':
                     else:
                         node.blockchain.append(insert_block)
                     # 更新交易池中的信息
-                    node.update_transactions()
+                    # node.update_transactions()
                     node.channel_state = 0
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
+                    node.send_prop = 0.0125
                     node.psigns = None
                     node.csigns = None
                     node.current_sign = None
@@ -146,13 +151,14 @@ if __name__== '__main__':
                 cblocks +=1
             # 共识失败
             if N1.leader and ((N1.current_time - begin_time) == TIMEOUT) and cblocks <10:
-                print("共识失败", fail_times)
+                print("共识失败", fail_times, N1.leader.node_id, N1.leader.sybil, N1.leader.send_prop, N1.leader.current_sign)
                 for node in N1.nodes:
                     # 更新交易池中的信息
                     node.channel_state = 0
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
+                    node.send_prop = 0.0125
                     node.psigns = None
                     node.csigns = None
                     node.current_sign = None
