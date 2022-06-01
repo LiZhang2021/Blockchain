@@ -115,6 +115,12 @@ class Node(object):
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # file_begin_time.close() 
+            file_begin_time = open("Adversary_Begin_time_PBFT.txt","a")
+            if self.node_id == 0:
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            else:
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            file_begin_time.close() 
             # file_begin_time = open("Sybil_Begin_time.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -127,18 +133,24 @@ class Node(object):
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
             # file_begin_time.close()    
+            # file_begin_time = open("Begin_time_nodes(PBFT).txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"]) 
+            # file_begin_time.close()
             # file_begin_time = open("Begin_time_propagation(PBFT).txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # file_begin_time.close()  
-            file_begin_time = open("Adversary_Begin_time_PBFT.txt","a")
-            if self.node_id == 0:
-                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            else:
-                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            file_begin_time.close() 
+            # file_begin_time = open("Adversary_Begin_time_PBFT.txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # file_begin_time.close() 
         else:
             self.gen_trans(current_time)
 
@@ -209,9 +221,9 @@ class Node(object):
             self.send_queue = [tsign]
         else:
             if self.channel_state > 0:
-                if isinstance(self.send_queue[1], Transaction):
+                if self.send_queue and len(self.send_queue) >1 and isinstance(self.send_queue[1], Transaction):
                     self.send_queue.insert(1, tsign)
-                else:
+                elif self.send_queue and len(self.send_queue) >2 and isinstance(self.send_queue[1], Transaction):
                     self.send_queue.insert(2, tsign)
             else:
                 if isinstance(self.send_queue[0], Transaction):
@@ -337,14 +349,13 @@ class Node(object):
             if data.leader_id == self.current_leader_id: 
                self.current_block = data
                self.send_prop = 0
-               print("传输区块成功", self.node_id)
+            #    print("传输区块成功", self.node_id)
         elif data == 'Prepared Message':
             self.send_prop = 0
-            print("传输Prepared Message成功", self.node_id, len(self.psigns))
+            # print("传输Prepared Message成功", self.node_id, len(self.psigns))
         elif data == 'Commit Message':
             self.send_prop = 0
-            print(self.node_id)
-            print("传输Commit Message成功",self.node_id, self.current_sign, len(self.csigns))
+            # print("传输Commit Message成功",self.node_id, self.current_sign, len(self.csigns))
             if self.send_queue and self.send_queue[0] == 'Prepared Message':
                 del self.send_queue[0]
             if self.send_queue and len(self.send_queue) >1 and self.send_queue[1] == 'Prepared Message':
@@ -352,7 +363,7 @@ class Node(object):
             if self.send_queue and len(self.send_queue) >2 and self.send_queue[2] == 'Prepared Message':
                 del self.send_queue[2]
         elif data == 'Pre-prepare Message':
-            print("传输Pre-prepare Message成功", self.node_id)
+            # print("传输Pre-prepare Message成功", self.node_id)
             if self.send_queue and self.send_queue[0] == 'Commit Message':
                 del self.send_queue[0]
             if self.send_queue and len(self.send_queue) >1 and self.send_queue[1] == 'Commit Message':
@@ -383,7 +394,8 @@ class Node(object):
             if isinstance(data, Block):
                 if not self.current_block and data.leader_id == self.current_leader_id: 
                     self.current_block = data
-                    # self.send_prop = 0.0125
+                    if self.sybil == 1:
+                        self.send_prop = 0.0001
                     # print("接收区块成功",self.node_id)
             elif data == 'Prepared Message':
                 if not self.psigns:
@@ -398,9 +410,9 @@ class Node(object):
                     self.csigns.append(data)
                 if self.send_queue and self.send_queue[0] == 'Prepared Message':
                     del self.send_queue[0]
-                if self.send_queue and self.send_queue[1] == 'Prepared Message':
+                if self.send_queue and len(self.send_queue) >1 and self.send_queue[1] == 'Prepared Message':
                     del self.send_queue[1]
-                if self.send_queue and self.send_queue[2] == 'Prepared Message':
+                if self.send_queue and len(self.send_queue) >2 and self.send_queue[2] == 'Prepared Message':
                     del self.send_queue[2]
                 # print("接收Commit Message成功", self.node_id, len(self.csigns))
             elif data == 'Pre-prepare Message':

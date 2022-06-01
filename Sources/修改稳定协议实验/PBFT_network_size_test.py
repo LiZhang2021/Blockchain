@@ -33,7 +33,7 @@ if __name__== '__main__':
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
     # NUM_NODES= np.arange(50, 501, 50)  # 节点的数量
-    NUM_NODES= [10] # 节点的数量
+    NUM_NODES= [100] # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT = 1
@@ -53,7 +53,7 @@ if __name__== '__main__':
         min_tx_num = int((BLOCK_SIZE * 1024 - 256)/512)  # 交易数量
         N1 = Network()
         N1.create_nodes(num_nodes, 200)
-        # N1.set_basic_info()
+        N1.set_basic_info()
         N1.find_adjacent_nodes()
         N1.current_time = 0
         num_slots  = 0
@@ -81,10 +81,15 @@ if __name__== '__main__':
                         node.blockchain.append(node.current_block)
                     # 更新交易池中的信息
                     node.update_transactions()
+                    node.channel_state = 0
+                    node.transmission_node = None
+                    node.send_queue = None
+                    node.send_time = N1.current_time + SLOT
                     node.psigns = None
                     node.csigns = None
                     node.current_sign = None
                     node.current_block = None
+                    node.count_votes = 0 
                     node.current_leader_id = None
                 file_end_time = open("End_time_nodes(PBFT).txt","a")
                 if N1.leader.node_id == 0:

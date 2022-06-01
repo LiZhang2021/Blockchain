@@ -60,14 +60,12 @@ if __name__== '__main__':
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
-                leader = random.choice(N1.nodes)
-                N1.leader = leader
-                N1.leader_id = leader.node_id
+                N1.leader_id = cblocks
                 print("首领节点是", N1.leader_id)
                 for node in N1.nodes:
                     node.current_leader_id = N1.leader_id
-                    # if node.node_id == N1.leader_id:
-                    #     N1.leader = node    
+                    if node.node_id == N1.leader_id:
+                        N1.leader = node    
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
@@ -81,10 +79,15 @@ if __name__== '__main__':
                         node.blockchain.append(node.current_block)
                     # 更新交易池中的信息
                     node.update_transactions()
+                    node.channel_state = 0
+                    node.transmission_node = None
+                    node.send_queue = None
+                    node.send_time = N1.current_time + SLOT
                     node.psigns = None
                     node.csigns = None
                     node.current_sign = None
                     node.current_block = None
+                    node.count_votes = 0 
                     node.current_leader_id = None
                 file_end_time = open("End_time_blocksize(PBFT).txt","a")
                 if N1.leader.node_id == 0:
@@ -97,5 +100,5 @@ if __name__== '__main__':
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
             N1.handle_event(min_tx_num, signs_threshold)
-            N1.transmission(SLOT, TRANSMISSION_RATE)
+            N1.transmission(SLOT, TRANSMISSION_RATE, 1)
             N1.current_time += SLOT

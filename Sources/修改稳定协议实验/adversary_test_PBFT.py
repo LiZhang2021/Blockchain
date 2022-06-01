@@ -32,7 +32,7 @@ if __name__== '__main__':
     from PBFT_network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    NUM_NODES= 100  # 节点的数量
+    NUM_NODES= 500  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
@@ -40,8 +40,8 @@ if __name__== '__main__':
     MAX_SIMULATIOND_TIME = 10000000000 # 仿真时间
     ALPHA = 0.7
     # gammas = np.arange(0, 0.51, 0.05)
-    # gammas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35]
-    gammas = [0.3]
+    gammas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35]
+    # gammas = [0.3]
     signs_threshold = int(2*NUM_NODES/3) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)
@@ -61,7 +61,7 @@ if __name__== '__main__':
         N1.find_adjacent_nodes()
         N1.set_aversary(gamma)
         N1.current_time = 0
-        TIMEOUT = 120000
+        TIMEOUT = 60000
         fail_times = 0
         cblocks = 0 # 当前共识的次数
         while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
@@ -69,46 +69,49 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 # leader = random.choice(N1.nodes)
-                N1.leader_id = cblocks
+                N1.leader_id = cblocks*10
                 begin_time = N1.current_time
                 print("首领节点是", N1.leader_id, begin_time)
                 for node in N1.nodes:
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node
+                # 首领节点是故障节点，则直接跳过当前轮
                 if N1.leader.sybil == 1:
-                    N1.current_time += TIMEOUT
+                    N1.current_time += 20000
                     for node in N1.nodes:
-                        node.update_transactions()
-                        node.send_queue = None
-                        node.send_time = N1.current_time + SLOT
-                        # node.tx_pool = None
+                        # 更新交易池中的信息
                         node.channel_state = 0
                         node.transmission_node = None
+                        node.send_queue = None
+                        node.send_time = N1.current_time + SLOT
                         node.psigns = None
                         node.csigns = None
                         node.current_sign = None
                         node.current_block = None
+                        node.count_votes = 0 
                         node.current_leader_id = None
                     file_end_time = open("Adversary_End_time_PBFT.txt","a")
                     if N1.leader.node_id == 0:
-                        file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", "\tNo blocks in current round\t", "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(0), "\n"])
+                        file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", "Leader is faulty", "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(0), "\n"])
                     else:
-                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", "\tNo blocks in current round\t", "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(0), "\n"])
+                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", "Leader is faulty", "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(0), "\n"])
                     file_end_time.close()
                     N1.leader_id = None
                     N1.leader = None
                     print('当前任期无法生成区块', N1.current_time)
                     cblocks +=1
+                else:
+                    print("当前阶段生成有效区块")
+            
             # 计算当前完成区块确认的节点数量
             count = 0
             for node in N1.nodes:
                 if N1.leader and node.current_block and node.current_sign == 'Pre-prepare Message':
                     count += 1
-            if count >= 2:
-            # if count >= 1:
+            if count >= int(2*NUM_NODES/3):
+                insert_block = N1.leader.current_block
                 for node in N1.nodes:
-                    insert_block = N1.leader.current_block
                     if not node.blockchain:
                         node.blockchain = [insert_block]
                     else:
@@ -123,13 +126,19 @@ if __name__== '__main__':
                     node.csigns = None
                     node.current_sign = None
                     node.current_block = None
+                    node.count_votes = 0 
                     node.current_leader_id = None
-                    node.recent_receive_data = None
                 file_end_time = open("Adversary_End_time_PBFT.txt","a")
                 if N1.leader.node_id == 0:
-                    file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                    if not N1.leader.blockchain[-1].tx_arr:
+                        file_end_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", "0", "\n"])
+                    else:
+                        file_end_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 else:
-                    file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
+                    if not N1.leader.blockchain[-1].tx_arr:
+                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id), "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", "0", "\n"])
+                    else:
+                        file_end_time.writelines(["LEADER_ID\t", str(N1.leader.node_id), "\tLEADER_ID_type\t", str(N1.leader.sybil), "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
                 file_end_time.close()
                 N1.leader_id = None
                 N1.leader = None
@@ -139,19 +148,19 @@ if __name__== '__main__':
             if N1.leader and ((N1.current_time - begin_time) == TIMEOUT) and cblocks <10:
                 print("共识失败", fail_times)
                 for node in N1.nodes:
-                    # node.update_transactions()
-                    node.send_queue = None
-                    # node.tx_pool = None
+                    # 更新交易池中的信息
                     node.channel_state = 0
-                    node.send_time = N1.current_time + SLOT
                     node.transmission_node = None
+                    node.send_queue = None
+                    node.send_time = N1.current_time + SLOT
                     node.psigns = None
                     node.csigns = None
                     node.current_sign = None
                     node.current_block = None
+                    node.count_votes = 0 
                     node.current_leader_id = None
                 file_end_time = open("Adversary_End_time_PBFT.txt","a")
-                if not N1.leader:
+                if N1.leader.node_id == 0:
                     if not N1.leader.blockchain:
                         file_end_time.writelines(["LEADER_ID\t", "0",  "\tFailed to generate the first block\t", "\tEnd_TIME\t", str(N1.current_time), "\n"])
                     else:
@@ -173,5 +182,5 @@ if __name__== '__main__':
                 fail_times +=1
                 cblocks +=1
             N1.Adversary_event(min_tx_num, signs_threshold)
-            N1.transmission_Adversary(SLOT, TRANSMISSION_RATE)
+            N1.transmission(SLOT, TRANSMISSION_RATE, 1)
             N1.current_time += SLOT

@@ -644,7 +644,7 @@ class Network(object):
         print("故障节点的数量", num_adversary)
         t = 0
         for node in self.nodes:
-            if node.sybil == 0 and node.lifetime <= 20:
+            if node.sybil == 0 and node.node_id%2 == 0:
                 node.sybil = 1
                 node.lifetime = 15
                 node.recent_gen_blocks = 10
@@ -684,7 +684,13 @@ class Network(object):
                         # if node.timeout >= numpy.log(500)*4*slot: # log(500)*4*slot
                         # if node.timeout >= node.time_window: # log(500)*4*slot
                         if node.timeout >= 4500: 
+                            node.send_prop = 1
+                            node.send_time = self.current_time + SLOT
                             node.gen_empty_block(self.current_time)
+                            # print("节点信息", node.node_id, node.send_prop, node.channel_state)
+                            for rnode in node.neighbors:
+                                # print("节点信息", rnode.node_id, rnode.send_prop, rnode.channel_state)
+                                rnode.send_time = self.current_time + SLOT
                             node.timeout = 0
                         else:
                             node.gen_trans(self.current_time)

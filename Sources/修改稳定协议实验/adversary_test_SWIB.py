@@ -40,8 +40,8 @@ if __name__== '__main__':
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
     # gammas = np.arange(0, 0.51, 0.05)
-    gammas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
-    # gammas = [0.5]
+    # gammas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
+    gammas = [0.4, 0.35, 0.3, 0.25]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)
@@ -77,6 +77,7 @@ if __name__== '__main__':
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node
+
                 
             # 计算当前完成区块确认的节点数量
             count = 0
