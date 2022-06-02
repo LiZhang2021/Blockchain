@@ -298,17 +298,17 @@ class Network(object):
     def set_aversary(self, gamma):
         # 设置故障节点，gamma 是故障节点所占系统的比例
         num_adversary = int(gamma*len(self.nodes))
+        k = int(len(self.nodes)/num_adversary)
         print("故障节点的数量", num_adversary)
         t = 0
         for node in self.nodes:
-            if node.sybil == 0 and node.lifetime <= 20 and t < num_adversary:
+            if node.sybil == 0 and node.node_id% k == 1:
                 node.sybil = 1
                 node.lifetime = 15
                 node.recent_gen_blocks = 10
-                # print("节点被设置为故障节点", node.node_id, t)
+                # print("节点被设置为故障节点", node.node_id, node.sybil, t)
                 t = t + 1
-                # print("t=", t)
-                if t >=num_adversary:
+                if t >= num_adversary:
                     break
 
                     # 故障节点事件处理
@@ -328,8 +328,8 @@ class Network(object):
                             # print("生成Pre-Prepare message", node.node_id)
             else:  # 非首领节点的操作
                 # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
-                if node.current_block:
-                    if node.sybil == 0:
+                if node.sybil == 0:
+                    if node.current_block:
                         # print("接收节点信息", node.node_id, node.current_sign, node.psigns)
                         if node.current_block and not node.current_sign:
                             # 还没有传输prepared 消息
@@ -340,6 +340,13 @@ class Network(object):
                                 # print("生成Commit message", node.node_id)    
                         elif node.current_block and node.current_sign == 'Commit Message' and node.csigns and len(node.csigns) >= signs_threshold:
                                 node.gen_pre_pre_msg()
+                    else:
+                        # print("还没有收到区块")
+                        if not node.tx_pool:
+                            node.gen_trans(self.current_time)
+                        else:
+                            if len(node.tx_pool) < 10000:
+                                node.gen_trans(self.current_time)
                 else:
                     # print("还没有收到区块")
                     if not node.tx_pool:

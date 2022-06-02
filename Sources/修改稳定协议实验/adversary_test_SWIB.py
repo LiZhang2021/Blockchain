@@ -40,7 +40,7 @@ if __name__== '__main__':
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
     # gammas = np.arange(0, 0.51, 0.05)
-    gammas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
+    gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
     # gammas = [0.4, 0.35, 0.3, 0.25]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
@@ -71,7 +71,7 @@ if __name__== '__main__':
                 # prob = random.uniform(0, 1)
                 # prob = cblocks/10.0
                 # N1.leader_election(prob, ALPHA)
-                N1.leader_id = cblocks*50 +1
+                N1.leader_id = random.randint(0, 499)
                 print("首领节点是", N1.leader_id)
                 begin_time = N1.current_time
                 for node in N1.nodes:
@@ -79,18 +79,9 @@ if __name__== '__main__':
                     if node.node_id == N1.leader_id:
                         N1.leader = node
                 if N1.leader.sybil == 1:
-                    N1.current_time += 20000
-                    begin_time = N1.current_time
                     for node in N1.nodes:
                         node.channel_state = 0
-                        node.transmission_node = None
-                        node.send_queue = None
-                        node.send_time = N1.current_time + SLOT
-                        node.signs = None
-                        node.final_sign = None
-                        node.current_sign = None
-                        node.current_block = None
-                        node.recent_receive_data = None
+                        node.send_time += 1000
                 
             # 计算当前完成区块确认的节点数量
             count = 0
@@ -108,6 +99,8 @@ if __name__== '__main__':
                     # node.update_transactions()
                     node.tx_pool = None
                     node.channel_state = 0
+                    node.send_prop = 0.0125
+                    node.time_window = 100
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
@@ -116,7 +109,7 @@ if __name__== '__main__':
                     node.current_sign = None
                     node.current_block = None
                     node.current_leader_id = None
-                    node.recent_receive_data = None
+                    # node.recent_receive_data = None
                 # N1.update_information()               
                 file_end_time = open("Adversary_End_time.txt","a")
                 if N1.leader.node_id == 0:
@@ -143,6 +136,8 @@ if __name__== '__main__':
                     node.channel_state = 0
                     node.transmission_node = None
                     node.send_time = N1.current_time + SLOT
+                    node.send_prop = 0.0125
+                    node.time_window = 100
                     node.signs = None
                     node.final_sign = None
                     node.current_sign = None
@@ -171,6 +166,6 @@ if __name__== '__main__':
                 N1.leader = None
                 fail_times +=1
                 cblocks +=1
-            N1.Adversary_event(min_tx_num, signs_threshold, N1.current_time)
+            N1.Adversary_event(min_tx_num, signs_threshold)
             N1.transmission_Adversary(SLOT, TRANSMISSION_RATE)
             N1.current_time += SLOT

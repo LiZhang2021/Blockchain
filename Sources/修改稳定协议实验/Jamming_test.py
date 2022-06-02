@@ -39,9 +39,9 @@ if __name__== '__main__':
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 10000000000 # 仿真时间
     ALPHA = 0.7
-    TIME_WINDOW = 500
-    # gammas = np.arange(0.01, 0.50, 0.01)  # 诚实节点能够发送的轮数的时间窗口占比
-    gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
+    TIME_WINDOW = 100
+    gammas = np.arange(0.1, 1.1, 0.1)  # 诚实节点能够发送的轮数的时间窗口占比
+    # gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
     # gammas = [0.05]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
@@ -94,6 +94,8 @@ if __name__== '__main__':
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
+                    node.send_prop = 0.0125
+                    node.time_window = 100
                     node.signs = None
                     node.final_sign = None
                     node.current_sign = None

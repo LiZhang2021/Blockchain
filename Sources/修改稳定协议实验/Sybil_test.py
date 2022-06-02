@@ -66,8 +66,8 @@ if __name__== '__main__':
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
-                # prob = random.uniform(0, 1)
-                prob = cblocks/10.0
+                prob = random.uniform(0, 1)
+                # prob = cblocks/10.0
                 N1.leader_election(prob, ALPHA)
                 # N1.leader_id = cblocks*10
                 print("首领节点是", N1.leader_id)
@@ -76,9 +76,8 @@ if __name__== '__main__':
                     if node.node_id == N1.leader_id:
                         N1.leader = node
                 if N1.leader.sybil == 1:
-                    max =0
                     for node in N1.nodes:
-                        node.send_time += 1800
+                        node.send_time += 600
                         node.channel_state = 0
             count = 0
             for node in N1.nodes:
@@ -94,6 +93,8 @@ if __name__== '__main__':
                     node.update_transactions()
                     node.tx_pool = None
                     node.channel_state = 0
+                    node.send_prop = 0.0125
+                    node.time_window = 100
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT

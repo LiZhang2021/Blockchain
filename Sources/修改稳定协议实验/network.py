@@ -642,10 +642,11 @@ class Network(object):
     def set_aversary(self, gamma):
         # 设置故障节点，gamma 是故障节点所占系统的比例
         num_adversary = int(gamma*len(self.nodes))
+        k = int(len(self.nodes)/num_adversary)
         print("故障节点的数量", num_adversary)
         t = 0
         for node in self.nodes:
-            if node.sybil == 0 and node.node_id%2 == 0:
+            if node.sybil == 0 and node.node_id% k == 1:
                 node.sybil = 1
                 node.lifetime = 15
                 node.recent_gen_blocks = 10
@@ -660,44 +661,56 @@ class Network(object):
         # 设置女巫节点，gamma 是女巫节点所占系统的比例
         num_sybil = int(gamma*len(self.nodes))
         k = int(len(self.nodes)/num_sybil)
-        print("女巫节点的数量", num_sybil)
+        # print("女巫节点的数量", num_sybil)
         t = 0
         for node in self.nodes:
             if node.sybil == 0 and node.node_id % k == 1:
                 node.sybil = 1
                 node.lifetime = 15
                 node.recent_gen_blocks = 10
-                print("节点被设置为女巫节点", node.node_id, node.sybil, t)
+                # print("节点被设置为女巫节点", node.node_id, node.sybil, t)
                 t = t + 1
                 if t >= num_sybil:
                     break
             
     # 故障节点事件处理
-    def Adversary_event(self, min_tx_num, signs_threshold, current_time):
+    def Adversary_event(self, min_tx_num, signs_threshold):
         # print("当前时间", self.current_time)
         for node in self.nodes:
             if node.node_id == self.leader_id:  # 首领节点的操作
-                if not node.current_block:                   
-                    # 如果首领节点是女巫节点
-                    if node.sybil == 1:
-                        node.gen_empty_block(self.current_time)
-                    else:
-                        # 首领节点不是女巫节点
-                        # print("节点要生成区块", node.node_id)
+                if not node.current_block:
+                    if node.sybil == 0:
                         # 如果还没有生成区块，则需要生成区块和区块Hash的签名
                         node.gen_valid_block(min_tx_num, self.current_time)
                         # node.gen_sign()
-                        # print("首领生成签名成功了", node.node_id)
+                    else:
+                        # node.timeout += SLOT
+                        # print("当前时间", self.current_time, node.timeout)
+                        # for nodei in self.nodes:
+                        #     if node.channel_state !=1:
+                        #         node.sent_time = self.current_time
+                        # if node.timeout >= 4000:
+                        node.gen_empty_block(self.current_time)
+                        for node in self.nodes:
+                            if node.channel_state !=1:
+                                node.sent_time = self.current_time
+                    
                 else:
+                    # 已经生成区块之后，判定区块是否被确认
                     if node.sybil == 0:
-                        # 已经生成区块之后，判定区块是否被确认
                         if not node.final_sign:
                             if node.signs and len(node.signs) >= signs_threshold:
-                                # print("节点生成最终签名了", node.node_id)
                                 node.gen_final_sign(signs_threshold)
-                            # else:
-                            #     if not node.current_sign:
-                            #         node.gen_sign()
+                            else:
+                                # if not node.signs:
+                                #     print("节点收集的签名还不够", node.node_id, 0)
+                                # else:
+                                #     print("节点收集的签名还不够", node.node_id, len(node.signs))
+                                if not node.current_sign:
+                                    node.gen_sign()
+                                    # print("首领节点生成签名成功了", node.node_id)
+                                # else:
+                                #     print("节点已经生成签名了，只能等待接收",node.node_id)
             else:  # 非首领节点的操作
                 # 如果有正在处理的区块，就需要对区块进行验证确认，否则就生成交易和传输交易
                 if node.sybil == 0:
@@ -706,13 +719,11 @@ class Network(object):
                         if not node.final_sign:
                             if node.signs:
                                 if len(node.signs) >= signs_threshold:
+                                    # print("节点已经生成最终签名了",node.node_id)
                                     node.gen_final_sign(signs_threshold)
-                                    # print("节点生成最终签名了", node.node_id)
                             else:
-                                # print("节点收集的签名还不够")
                                 if not node.current_sign:
                                     node.gen_sign()
-                                    # print("普通节点生成签名成功了", node.node_id)
                                 # else:
                                 #     print("节点已经生成签名了，只能等待接收",node.node_id)
                     else:
@@ -721,6 +732,12 @@ class Network(object):
                         else:
                             if len(node.tx_pool) < 10000:
                                 node.gen_trans(self.current_time)
+                else:
+                    if not node.tx_pool:
+                        node.gen_trans(self.current_time)
+                    else:
+                        if len(node.tx_pool) < 10000:
+                            node.gen_trans(self.current_time)
 
      # 故障传输消息
     def transmission_Adversary(self, slot, trans_rate):

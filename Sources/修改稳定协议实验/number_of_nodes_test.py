@@ -32,7 +32,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024 # 区块大小设置1MB = 1024KB
-    NUM_NODES= np.arange(50, 501, 50)  # 节点的数量
+    NUM_NODES= np.arange(50, 601, 50)  # 节点的数量
     # NUM_NODES= [150] # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
@@ -64,7 +64,7 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 # prob = random.uniform(0, 1)
-                prob = cblocks/11.0
+                prob = cblocks/10.0
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 for node in N1.nodes:
@@ -90,14 +90,15 @@ if __name__== '__main__':
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
-                    # node.send_prop = 0.025
+                    node.send_prop = 0.0125
+                    node.time_window = 100
                     node.signs = None
                     node.final_sign = None
                     node.current_sign = None
                     node.current_block = None
                     node.current_leader_id = None
                     node.recent_receive_data = None
-                N1.update_information()
+                # N1.update_information()
                 file_end_time = open("End_time_nodes.txt","a")
                 if N1.leader.node_id == 0:
                     file_end_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(N1.leader.blockchain[-1].block_id), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", str(len(N1.leader.blockchain[-1].tx_arr)), "\n"])
