@@ -33,7 +33,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = np.arange(512, 5121, 512)  # 区块大小设置
-    NUM_NODES= 500  # 节点的数量
+    NUM_NODES= 100  # 节点的数量
     TIMEOUT = 200000000
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
@@ -65,7 +65,7 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领     
                 # prob = random.uniform(0, 1)
-                prob = cblocks/11.0
+                prob = cblocks/10.0
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 begin_time = N1.current_time
@@ -140,6 +140,6 @@ if __name__== '__main__':
             #     fail_times +=1
             #     cblocks +=1
             N1.handle_event(min_tx_num, signs_threshold)
-            # N1.transmission(SLOT, TRANSMISSION_RATE, 1)
-            N1.transmission(SLOT, TRANSMISSION_RATE)
+            N1.transmission(SLOT, TRANSMISSION_RATE, 1)
+            # N1.transmission(SLOT, TRANSMISSION_RATE)
             N1.current_time += SLOT

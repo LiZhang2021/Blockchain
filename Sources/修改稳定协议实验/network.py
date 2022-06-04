@@ -835,12 +835,6 @@ class Network(object):
                         node.gen_valid_block(min_tx_num, self.current_time)
                         # node.gen_sign()
                     else:
-                        # node.timeout += SLOT
-                        # print("当前时间", self.current_time, node.timeout)
-                        # for nodei in self.nodes:
-                        #     if node.channel_state !=1:
-                        #         node.sent_time = self.current_time
-                        # if node.timeout >= 4000:
                         node.gen_empty_block(self.current_time)
                         for node in self.nodes:
                             if node.channel_state !=1:
