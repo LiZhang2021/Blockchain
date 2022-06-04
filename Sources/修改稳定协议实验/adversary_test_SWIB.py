@@ -71,7 +71,8 @@ if __name__== '__main__':
                 # prob = random.uniform(0, 1)
                 # prob = cblocks/10.0
                 # N1.leader_election(prob, ALPHA)
-                N1.leader_id = random.randint(0, 499)
+                # N1.leader_id = random.randint(0, 499)
+                N1.leader_id = cblocks*50 +cblocks
                 print("首领节点是", N1.leader_id)
                 begin_time = N1.current_time
                 for node in N1.nodes:

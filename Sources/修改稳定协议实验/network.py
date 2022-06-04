@@ -666,6 +666,7 @@ class Network(object):
         for node in self.nodes:
             if node.sybil == 0 and node.node_id % k == 1:
                 node.sybil = 1
+                node.send_prop = 0
                 node.lifetime = 15
                 node.recent_gen_blocks = 10
                 # print("节点被设置为女巫节点", node.node_id, node.sybil, t)

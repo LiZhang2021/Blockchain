@@ -69,7 +69,8 @@ if __name__== '__main__':
             if not N1.leader: 
                 # 确定当前的首领   
                 # leader = random.choice(N1.nodes)
-                N1.leader_id = random.randint(0, 499)
+                # N1.leader_id = random.randint(0, 499)
+                N1.leader_id = cblocks*50 +cblocks
                 begin_time = N1.current_time
                 print("首领节点是", N1.leader_id, begin_time)
                 # 首领节点是故障节点，则直接跳过当前轮
