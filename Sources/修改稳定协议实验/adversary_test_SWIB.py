@@ -39,8 +39,8 @@ if __name__== '__main__':
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
-    # gammas = np.arange(0, 0.51, 0.05)
-    gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
+    # gammas = np.arange(0, 0.46, 0.05)
+    gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45]
     # gammas = [0.4, 0.35, 0.3, 0.25]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
@@ -72,7 +72,7 @@ if __name__== '__main__':
                 # prob = cblocks/10.0
                 # N1.leader_election(prob, ALPHA)
                 # N1.leader_id = random.randint(0, 499)
-                N1.leader_id = cblocks*50 +cblocks
+                N1.leader_id = cblocks*50 - cblocks
                 print("首领节点是", N1.leader_id)
                 begin_time = N1.current_time
                 for node in N1.nodes:
@@ -82,7 +82,8 @@ if __name__== '__main__':
                 if N1.leader.sybil == 1:
                     for node in N1.nodes:
                         node.channel_state = 0
-                        node.send_time += 1000
+                        node.send_time += 8200
+                        node.send_prop = 0.0125
                 
             # 计算当前完成区块确认的节点数量
             count = 0

@@ -320,20 +320,20 @@ class Node(object):
     def commpute_trans_time(self, data, trans_rate):
         # 如果是交易数据， 一个交易的大小设为512B
         if isinstance(data, Transaction):
-            t_trans = 2  # 512*8/2048
+            t_trans = 4  # 512*8/2048
         # 如果是区块数据，一个区块的大小设为1MB
         elif isinstance(data, Block):
             if not data.tx_arr:
-                t_trans = 8  # 8*pow(2, 11) /2048
+                t_trans = 16  # 8*pow(2, 11) /2048
             else:
-                t_trans = len(data.tx_arr) * 2 + 8
+                t_trans = len(data.tx_arr) * 4 + 16
         # 如果是签名数据，一个签名的大小设为2048bit 
         elif data == 'Pre-prepare Message':
-            t_trans = 1
+            t_trans = 2
         elif data == 'Prepared Message':
-            t_trans = 1
+            t_trans = 2
         elif data == 'Commit Message':
-            t_trans = 1
+            t_trans = 2
         else:
             t_trans = 0
         return t_trans
@@ -350,8 +350,8 @@ class Node(object):
 
     # 传输消息成功之后更新本地信息
     def update_sendnode_info(self, data, slot, trans_rate, current_time):
-        if self.sybil == 1 and isinstance(data, Block):
-            self.send_prop = 0.0025
+        if self.sybil == 1 and self.current_block:
+            self.send_prop = 0
         t_trans = self.commpute_trans_time(data, trans_rate)
         t_prop =  t_trans  + self.send_time + slot
         # 更新消息传输完成后发送节点的区块状态
@@ -395,7 +395,9 @@ class Node(object):
     # 接收消息成功后，更新本地消息
     def update_receivenode_info(self, data, current_time, slot, trans_rate, prob_suc):
         if self.sybil == 1 and isinstance(data, Block):
-            self.send_prop = 0.0025
+            self.send_prop = 0
+        if self.sybil == 1 and self.current_block:
+            self.send_prop = 0
         # 判定节点是否接收成功
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
@@ -459,8 +461,8 @@ class Node(object):
     # 接收消息成功后，更新本地消息
     def update_receivenode_info0(self, data, current_time, slot, trans_rate):
         # 判定节点是否接收成功
-        # if self.sybil == 1:
-        #     self.send_prop = 0.0125
+        if isinstance(data, Block):
+            self.send_prop = 0
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
         self.compute_trans_prob(snode)
