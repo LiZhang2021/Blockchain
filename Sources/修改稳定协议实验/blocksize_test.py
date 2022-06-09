@@ -96,7 +96,8 @@ if __name__== '__main__':
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
-                    # node.send_prop = 0.05
+                    node.send_prop = 0.0125
+                    node.time_window = 100
                     node.signs = None
                     node.final_sign = None
                     node.current_sign = None
