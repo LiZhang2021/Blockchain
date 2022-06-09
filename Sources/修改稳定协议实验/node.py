@@ -203,12 +203,12 @@ class Node(object):
         # else:
         #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-20000), "\tNUM_TXS\t", str(0), "\n"])
         # file_begin_time.close() 
-        file_begin_time = open("Sybil_Begin_time.txt","a")
-        if self.node_id == 0:
-            file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
-        else:
-            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
-        file_begin_time.close() 
+        # file_begin_time = open("Sybil_Begin_time.txt","a")
+        # if self.node_id == 0:
+        #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
+        # else:
+        #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
+        # file_begin_time.close() 
         # file_begin_time = open("Begin_time_blocksize.txt","a")
         # if self.node_id == 0:
         #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -427,8 +427,8 @@ class Node(object):
     # 接收消息成功后，更新本地消息
     def update_receivenode_info(self, data, current_time, slot, trans_rate, prob_suc):      
         # 判定节点是否接收成功
-        if self.sybil == 1 and isinstance(data, Block):
-            self.send_prop = 0.0025
+        if isinstance(data, Block):
+            self.send_prop = 0
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
         self.compute_trans_prob(snode)
@@ -489,8 +489,8 @@ class Node(object):
         # print("节点的传输时间", self.node_id, self.send_time)
 
     def update_receivenode_info0(self, data, current_time, slot, trans_rate):     
-        if self.sybil == 1 and isinstance(data, Block):
-            self.send_prop = 0.0025
+        if isinstance(data, Block):
+            self.send_prop = 0
         # if self.sybil == 1 and isinstance(data, Sign):
         #     self.send_prop = 0.0125
         # 判定节点是否接收成功  
