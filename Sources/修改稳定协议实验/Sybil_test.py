@@ -32,7 +32,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    NUM_NODES= 100  # 节点的数量
+    NUM_NODES= 500  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
@@ -69,8 +69,8 @@ if __name__== '__main__':
                 # prob = random.uniform(0, 1)
                 # prob = cblocks/10.0
                 # N1.leader_election(prob, ALPHA)
-                # N1.leader_id = cblocks*50 - cblocks 
-                N1.leader_id = cblocks*10 + cblocks 
+                N1.leader_id = cblocks*50 - cblocks 
+                # N1.leader_id = cblocks*30 + cblocks 
                 print("首领节点是", N1.leader_id)
                 for node in N1.nodes:
                     node.current_leader_id = N1.leader_id
@@ -78,7 +78,7 @@ if __name__== '__main__':
                         N1.leader = node
                 if N1.leader.sybil == 1:
                     for node in N1.nodes:
-                        node.send_time += 4100
+                        node.send_time += 8200
                         node.channel_state = 0
             count = 0
             for node in N1.nodes:
