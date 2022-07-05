@@ -127,14 +127,14 @@
 \newpage
 
 \begin{breakablealgorithm}
+\setcounter{algorithm}{1}
 	%\textsl{}\setstretch{1.8}
 	\renewcommand{\algorithmicrequire}{\textbf{Input:}}
 	\renewcommand{\algorithmicensure}{\textbf{Output:}}
 	\caption{The SWIB Protocol}
 	\label{alg1}
 \begin{algorithmic}[1]
-\setcounter{algorithm}{2}
-    \Require 
+    \Require
     List of consensus nodes $\{1, 2, \cdots, N\}$ with active time $\{T_1, T_2, \cdots, T_N\}$;
     Transactions $Txs$;
     Target contention success probability $\varsigma$;
@@ -143,19 +143,25 @@
     Blockchain $BC$
     \State \textcolor{cyan}{//** Achieving consensus on block round-by-round,$r$ round}
     \State \textcolor{blue}{$\rhd$ Initialization}:
-    \State Compute elected probability of all nodes according to stability;
-    \State Get sorted node list based on public key value;
-    \State $Finalized = false$
-    \State \textcolor{blue}{$\rhd$ Block Proposer Election}:Slots 2: 
-    \State $Rdm^{r} = GenerateRandomValue(r, B_{H}^{r-1}, sig_{full}^{r-1})$
-    \State $ID_{BP} = \text{Block Proposer Election}(NodeList, Rdm^{r})$
+    \State $Finalized = False$;
+    \State \textcolor{blue}{$\rhd$ Block Proposer Election}:
+    \State Slot 1: $Rdm^{r} = GenerateRandomValue(r, B_{H}^{r-1}, sig_{full}^{r-1})$;
+    \State Slot 2: Compute elected probability of all nodes according to stability;
+    \State Slot 3: Get sorted node list $NodeList$ based on public key value;
+    \State Slot 4: $ID_{BP} = \text{Block Proposer Election}(NodeList, Rdm^{r})$;
     \State \textcolor{blue}{$\rhd$ Block Generation}:
     \For {$x_{comp} + T_{B}\cdot x_{trans}$ Slots}
         \If {$BP_{ID} == Node_{ID}$}
+            \If {node has not enough transactions}
+                \State Request transactions from other nodes
+            \EndIf
             \State $B^{r} = \text{Generate Block}(B_{H}^{r-1}, Txs)$
             \State Broadcast the block $B^{r}$ to other nodes with transmit power $P_t$
         \Else
-            \State Listen on the channel to receive the block 
+            \State Listen on the channel to receive the block
+            \If {Receive a request from block proposer}
+                \State run {\bf broadcastMessage(Txs)}
+            \EndIf
         \EndIf
     \EndFor
     \State \textcolor{blue}{$\rhd$ Block Verification}
@@ -173,7 +179,7 @@
             \EndIf
             \If {collect enough partial signatures  $Count(Sigs^{r}) > threshold$}
                 \State $sig_{full}^{r} = \text{Recover Full Signature}(Sigs^{r})$
-                \State run {\bf broadcsatSignature}
+                \State run {\bf broadcsatMessage(Sigs)}
             \EndIf
         \EndFor
     \EndFor
@@ -197,7 +203,7 @@
 	\caption{Synchronization Mechanism}
 	\label{alg1}
 	\begin{algorithmic}[1]
-        \Require 
+        \Require
          Latest blockchain length $Length$
          Neighbor list $Neighbors$
          \Ensure
@@ -224,12 +230,12 @@
     \setcounter{algorithm}{2}
 	\renewcommand{\algorithmicrequire}{\textbf{Input:}}
 	\renewcommand{\algorithmicensure}{\textbf{Output:}}
-	\caption{broadcsatSignature Subroutine}
+	\caption{broadcastMessage Subroutine}
 	\label{alg1}
 	\begin{algorithmic}[1]
         \For {Any node $v$ in $\{1, \cdots, N\}$}
-            \If {$ \text{Node } v \text{ decides to send a signature with transmit probability }p_{v}$}
-                \State $Broadcast(sig_{v}^{r})\text{ with transmit power }P_{t}$
+            \If {$ \text{Node } v \text{ decides to send a message with transmit probability }p_{v}$}
+                \State $Broadcast(msg)\text{ with transmit power }P_{t}$
             \Else
                 \If {channel is idle}
                     \State $e_v = e_v + 1$ \textcolor{cyan}{//** Count idle slots within $T_{v}$}
@@ -241,7 +247,7 @@
             \State $count_v = count_v + 1$
             \If {$count_v > \hat{T}_v$}
                 \State {$count_v = 1$}
-                \If {$e_v == 0$} \textcolor{cyan}{//** No idle round in the past $\hat{T}_{v}$ slots}
+                \If {$e_v == 0$} \textcolor{cyan}{//** No idle slot in the past $\hat{T}_{v}$ slots}
                     \State {$\hat{p}_v = p_v/(1+\frac{1}{T_v})$}
                     \State {$\hat{T}_v = \hat{T}_v + 2$}
                 \ElsIf {$e_v >= 1$}

@@ -1,0 +1,4 @@
+propagation success probability	1	 Consensus times	100	 Failed times	0
+propagation success probability	0.95	 Consensus times	100	 Failed times	84
+propagation success probability	0.9	 Consensus times	100	 Failed times	99
+propagation success probability	0.85	 Consensus times	100	 Failed times	100

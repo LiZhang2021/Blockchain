@@ -79,16 +79,16 @@ if __name__ == '__main__':
             NodeList = []
             for j in range(num_nodes):
                 if j%4 == 0:
-                    TNode = Node(j, 20, 30)
+                    TNode = Node(j, 20, 100)
                     NodeList.append(TNode)
                 elif j%4 == 1:
-                    TNode = Node(j, 100, 90)
+                    TNode = Node(j, 100, 100)
                     NodeList.append(TNode)
                 elif j%4 == 2:
-                    TNode = Node(j, 20, 30)
+                    TNode = Node(j, 20, 20)
                     NodeList.append(TNode)
                 elif j%4 == 3:
-                    TNode = Node(j, 100, 90)
+                    TNode = Node(j, 100, 20)
                     NodeList.append(TNode)
             temp_nodelist = NodeList
             # for node in temp_nodelist:
@@ -115,7 +115,7 @@ if __name__ == '__main__':
             for node in temp_nodelist:
                 if node.index == temp:
                     # print("节点的信息", node.index, node.ttime, node.bnum)
-                    if (node.ttime >= 100)  and (node.bnum >= 90):
+                    if (node.ttime >= 90)  and (node.bnum >= 90):
                         num_best = num_best + 1
                         #print("优质节点计数：", num_best)
                     # 更新节点的共识区块数量
@@ -143,8 +143,8 @@ if __name__ == '__main__':
     plt.xticks(fontsize=10)
     plt.yticks(fontsize=10)
     #标签设置字体大小设置
-    plt.xlabel('Active Time Ratio Weight',fontsize=10)
-    plt.ylabel('Percentage of High-quality Nodes',fontsize=10)
+    plt.xlabel('Active Time Ratio Weight(a)',fontsize=10)
+    plt.ylabel('Percentage of Electing High-quality Nodes',fontsize=10)
     plt.show()
 
 # 结论

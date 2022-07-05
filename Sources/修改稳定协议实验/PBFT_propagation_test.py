@@ -33,9 +33,9 @@ if __name__== '__main__':
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
     # prob_sucs = np.arange(0.05, 1, 0.05)  # 区块大小设置
-    prob_sucs = [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4]
+    prob_sucs = [0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4]
     # prob_sucs = [1]
-    TIMEOUT = 10000
+    TIMEOUT = 13000
     NUM_NODES= 100  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
@@ -57,7 +57,8 @@ if __name__== '__main__':
         min_tx_num = int((BLOCK_SIZE * 1024 - 256)/512)  # 交易数量
         N1 = Network()
         N1.create_nodes(NUM_NODES, 200)
-        # N1.set_basic_info()
+        N1.set_basic_info()
+        # N1.set_aversary(0.3)
         N1.find_adjacent_nodes()
         N1.current_time = 0
         cblocks = 0 # 当前共识的次数
@@ -78,12 +79,28 @@ if __name__== '__main__':
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node    
-                # else:
-                #     print("首领节点故障，当前轮共识失败", cblocks)
-                #     N1.current_time += TIMEOUT
-                #     print("结束时间", N1.current_time)
-                #     fail_times +=1
-                #     cblocks +=1
+                if N1.leader.sybil == 1:
+                    file_begin_time = open("Begin_time_propagation(PBFT).txt","a")
+                    file_begin_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", str(-1), "\tBEGIN_TIME\t", str(N1.current_time), "\tNUM_TXS\t", str(0), "\n"])
+                    file_begin_time.close() 
+                    N1.current_time += TIMEOUT
+                    for node in N1.nodes:
+                        # 更新交易池中的信息
+                        node.channel_state = 0
+                        node.send_time = N1.current_time
+                        node.send_prop = 0.0125
+                        node.current_leader_id = None
+                    file_end_time = open("End_time_propagation(PBFT).txt","a")
+                    file_end_time.writelines(["LEADER_ID\t", str(N1.leader_id), "\tBLOCK_ID\t", str(-1), "\tEnd_TIME\t", str(N1.current_time), "\t NUM_TXS\t", "0", "\n"])
+                    file_end_time.close()
+                    N1.leader_id = None
+                    N1.leader = None
+                    print('当前任期无法生成区块', N1.current_time)
+                    # print("首领节点故障，当前轮共识失败", cblocks)
+                    # N1.current_time += TIMEOUT
+                    # print("结束时间", N1.current_time)
+                    fail_times +=1
+                    cblocks +=1
             # 计算当前完成区块确认的节点数量 
             count = 0
             for node in N1.nodes:  
@@ -157,7 +174,7 @@ if __name__== '__main__':
                 N1.leader = None
                 fail_times +=1
                 cblocks +=1
-            N1.handle_event(min_tx_num, signs_threshold)
+            N1.Adversary_event(min_tx_num, signs_threshold)
             N1.transmission(SLOT, TRANSMISSION_RATE, ps)
             N1.current_time += SLOT
         

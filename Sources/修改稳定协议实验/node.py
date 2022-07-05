@@ -115,18 +115,18 @@ class Node(object):
                     self.send_queue.insert(0, block)
             # print("首领的发送时间",  self.send_time)
             # print("当前时间",  current_time)
-            # file_begin_time = open("propagation_Begin_time.txt","a")
-            # if self.node_id == 0:
-            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # else:
-            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # file_begin_time.close() 
-            file_begin_time = open("Jamming_Begin_time.txt","a")
+            file_begin_time = open("propagation_Begin_time.txt","a")
             if self.node_id == 0:
-                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             else:
-                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             file_begin_time.close() 
+            # file_begin_time = open("Jamming_Begin_time.txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # file_begin_time.close() 
             # file_begin_time = open("Adversary_Begin_time.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -203,6 +203,12 @@ class Node(object):
         # else:
         #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-20000), "\tNUM_TXS\t", str(0), "\n"])
         # file_begin_time.close() 
+        file_begin_time = open("propagation_Begin_time.txt","a")
+        if self.node_id == 0:
+            file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
+        else:
+            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
+        file_begin_time.close() 
         # file_begin_time = open("Sybil_Begin_time.txt","a")
         # if self.node_id == 0:
         #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
@@ -432,11 +438,11 @@ class Node(object):
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
         self.compute_trans_prob(snode)
-        if isinstance(data, Block):
-            temp_prob = 1
-        else:
-            temp_prob = prob_suc
-        # temp_prob = prob_suc
+        # if isinstance(data, Block):
+        #     temp_prob = 1
+        # else:
+        #     temp_prob = prob_suc
+        temp_prob = prob_suc
         if rdm <= temp_prob :
             # print("接收消息成功", self.node_id, self.transmission_node[0].node_id)
             # 更新消息传输完成后接收节点的状态
@@ -447,13 +453,13 @@ class Node(object):
                     # print("接收最终签名成功", self.node_id)
                     if self.send_queue and isinstance(self.send_queue[0], Finalsign):
                         del self.send_queue[0]
-                    if len(self.send_queue) >1 and isinstance(self.send_queue[1], Finalsign):
+                    if self.send_queue and len(self.send_queue) >1 and isinstance(self.send_queue[1], Finalsign):
                         del self.send_queue[1]
                     if self.send_queue and isinstance(self.send_queue[0], Sign):
                         del self.send_queue[0]
-                    if len(self.send_queue)>1 and  isinstance(self.send_queue[1], Sign):
+                    if self.send_queue and len(self.send_queue)>1 and  isinstance(self.send_queue[1], Sign):
                         del self.send_queue[1]
-                    if len(self.send_queue)>2 and  isinstance(self.send_queue[2], Sign):
+                    if self.send_queue and len(self.send_queue)>2 and  isinstance(self.send_queue[2], Sign):
                         del self.send_queue[2]
             elif isinstance(data, Block):
                 if not self.current_block and data.leader_id == self.current_leader_id: 
