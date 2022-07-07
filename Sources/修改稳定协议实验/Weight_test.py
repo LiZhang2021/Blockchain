@@ -60,7 +60,7 @@ if __name__ == '__main__':
     x = []
     y = []
     num_consensus = 100     # 共识次数
-    num_nodes = 100         # 节点数量
+    num_nodes = 500         # 节点数量
 
     # 随机生成节点并赋予不同的时间和共识区块
     # file_stability = open("Stability.txt","a")
