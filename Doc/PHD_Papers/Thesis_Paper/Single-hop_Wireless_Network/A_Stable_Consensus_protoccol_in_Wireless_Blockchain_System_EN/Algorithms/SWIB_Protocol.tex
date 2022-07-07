@@ -63,32 +63,28 @@
     \State $Rdm^{r} = GenerateRandomValue(r, B_{H}^{r-1}, sig_{full}^{r-1})$
     \State $ID_{BP} = \text{Block Proposer Election}(NodeList, Rdm^{r})$
     \State \textcolor{blue}{$\rhd$ Block Generation}:
-    \For {$x_{comp} + T_{B}\cdot x_{trans}$ Slots}
-        \If {$BP_{ID} == Node_{ID}$}
-            \State $B^{r} = \text{Generate Block}(B_{H}^{r-1}, Txs)$
-            \State Broadcast the block $B^{r}$ to other nodes with transmit power $P_t$
-        \Else
-            \State Listen on the channel to receive the block
-        \EndIf
-    \EndFor
+    \If {$BP_{ID} == Node_{ID}$}
+        \State $B^{r} = \text{Generate Block}(B_{H}^{r-1}, Txs)$
+        \State Broadcast the block $B^{r}$ to other nodes with transmit power $P_t$
+    \Else
+        \State Listen on the channel to receive the block
+    \EndIf
     \State \textcolor{blue}{$\rhd$ Block Verification}
-    \For {$N\cdot x_{comp} + T_{sig}\cdot x_{trans}$ Slots}
-        \For {Any node in $\{1, \cdots, N\}$}
-            \If {$Node_{ID}!= BP_{ID}$}
-                \If {$isLegal(BPNode_{ID})$ and $isValid(B^{r})$}
-                    \State $sig^{r} = \text{Generate Signature}(B^{r}, sk)$
-                    \State Broadcast $sig^{r}$ to other nodes
-                \Else
-                    \State Discard the new block and generate an empty block $B_{empty}^r$
-                    \State $sig^{r} = \text{Generate Signature}(B_{empty}^{r}, sk)$
-                    \State Broadcast $sig^{r}$ to other nodes
-                \EndIf
-            \EndIf
-            \If {received enough partial signatures  $Count(Sigs^{r}) > threshold$}
-                \State $sig_{full}^{r} = \text{Recover Full Signature}(Sigs^{r})$
+    \For {Any node in $\{1, \cdots, N\}$}
+        \If {$Node_{ID}!= BP_{ID}$}
+            \If {$isLegal(BPNode_{ID})$ and $isValid(B^{r})$}
+                \State $sig^{r} = \text{Generate Signature}(B^{r}, sk)$
+                \State Broadcast $sig^{r}$ to other nodes
+            \Else
+                \State Discard the new block and generate an empty block $B_{empty}^r$
+                \State $sig^{r} = \text{Generate Signature}(B_{empty}^{r}, sk)$
                 \State Broadcast $sig^{r}$ to other nodes
             \EndIf
-        \EndFor
+        \EndIf
+        \If {received enough partial signatures  $Count(Sigs^{r}) > threshold$}
+            \State $sig_{full}^{r} = \text{Recover Full Signature}(Sigs^{r})$
+            \State Broadcast $sig^{r}$ to other nodes
+        \EndIf
         \State \textcolor{red}{//**Broadcast signatures}
         \State Listen on the channel
         \If {$ \text{Node } v \text{ decides to send a signature with transmit probability }p_{v}$}
@@ -143,55 +139,42 @@
     Blockchain $BC$
     \State \textcolor{cyan}{//** Achieving consensus on block round-by-round,$r$ round}
     \State \textcolor{blue}{$\rhd$ Initialization}:
-    \State $Finalized = False$;
+    \State $Finalized = False$
     \State \textcolor{blue}{$\rhd$ Block Proposer Election}:
-    \State Slot 1: $Rdm^{r} = GenerateRandomValue(r, B_{H}^{r-1}, sig_{full}^{r-1})$;
-    \State Slot 2: Compute elected probability of all nodes according to stability;
-    \State Slot 3: Get sorted node list $NodeList$ based on public key value;
-    \State Slot 4: $ID_{BP} = \text{Block Proposer Election}(NodeList, Rdm^{r})$;
+    \State $Rdm^{r} = GenerateRandomValue(r, B_{H}^{r-1}, sig_{full}^{r-1})$
+    \State Compute elected probability of all nodes according to stability
+    \State Get sorted node list $NodeList$ based on public key value
+    \State $BP_{ID} = \text{Block Proposer Election}(NodeList, Rdm^{r})$
     \State \textcolor{blue}{$\rhd$ Block Generation}:
-    \For {$x_{comp} + T_{B}\cdot x_{trans}$ Slots}
-        \If {$BP_{ID} == Node_{ID}$}
-            \If {node has not enough transactions}
-                \State Request transactions from other nodes
-            \EndIf
-            \State $B^{r} = \text{Generate Block}(B_{H}^{r-1}, Txs)$
-            \State Broadcast the block $B^{r}$ to other nodes with transmit power $P_t$
-        \Else
-            \State Listen on the channel to receive the block
-            \If {Receive a request from block proposer}
-                \State run {\bf broadcastMessage(Txs)}
-            \EndIf
-        \EndIf
-    \EndFor
+    \If {$Node_{ID}==BP_{ID}$}
+        \State Listen on the channel to collect transactions
+    \Else
+        \State run {\bf MroadcastMessage(Txs)}
+    \EndIf
+    \If {$Node_{ID}==BP_{ID}$}
+        \State $B^{r} = \text{Generate Block}(B_{H}^{r-1}, Txs)$
+        \State Broadcast the block $B^{r}$ to other nodes
+    \Else
+        \State Listen on the channel to receive the block
+    \EndIf
     \State \textcolor{blue}{$\rhd$ Block Verification}
-    \For {$N\cdot x_{comp} + T_{sig}\cdot x_{trans}$ Slots}
-        \For {Any node in $\{1, \cdots, N\}$}
-            \If {$Node_{ID}!= BP_{ID}$}
-                \If {$isLegal(BPNode_{ID})$ and $isValid(B^{r})$}
-                    \State $sig^{r} = \text{Generate Signature}(B^{r}, sk)$
-                    \State Broadcast $sig^{r}$ to other nodes with transmit probability and transmit power $P_t$
-                \Else
-                    \State Discard the new block and generate an empty block $B_{empty}^r$
-                    \State $sig^{r} = \text{Generate Signature}(B_{empty}^{r}, sk)$
-                    \State run {\bf broadcsatSignature}
-                \EndIf
-            \EndIf
-            \If {collect enough partial signatures  $Count(Sigs^{r}) > threshold$}
-                \State $sig_{full}^{r} = \text{Recover Full Signature}(Sigs^{r})$
-                \State run {\bf broadcsatMessage(Sigs)}
-            \EndIf
-        \EndFor
-    \EndFor
-    \State \textcolor{blue}{$\rhd$ Block Finalization}:
-    \For {Any node $\{1, \cdots, N\}$}
-        \If {received or generated the $sig_{full}^{r}$}
-            \State $AddSig(B^{r}, sig_{full}^{r})$
-            \State $Append(BC, B^{r})$
-            \State $Update(NodeList)$
-            \State $Finalized = True$
+    \If {$Node_{ID}!= BP_{ID}$}
+        \If {$isLegal(BPNode_{ID})$ and $isValid(B^{r})$}
+            \State $sig^{r} = \text{Generate Signature}(B^{r}, sk)$
         \EndIf
-    \EndFor
+    \EndIf
+    \State run {\bf BroadcastMessage(sig)}
+    \If {collect enough partial signatures  $Count(Sigs^{r}) > threshold$}
+        \State $sig_{full}^{r} = \text{Recover Full Signature}(Sigs^{r})$
+        \State Broadcast the full signature $sig_{full}^{r}$ to other nodes
+    \EndIf
+    \State \textcolor{blue}{$\rhd$ Block Finalization}:
+    \If {Nodes have received or generated the $sig_{full}^{r}$}
+        \State $AddSig(B^{r}, sig_{full}^{r})$
+        \State $Append(BC, B^{r})$
+        \State $Update(NodeList)$
+        \State $Finalized = True$
+    \EndIf
 	\end{algorithmic}
 \end{breakablealgorithm}
 
@@ -204,21 +187,19 @@
 	\label{alg1}
 	\begin{algorithmic}[1]
         \Require
-         Latest blockchain length $Length$
+         Latest blockchain length $Length$;
          Neighbor list $Neighbors$
-         \Ensure
-         blockchain
         \For {node $v$ in Neighbors}
             \If {$Len(BC_v)== Length$  and $Stability_v > threshold$}
-                \State add the node to RequestNeighbors
+                \State add the node to Candidates
             \EndIf
         \EndFor
-        \For {node $i$ in the Requested Neighbors}
-            \State Request $m$ blocks from node
+        \For {node $i$ in Candidates}
+            \State Request $m$ blocks from node $i$
             \If {all blocks are valid}
                 \State Add missing block to local blockchain
             \Else
-                \State request these blocks from other nodes in RequestNeighbors
+                \State request these blocks from other nodes in Candidates
             \EndIf
         \EndFor
 	\end{algorithmic}
@@ -230,32 +211,30 @@
     \setcounter{algorithm}{2}
 	\renewcommand{\algorithmicrequire}{\textbf{Input:}}
 	\renewcommand{\algorithmicensure}{\textbf{Output:}}
-	\caption{broadcastMessage Subroutine}
+	\caption{BroadcastMessage Subroutine}
 	\label{alg1}
 	\begin{algorithmic}[1]
-        \For {Any node $v$ in $\{1, \cdots, N\}$}
-            \If {$ \text{Node } v \text{ decides to send a message with transmit probability }p_{v}$}
-                \State $Broadcast(msg)\text{ with transmit power }P_{t}$
+        \If {$ \text{Node } v \text{ decides to send a message with transmit probability }p_{v}$}
+            \State $Broadcast(msg)\text{ with transmit power }P_{t}$
+        \Else
+            \If {channel is idle}
+                \State $e_v = e_v + 1$ \textcolor{cyan}{//** Count idle slots within $T_{v}$}
             \Else
-                \If {channel is idle}
-                    \State $e_v = e_v + 1$ \textcolor{cyan}{//** Count idle slots within $T_{v}$}
-                \Else
-                    \State $\text{Receive a message from others}$
-                \EndIf
+                \State $\text{Receive a message from other nodes}$
             \EndIf
-            \State \textcolor{red}{//**maintain the estimate of adversary time window}
-            \State $count_v = count_v + 1$
-            \If {$count_v > \hat{T}_v$}
-                \State {$count_v = 1$}
-                \If {$e_v == 0$} \textcolor{cyan}{//** No idle slot in the past $\hat{T}_{v}$ slots}
-                    \State {$\hat{p}_v = p_v/(1+\frac{1}{T_v})$}
-                    \State {$\hat{T}_v = \hat{T}_v + 2$}
-                \ElsIf {$e_v >= 1$}
-                    \State {$\hat{p}_v = \hat{p}_v*(1+\frac{e_{v}}{T_{v}})$}
-                    \State {$\hat{T}_v = \hat{T}_v - 1$}
-                \EndIf
+        \EndIf
+        \State \textcolor{red}{//**maintain the estimate of adversary time window}
+        \State $count_v = count_v + 1$
+        \If {$count_v > \hat{T}_v$}
+            \State {$count_v = 1$}
+            \If {$e_v == 0$} \textcolor{cyan}{//** No idle slot in the past $\hat{T}_{v}$ slots}
+                \State {$\hat{p}_v = p_v/(1+\frac{1}{T_v})$}
+                \State {$\hat{T}_v = \hat{T}_v + 2$}
+            \ElsIf {$e_v >= 1$}
+                \State {$\hat{p}_v = \hat{p}_v*(1+\frac{e_{v}}{T_{v}})$}
+                \State {$\hat{T}_v = \hat{T}_v - 1$}
             \EndIf
-        \EndFor
+        \EndIf
 	\end{algorithmic}
 \end{breakablealgorithm}
 
