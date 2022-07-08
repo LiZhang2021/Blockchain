@@ -34,7 +34,8 @@ from sign import Sign
 # 计算节点成功接收消息的参数
 PL = 20*np.log10(0.125/(4*np.pi))
 beta = 10
-Pt = pow(10, -2)
+Pt = 100
+alpha = 3
 Pn=pow(10, -9)
 
 class Node(object):
@@ -115,12 +116,12 @@ class Node(object):
                     self.send_queue.insert(0, block)
             # print("首领的发送时间",  self.send_time)
             # print("当前时间",  current_time)
-            file_begin_time = open("propagation_Begin_time.txt","a")
-            if self.node_id == 0:
-                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            else:
-                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            file_begin_time.close() 
+            # file_begin_time = open("propagation_Begin_time.txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # file_begin_time.close() 
             # file_begin_time = open("Jamming_Begin_time.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -145,12 +146,12 @@ class Node(object):
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
             # file_begin_time.close()    
-            # file_begin_time = open("Begin_time_nodes.txt","a")
-            # if self.node_id == 0:
-            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # else:
-            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # file_begin_time.close()    
+            file_begin_time = open("Begin_time_nodes.txt","a")
+            if self.node_id == 0:
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            else:
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            file_begin_time.close()    
             # file_begin_time = open("Begin_time_bandwidth.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -203,12 +204,12 @@ class Node(object):
         # else:
         #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-20000), "\tNUM_TXS\t", str(0), "\n"])
         # file_begin_time.close() 
-        file_begin_time = open("propagation_Begin_time.txt","a")
-        if self.node_id == 0:
-            file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
-        else:
-            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
-        file_begin_time.close() 
+        # file_begin_time = open("propagation_Begin_time.txt","a")
+        # if self.node_id == 0:
+        #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
+        # else:
+        #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
+        # file_begin_time.close() 
         # file_begin_time = open("Sybil_Begin_time.txt","a")
         # if self.node_id == 0:
         #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
@@ -221,12 +222,12 @@ class Node(object):
         # else:
         #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
         # file_begin_time.close()    
-        # file_begin_time = open("Begin_time_nodes.txt","a")
-        # if self.node_id == 0:
-        #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-        # else:
-        #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-        # file_begin_time.close()    
+        file_begin_time = open("Begin_time_nodes.txt","a")
+        if self.node_id == 0:
+            file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+        else:
+            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+        file_begin_time.close()    
         # file_begin_time = open("Begin_time_bandwidth.txt","a")
         # if self.node_id == 0:
         #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -342,7 +343,7 @@ class Node(object):
         # 如果是交易数据， 一个交易的大小设为512B
         if isinstance(data, Transaction):
             t_trans = pow(2, 9)*8 /float(trans_rate)
-        # 如果是区块数据，一个区块的大小设为1MB
+        # 如果是区块数据，一个区块的大小设为1MB, 区块头设为128字节
         elif isinstance(data, Block):
             if not data.tx_arr:
                 t_trans = pow(2, 11)*8 /float(trans_rate)
@@ -361,18 +362,18 @@ class Node(object):
     def commpute_trans_time(self, data, trans_rate):
         # 如果是交易数据， 一个交易的大小设为512B
         if isinstance(data, Transaction):
-            t_trans = 4  # 512*8/2048
+            t_trans = 2  # 512*8/2048
         # 如果是区块数据，一个区块的大小设为1MB
         elif isinstance(data, Block):
             if not data.tx_arr:
-                t_trans = 16  # 8*pow(2, 11) /2048
+                t_trans = 2  # 8*pow(2, 11) /1024
             else:
-                t_trans = len(data.tx_arr) * 4 + 16
+                t_trans = len(data.tx_arr) * 2 + 2
         # 如果是签名数据，一个签名的大小设为2048bit 
         elif isinstance(data, Sign):
-            t_trans = 2
+            t_trans = 1
         elif isinstance(data, Finalsign):
-            t_trans = 2
+            t_trans = 1
         else:
             t_trans = 0
         return t_trans
@@ -390,8 +391,8 @@ class Node(object):
         d = np.sqrt((pow(self.x - sendnode.x, 2)) + (pow(self.y - sendnode.y, 2)))
         if d < 1:
             d=1
-        ev = pow(10, 0.1 *PL)*beta*Pn*Pt*pow(d, -3)
-        self.prob_suc = 1-pow(np.e,-ev)
+        ev = pow(10, 0.1 *PL)*beta*Pn*pow(d, alpha)/Pt
+        self.prob_suc = pow(np.e,-ev)
 
     # 传输消息成功之后更新本地信息
     def update_sendnode_info(self, data, slot, trans_rate, current_time):
@@ -588,7 +589,6 @@ class Node(object):
 
     # 接收消息成功后，更新本地消息
     def update_receivenode_info_jammer(self, data, current_time, slot):
-                    
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
         self.compute_trans_prob(snode)
@@ -613,15 +613,6 @@ class Node(object):
             elif isinstance(data, Block):
                 if not self.current_block and data.leader_id == self.current_leader_id: 
                     self.current_block = data
-                    # print("接收区块成功",self.node_id)
-                    # if self.current_sign in self.send_queue:
-                    #     self.send_prop = self.send_prop*(1+0.1)
-                    #     if self.send_prop > 0.9:
-                    #         self.send_prop = 0.9
-                    # else:
-                    #     self.send_prop = self.send_prop/(1+0.1)
-                    #     if self.send_prop <0.1:
-                    #         self.send_prop = 0.1
             elif isinstance(data, Sign):
                 if not self.signs:
                     self.signs = [data]
@@ -630,15 +621,6 @@ class Node(object):
                     #     print("已经在签名集合中", self.node_id, len(self.signs))
                     # else:
                         self.signs.append(data)
-                        # print("节点接收签名成功", self.node_id, len(self.signs))
-                # if self.current_sign in self.send_queue:
-                #     self.send_prop = self.send_prop*(1+0.1)
-                #     if self.send_prop > 0.9:
-                #         self.send_prop = 0.9
-                # else:
-                #     self.send_prop = self.send_prop/(1+0.1)
-                #     if self.send_prop <0.1:
-                #         self.send_prop = 0.1
             elif isinstance(data, Transaction):
                 if not self.tx_pool:
                     self.tx_pool = [data]
@@ -648,14 +630,6 @@ class Node(object):
                     # else:
                         # print("接收交易成功", self.node_id)
                         self.tx_pool.append(data)
-                # if self.current_sign in self.send_queue:
-                #     self.send_prop = self.send_prop*(1+0.1)
-                #     if self.send_prop > 0.9:
-                #         self.send_prop = 0.9
-                # else:
-                #     self.send_prop = self.send_prop/(1+0.1)
-                #     if self.send_prop <0.1:
-                #         self.send_prop = 0.1
             # 更新所有接收节点发送队列的时间和信道状态       
             self.send_time = current_time + slot
             self.channel_state = 0

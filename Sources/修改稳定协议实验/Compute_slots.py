@@ -8,22 +8,62 @@ from scipy.interpolate import make_interp_spline
 
 PL = 20*np.log10(0.125/(4*np.pi))
 beta = 10
-Pt = pow(10, -2)
+Pt = 100
 Pn=pow(10, -9)
 p=0.005
 N=500
 p = 1/N
-sigma = 0.9999
+sigma = 0.95
+xi = 0.95
 p_comp = N*p*pow(1-p,N-1)/(1-pow(1-p,N))
+d = 143
+expont = pow(10, 0.1 *PL)*beta*Pn*pow(d, 5)/Pt
+print("exponent=",expont)
+m_epsilon = 1-pow(np.e, -expont)
+## 给定目标竞争成功概率和目标传输成功概率
+p_suc = sigma*xi
+p_comm = 0
+x = []
+y1=[]
+for N in range(100,500, 50):
+    x.append(N)
+    for f in range(int(N/2+1),N-1):
+        p_comm = p_comm + comb(N-1, f)* pow(1-p_suc,f)*pow(p_suc, N-1-f)
+    p_cp = p_suc * (1-p_comm) * p_suc
+    print("p_consensus = ", p_cp)
+    y1.append(p_cp)
+# plt.plot(x, y, 'o-', c='orange', label ='SWIB', linewidth=1)
+# plt.show()
+
+x = []
+y=[]
+p_comm = 0
+for N in range(100,500, 50):
+    p = 1/N
+    p_c = N*p*pow(1-p,N-1)/(1-pow(1-p,N))
+    print("p_c = ", p_c)
+    expont = pow(10, 0.1 *PL)*beta*Pn*pow(d, 3)/Pt
+    print("exponent=",expont)
+    epsilon = 1-pow(np.e, -expont)
+    p_suc= p_c*(1-epsilon)
+    print("max epsilon=", epsilon)
+    x.append(N)
+    for f in range(int(N/2+1),N-1):
+        p_comm = p_comm + comb(N-1, f)* pow(1-p_suc,f)*pow(p_suc, N-1-f)
+    p_cp = p_suc * (1-p_comm) * p_suc
+    print("p_consensus = ", p_cp)
+    y.append(p_cp)
+plt.plot(x, y, 'o--', c='red', label ='SWIB', linewidth=1)
+plt.plot(x, y1, 'o-', c='orange', label ='SWIB', linewidth=1)
+plt.show()
+
+
+
 x_comp = np.log(1-sigma)/np.log(1-p_comp)
 print("p_comp = ", p_comp)
 print("x_comp = ", round(x_comp))
-d = 143
-expont = pow(10, 0.1 *PL)*beta*Pt*Pn*pow(d, 5)
-print("exponent=",expont)
-m_epsilon = 1-pow(2.7, -expont)
+
 # m_epsilon = 0.0005
-xi = 0.9999
 x_trans = np.log(1-pow(xi,N))/np.log(m_epsilon)
 print("max epsilon=", m_epsilon)
 print("x_trans=", x_trans)

@@ -31,8 +31,8 @@ if __name__== '__main__':
     from node import Node
     from network import Network
 
-    BLOCK_SIZE = 512 # 区块大小设置1MB = 1024KB
-    NUM_NODES= np.arange(50, 601, 50)  # 节点的数量
+    BLOCK_SIZE = 1024 # 区块大小设置1MB = 1024KB
+    NUM_NODES= np.arange(50, 501, 50)  # 节点的数量
     # NUM_NODES= [150] # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
@@ -51,7 +51,7 @@ if __name__== '__main__':
         file_end_time = open("End_time_nodes.txt","a")
         file_end_time.writelines(["NUM_NODES\t", str(num_nodes), "\n"])
         file_end_time.close()
-        min_tx_num = int((BLOCK_SIZE * 1024 - 256)/512)  # 交易数量
+        min_tx_num = int((BLOCK_SIZE * 1024 - 512)/512)  # 交易数量
         N1 = Network()
         N1.create_nodes(num_nodes, 200)
         N1.set_basic_info()
@@ -90,7 +90,7 @@ if __name__== '__main__':
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
-                    node.send_prop = 0.0125
+                    node.send_prop = 1/len(N1.nodes)
                     node.time_window = 100
                     node.signs = None
                     node.final_sign = None

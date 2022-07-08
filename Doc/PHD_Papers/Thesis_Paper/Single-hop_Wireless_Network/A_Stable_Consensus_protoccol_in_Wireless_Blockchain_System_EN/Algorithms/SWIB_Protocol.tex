@@ -214,8 +214,10 @@
 	\caption{BroadcastMessage Subroutine}
 	\label{alg1}
 	\begin{algorithmic}[1]
+        \Require
+            transmit probability $\bar{p}$
         \If {$ \text{Node } v \text{ decides to send a message with transmit probability }p_{v}$}
-            \State $Broadcast(msg)\text{ with transmit power }P_{t}$
+            \State $Broadcast(msg)$
         \Else
             \If {channel is idle}
                 \State $e_v = e_v + 1$ \textcolor{cyan}{//** Count idle slots within $T_{v}$}
@@ -231,7 +233,7 @@
                 \State {$\hat{p}_v = p_v/(1+\frac{1}{T_v})$}
                 \State {$\hat{T}_v = \hat{T}_v + 2$}
             \ElsIf {$e_v >= 1$}
-                \State {$\hat{p}_v = \hat{p}_v*(1+\frac{e_{v}}{T_{v}})$}
+                \State {$\hat{p}_v = \max\{\hat{p}_v*(1+\frac{e_{v}}{T_{v}}), \bar{p}\}$}
                 \State {$\hat{T}_v = \hat{T}_v - 1$}
             \EndIf
         \EndIf

@@ -35,6 +35,8 @@ class Network(object):
         self.jamming = 0
         self.time_window = 0
         self.current_time = 0
+        self.compete_slots = 0
+        self.retrans = 0
     
     def __str__(self):
         if not self.nodes:
@@ -56,17 +58,21 @@ class Network(object):
     def set_basic_info(self):
         for i in range(len(self.nodes)):
             if i % 4 == 0:
+                self.nodes[i].send_prop = 1/len(self.nodes)
                 self.nodes[i].lifetime = 20
-                self.nodes[i].recent_gen_blocks = 30
+                self.nodes[i].recent_gen_blocks = 20
             if i % 4 == 1:
+                self.nodes[i].send_prop = 1/len(self.nodes)
                 self.nodes[i].lifetime = 100
-                self.nodes[i].recent_gen_blocks = 30
+                self.nodes[i].recent_gen_blocks = 20
             if i % 4 == 2:
+                self.nodes[i].send_prop = 1/len(self.nodes)
                 self.nodes[i].lifetime = 20
-                self.nodes[i].recent_gen_blocks = 90
+                self.nodes[i].recent_gen_blocks = 100
             if i % 4 == 3:
+                self.nodes[i].send_prop = 1/len(self.nodes)
                 self.nodes[i].lifetime = 100
-                self.nodes[i].recent_gen_blocks = 90
+                self.nodes[i].recent_gen_blocks = 100
     
     # 根据节点的位置和通信半径确定所有节点的邻节点
     def find_adjacent_nodes(self):
@@ -160,6 +166,7 @@ class Network(object):
                             if p_send <= tnode.send_prop:
                                 temp_sender.append(tnode)
                 if not temp_sender:
+                    self.compete_slots +=1
                     # print("当前时隙为空",self.current_time)
                     for node in self.nodes:
                         # print("节点信息", node.node_id, node.channel_state, node.send_prop)
@@ -169,6 +176,7 @@ class Network(object):
                         node.send_time = self.current_time + slot
                     break
                 elif len(temp_sender) > 1:
+                    self.compete_slots +=1
                     # print("当前时隙信道忙碌",self.current_time)
                     for node in self.nodes:
                         # print("节点信息", node.node_id, node.channel_state, node.send_prop)
@@ -177,6 +185,8 @@ class Network(object):
                         node.send_time = self.current_time + slot
                     break
                 else:
+                    # print("competslots", self.compete_slots)
+                    self.compete_slots = 0
                     snode = temp_sender[0]
                     snode.channel_state = 1
                     # 确定接收节点集合
@@ -193,14 +203,27 @@ class Network(object):
                 data = node.send_queue[0]
                 t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
                 # print("节点开始传输的时间和结束的时间", node.node_id, node.send_time , t_trans)
-                if self.current_time <= t_trans < self.current_time + slot:
+                if self.current_time <= t_trans + self.retrans < self.current_time + slot:
                     # 传输完成，更新发送节点信息
+                    self.retrans = 0
                     # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
                     for rnode in node.transmission_node:
                         # rnode.update_receivenode_info0(data, self.current_time,slot, trans_rate)
                         rnode.update_receivenode_info(data, self.current_time,slot, trans_rate, prob_suc)# print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                     # print("发送节点", node.node_id, len(node.tx_pool))
                     node.update_sendnode_info(data, slot, trans_rate, self.current_time)
+                else:
+                    count = 0
+                    for rnode in node.transmission_node:
+                        rdm = random.uniform(0,1)
+                        rnode.compute_trans_prob(node)
+                        # print("传输成功概率", rnode.prob_suc)
+                        if rnode.prob_suc >=rdm:
+                            count+=1
+                    # print("Count, lenth", count, len(node.transmission_node))
+                    if count < len(node.transmission_node):
+                        self.retrans +=1
+
         # 更新时间窗口
         for node in self.nodes:
             node.count_slots += 1
@@ -209,15 +232,15 @@ class Network(object):
                 node.count_slots = 1
                 if node.empty_slots == 0:
                     # 过去都没有空闲时隙，则增加时间窗口，降低传输概率
-                    node.send_prop = node.send_prop/(1 + 0.1)
+                    node.send_prop = node.send_prop/(1 + 1/node.time_window)
                     if node.send_prop > 0.3:
                         node.send_prop = 0.3
                     elif node.send_prop < 0.0001:
                         node.send_prop = 0.0001
                     node.time_window +=2
-                elif node.empty_slots > 10:
+                elif node.empty_slots >= 1:
                     # 如果空闲时隙超过阈值，则增加传输概率，降低窗口估计
-                    node.send_prop = node.send_prop*(1 + 0.1)
+                    node.send_prop = node.send_prop*(1 + node.empty_slots/node.time_window)
                     if node.send_prop > 0.3:
                         node.send_prop = 0.3
                     if node.time_window <=2:
