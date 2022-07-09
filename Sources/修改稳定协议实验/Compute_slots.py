@@ -53,24 +53,17 @@ for N in range(100,500, 50):
     p_cp = p_suc * (1-p_comm) * p_suc
     print("p_consensus = ", p_cp)
     y.append(p_cp)
-plt.plot(x, y, 'o--', c='red', label ='SWIB', linewidth=1)
-plt.plot(x, y1, 'o-', c='orange', label ='SWIB', linewidth=1)
-plt.show()
+# plt.plot(x, y, 'o--', c='red', label ='SWIB', linewidth=1)
+# plt.plot(x, y1, 'o-', c='orange', label ='SWIB', linewidth=1)
+# plt.show()
 
 
-
-x_comp = np.log(1-sigma)/np.log(1-p_comp)
-print("p_comp = ", p_comp)
-print("x_comp = ", round(x_comp))
-
-# m_epsilon = 0.0005
-x_trans = np.log(1-pow(xi,N))/np.log(m_epsilon)
-print("max epsilon=", m_epsilon)
-print("x_trans=", x_trans)
-print("x_trans=", round(x_trans))
 # N = np.arange(100, 1501, 50)
 P=np.arange(0.01, 0.61, 0.01)
 n=100
+x_comp = np.log(1-sigma)/np.log(1-p_comp)
+print("p_comp = ", p_comp)
+print("x_comp = ", round(x_comp))
 x = []
 y = []
 for p in P:
@@ -79,3 +72,19 @@ for p in P:
     y.append(p_comp)
 # plt.plot(x, y, 'o-', c='orange', label ='SWIB', linewidth=1)
 # plt.show()
+x = []
+y=[]
+N = 100
+Xis = np.arange(0.1, 1.1, 0.1)
+m_epsilon = 0.0005
+for xi in Xis:
+    x.append(xi)
+    x_trans = np.log(1-pow(xi,N))/np.log(m_epsilon)
+    y.append(x_trans)
+plt.plot(x, y, 'o-', c='orange', label ='SWIB', linewidth=1)
+plt.show()
+# print("max epsilon=", m_epsilon)
+# print("x_trans=", x_trans)
+# print("x_trans=", round(x_trans))
+
+

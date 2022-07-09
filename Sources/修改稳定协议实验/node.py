@@ -34,8 +34,8 @@ from sign import Sign
 # 计算节点成功接收消息的参数
 PL = 20*np.log10(0.125/(4*np.pi))
 beta = 10
-Pt = 100
-alpha = 3
+Pt = 50
+alpha = 5
 Pn=pow(10, -9)
 
 class Node(object):
