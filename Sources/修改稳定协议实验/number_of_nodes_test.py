@@ -110,5 +110,5 @@ if __name__== '__main__':
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
             N1.handle_event(min_tx_num, signs_threshold)
-            N1.transmission(SLOT, TRANSMISSION_RATE, 1)
+            N1.transmission(SLOT, TRANSMISSION_RATE)
             N1.current_time += SLOT

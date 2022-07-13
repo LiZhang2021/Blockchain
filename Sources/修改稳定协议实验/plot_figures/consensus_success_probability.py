@@ -18,7 +18,6 @@ for epsilon in epsilons:
     p_comm1 = 0
     for f in range(int(N/2+1),N):
         p_comm1 = p_comm1 + comb(N-1, f)* pow(epsilon,f)*pow(1-epsilon, N-1-f)
-    # p_cp1 = pow(p_comm1, int(N/2))
     p_cp1 = pow(p_comm1, int(N))
     y1.append(1-p_cp1)
     p_comm2 = 0

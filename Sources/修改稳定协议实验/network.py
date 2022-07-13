@@ -37,6 +37,7 @@ class Network(object):
         self.current_time = 0
         self.compete_slots = 0
         self.retrans = 0
+        self.rewindow = 0
     
     def __str__(self):
         if not self.nodes:
@@ -151,7 +152,7 @@ class Network(object):
         dnode.recent_gen_blocks -= 1
 
      # 传输消息
-    def transmission(self, slot, trans_rate, prob_suc):
+    def transmission(self, slot, trans_rate):
         for node in self.nodes:
             if node.channel_state == 0 and node.send_queue and self.current_time <= node.send_time < (self.current_time + slot):
                 # 节点确定是否要发送消息
@@ -209,21 +210,36 @@ class Network(object):
                     # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
                     for rnode in node.transmission_node:
                         # rnode.update_receivenode_info0(data, self.current_time,slot, trans_rate)
-                        rnode.update_receivenode_info(data, self.current_time,slot, trans_rate, prob_suc)# print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
+                        rnode.update_receivenode_info(data, self.current_time,slot, trans_rate)
                     # print("发送节点", node.node_id, len(node.tx_pool))
                     node.update_sendnode_info(data, slot, trans_rate, self.current_time)
                 else:
                     count = 0
+                    max_suc = 0
                     for rnode in node.transmission_node:
                         rdm = random.uniform(0,1)
                         rnode.compute_trans_prob(node)
                         # print("传输成功概率", rnode.prob_suc)
                         if rnode.prob_suc >=rdm:
                             count+=1
+                        if rnode.prob_suc > max_suc:
+                            max_suc=rnode.prob_suc
                     # print("Count, lenth", count, len(node.transmission_node))
                     if count < len(node.transmission_node):
                         self.retrans +=1
-
+                        self.rewindow += 1
+                    else:
+                        if self.rewindow <= int(numpy.log(1-pow(0.9,1/len(self.nodes)))/numpy.log(max_suc)):
+                            self.rewindow=0
+                        else:
+                            self.retrans=0
+                            for rnode in node.transmission_node:
+                                rnode.channel_state = 0
+                                rnode.send_time = self.current_time + 1
+                                rnode.transmission_node = None
+                            node.channel_state = 0
+                            node.send_time = self.current_time + 1
+                            node.transmission_node = None
         # 更新时间窗口
         for node in self.nodes:
             node.count_slots += 1
@@ -811,14 +827,42 @@ class Network(object):
                 data = node.send_queue[0]
                 t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
                 # print("节点开始传输的时间和结束的时间", node.node_id, node.send_time , t_trans)
-                if self.current_time <= t_trans < self.current_time + slot:
+                if self.current_time <= t_trans + self.retrans < self.current_time + slot:
                     # 传输完成，更新发送节点信息
+                    self.retrans = 0
                     # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
                     for rnode in node.transmission_node:
+                        # rnode.update_receivenode_info0(data, self.current_time,slot, trans_rate)
                         rnode.update_receivenode_info0(data, self.current_time,slot, trans_rate)
-                        # rnode.update_receivenode_info(data, self.current_time,slot, trans_rate, prob_suc)# print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                     # print("发送节点", node.node_id, len(node.tx_pool))
                     node.update_sendnode_info(data, slot, trans_rate, self.current_time)
+                else:
+                    count = 0
+                    max_suc = 0
+                    for rnode in node.transmission_node:
+                        rdm = random.uniform(0,1)
+                        rnode.compute_trans_prob(node)
+                        # print("传输成功概率", rnode.prob_suc)
+                        if rnode.prob_suc >=rdm:
+                            count+=1
+                        if rnode.prob_suc > max_suc:
+                            max_suc=rnode.prob_suc
+                    # print("Count, lenth", count, len(node.transmission_node))
+                    if count < len(node.transmission_node):
+                        self.retrans +=1
+                        self.rewindow += 1
+                    else:
+                        if self.rewindow <= int(numpy.log(1-pow(0.9,1/len(self.nodes)))/numpy.log(max_suc)):
+                            self.rewindow=0
+                        else:
+                            self.retrans=0
+                            for rnode in node.transmission_node:
+                                rnode.channel_state = 0
+                                rnode.send_time = self.current_time + 1
+                                rnode.transmission_node = None
+                            node.channel_state = 0
+                            node.send_time = self.current_time + 1
+                            node.transmission_node = None
         # 更新时间窗口
         for node in self.nodes:
             node.count_slots += 1
@@ -894,14 +938,43 @@ class Network(object):
                 data = node.send_queue[0]
                 t_trans = node.commpute_trans_time(data, trans_rate) + node.send_time
                 # print("节点开始传输的时间和结束的时间", node.node_id, node.send_time , t_trans)
-                if self.current_time <= t_trans < self.current_time + slot:
+                if self.current_time <= t_trans + self.retrans < self.current_time + slot:
                     # 传输完成，更新发送节点信息
+                    self.retrans = 0
                     # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
                     for rnode in node.transmission_node:
                         # rnode.update_receivenode_info0(data, self.current_time,slot, trans_rate)
-                        rnode.update_receivenode_info(data, self.current_time,slot, trans_rate, prob_suc)# print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
+                        rnode.update_receivenode_info(data, self.current_time,slot, trans_rate)# print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                     # print("发送节点", node.node_id, len(node.tx_pool))
                     node.update_sendnode_info(data, slot, trans_rate, self.current_time)
+                else:
+                    count = 0
+                    max_suc = 0
+                    for rnode in node.transmission_node:
+                        rdm = random.uniform(0,1)
+                        # rnode.compute_trans_prob(node)
+                        rnode.prob_suc=prob_suc
+                        # print("传输成功概率", rnode.prob_suc)
+                        if rnode.prob_suc >=rdm:
+                            count+=1
+                        if rnode.prob_suc > max_suc:
+                            max_suc=rnode.prob_suc
+                    # print("Count, lenth", count, len(node.transmission_node))
+                    if count < len(node.transmission_node):
+                        self.retrans +=1
+                        self.rewindow += 1
+                    else:
+                        if self.rewindow <= int(numpy.log(1-pow(0.9,1/len(self.nodes)))/numpy.log(max_suc)):
+                            self.rewindow=0
+                        else:
+                            self.retrans=0
+                            for rnode in node.transmission_node:
+                                rnode.channel_state = 0
+                                rnode.send_time = self.current_time + 1
+                                rnode.transmission_node = None
+                            node.channel_state = 0
+                            node.send_time = self.current_time + 1
+                            node.transmission_node = None
         # 更新时间窗口
         for node in self.nodes:
             node.count_slots += 1

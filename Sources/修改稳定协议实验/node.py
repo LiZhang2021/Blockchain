@@ -432,7 +432,7 @@ class Node(object):
         # print("节点的传输时间", self.node_id, self.send_time)
 
     # 接收消息成功后，更新本地消息
-    def update_receivenode_info(self, data, current_time, slot, trans_rate, prob_suc):      
+    def update_receivenode_info(self, data, current_time, slot, trans_rate):      
         # 判定节点是否接收成功
         if isinstance(data, Block):
             self.send_prop = 0
@@ -443,8 +443,7 @@ class Node(object):
         #     temp_prob = 1
         # else:
         #     temp_prob = prob_suc
-        temp_prob = prob_suc
-        if rdm <= temp_prob :
+        if rdm <= 1 :
             # print("接收消息成功", self.node_id, self.transmission_node[0].node_id)
             # 更新消息传输完成后接收节点的状态
             if isinstance(data, Finalsign):
