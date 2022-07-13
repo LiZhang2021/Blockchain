@@ -32,7 +32,7 @@ if __name__== '__main__':
     from network import Network
 
     BLOCK_SIZE = 1024  # 区块大小设置1MB = 1024KB
-    NUM_NODES= 500  # 节点的数量
+    NUM_NODES= 100  # 节点的数量
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
@@ -45,6 +45,7 @@ if __name__== '__main__':
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)
+    p_suc = 1
     for gamma in gammas:
         gamma = round(gamma,2)
         print("故障节点占比", str(gamma))
@@ -72,14 +73,14 @@ if __name__== '__main__':
                 # prob = cblocks/10.0
                 # N1.leader_election(prob, ALPHA)
                 # N1.leader_id = random.randint(0, 499)
-                N1.leader_id = cblocks*50 - cblocks
+                N1.leader_id = cblocks*10 - cblocks
                 print("首领节点是", N1.leader_id)
                 begin_time = N1.current_time
                 for node in N1.nodes:
                     node.current_leader_id = N1.leader_id
                     if node.node_id == N1.leader_id:
                         N1.leader = node
-                if N1.leader.sybil == 1:
+                if  N1.leader.sybil == 1:
                     for node in N1.nodes:
                         node.channel_state = 0
                         node.send_time += 8200
@@ -169,5 +170,5 @@ if __name__== '__main__':
                 fail_times +=1
                 cblocks +=1
             N1.Adversary_event(min_tx_num, signs_threshold)
-            N1.transmission_Adversary(SLOT, TRANSMISSION_RATE)
+            N1.transmission_Adversary(SLOT, TRANSMISSION_RATE, p_suc)
             N1.current_time += SLOT

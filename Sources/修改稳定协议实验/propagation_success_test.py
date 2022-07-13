@@ -36,11 +36,11 @@ if __name__== '__main__':
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
-    TIMEOUT = 15000
+    TIMEOUT = 25000
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
-    p_success = np.arange(0.05, 0.96, 0.05)
+    p_success = np.arange(0.95, 1, 0.05)
     # p_success = [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35]
     # p_success =[0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值

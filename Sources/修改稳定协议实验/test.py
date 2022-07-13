@@ -48,8 +48,8 @@ y3 = 0
 N = 100
 Nodes = np.arange(5, 1001, 15)
 Xis = np.arange(0.05, 1, 0.05)
-m_epsilon = 0.7
-xi = 0.99
+m_epsilon = 0.1
+xi = 0.9
 for N in Nodes:
     x.append(N)
     x_trans = np.log(1-pow(xi,1/N))/np.log(m_epsilon)
