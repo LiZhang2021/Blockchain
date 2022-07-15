@@ -68,6 +68,8 @@ class Node(object):
          self.jamming = 0  # Jamming 节点状态(不发起攻击0/发起攻击1)
          self.prob_suc = 0  # 从其他节点接收消息成功的概率（传输消息成功的时候计算）
          self.empty_slots = 0 # 记录以及传输过区块的节点
+         self.packages = 0
+         self.count_trans = 0
     # 定义输出
     def __str__(self):
         str_fmt = "node_id:{}, lifetime:{}, recent_gen_blocks:{}, neighbors:{}, stability:{}\n" +\
@@ -128,12 +130,12 @@ class Node(object):
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
             # file_begin_time.close() 
-            file_begin_time = open("Adversary_Begin_time.txt","a")
-            if self.node_id == 0:
-                file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            else:
-                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            file_begin_time.close() 
+            # file_begin_time = open("Adversary_Begin_time.txt","a")
+            # if self.node_id == 0:
+            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # else:
+            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            # file_begin_time.close() 
             # file_begin_time = open("Sybil_Begin_time.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -146,12 +148,12 @@ class Node(object):
             # else:
             #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
             # file_begin_time.close()    
-            # file_begin_time = open("Begin_time_nodes.txt","a")
-            # if self.node_id == 0:
-            #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # else:
-            #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-            # file_begin_time.close()    
+            file_begin_time = open("Begin_time_nodes.txt","a")
+            if self.node_id == 0:
+                file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            else:
+                file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+            file_begin_time.close()    
             # file_begin_time = open("Begin_time_bandwidth.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -188,9 +190,9 @@ class Node(object):
         # print("当前时间",  current_time)
         # file_begin_time = open("propagation_Begin_time.txt","a")
         # if self.node_id == 0:
-        #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+        #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", "0", "\n"])
         # else:
-        #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+        #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", "0", "\n"])
         # file_begin_time.close() 
         # file_begin_time = open("Jamming_Begin_time.txt","a")
         # if self.node_id == 0:
@@ -198,12 +200,12 @@ class Node(object):
         # else:
         #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
         # file_begin_time.close() 
-        file_begin_time = open("Adversary_Begin_time.txt","a")
-        if self.node_id == 0:
-            file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-20000), "\tNUM_TXS\t", str(0), "\n"])
-        else:
-            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-20000), "\tNUM_TXS\t", str(0), "\n"])
-        file_begin_time.close() 
+        # file_begin_time = open("Adversary_Begin_time.txt","a")
+        # if self.node_id == 0:
+        #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-20000), "\tNUM_TXS\t", str(0), "\n"])
+        # else:
+        #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-20000), "\tNUM_TXS\t", str(0), "\n"])
+        # file_begin_time.close() 
         # file_begin_time = open("propagation_Begin_time.txt","a")
         # if self.node_id == 0:
         #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
@@ -222,12 +224,12 @@ class Node(object):
         # else:
         #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])            
         # file_begin_time.close()    
-        # file_begin_time = open("Begin_time_nodes.txt","a")
-        # if self.node_id == 0:
-        #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-        # else:
-        #     file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
-        # file_begin_time.close()    
+        file_begin_time = open("Begin_time_nodes.txt","a")
+        if self.node_id == 0:
+            file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+        else:
+            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
+        file_begin_time.close()    
         # file_begin_time = open("Begin_time_bandwidth.txt","a")
         # if self.node_id == 0:
         #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -418,7 +420,7 @@ class Node(object):
         elif isinstance(data, Sign):
             if data not in self.signs:
                 self.signs.append(data)
-            print("传输签名成功", self.node_id, self.send_prop, len(self.signs))
+            # print("传输签名成功", self.node_id, self.send_prop, len(self.signs))
             self.send_prop = 0
         # elif isinstance(data, Transaction):
             # print("传输交易成功", self.node_id)
@@ -464,6 +466,7 @@ class Node(object):
             elif isinstance(data, Block):
                 if not self.current_block and data.leader_id == self.current_leader_id: 
                     self.current_block = data
+                    print("节点接收区块成功", self.node_id)
             elif isinstance(data, Sign):
                 if not self.signs:
                     self.signs = [data]

@@ -36,29 +36,40 @@ if __name__== '__main__':
     TRANSMISSION_RATE = 35*pow(2, 20)  # 信道传输速率
     # SLOT = 512/float(TRANSMISSION_RATE) # 时隙大小
     SLOT= 1
-    TIMEOUT = 25000
+    TIMEOUT = 20000
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
-    p_success = np.arange(0.95, 1, 0.05)
-    # p_success = [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35]
-    # p_success =[0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1]
+    # p_success = np.arange(0.7, 1, 0.05)
+    p_success = [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35]
+    # p_success =[0.65]
+    F_ratios = np.arange(0, 0.5, 0.03)
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
-    for ps in p_success:
-        ps = round(ps,2)
-        print("传输成功概率", str(ps))
+    for gamma in F_ratios:
+    # for ps in p_success:
+    #     ps = round(ps,2)
+    #     print("传输成功概率", str(ps))
+        ps = 0.8
+        gamma = round(gamma,2)
+        print("故障节点占比", str(gamma))
+        # file_begin_time = open("propagation_Begin_time.txt","a")
+        # file_begin_time.writelines(["propagation success probability\t", str(ps), "\n"])
+        # file_begin_time.close()
+        # file_end_time = open("propagation_End_time.txt","a")
+        # file_end_time.writelines(["propagation success probability\t", str(ps), "\n"])
+        # file_end_time.close()
         file_begin_time = open("propagation_Begin_time.txt","a")
-        file_begin_time.writelines(["propagation success probability\t", str(ps), "\n"])
+        file_begin_time.writelines(["propagation success probability\t", str(gamma), "\n"])
         file_begin_time.close()
         file_end_time = open("propagation_End_time.txt","a")
-        file_end_time.writelines(["propagation success probability\t", str(ps), "\n"])
+        file_end_time.writelines(["propagation success probability\t", str(gamma), "\n"])
         file_end_time.close()
         min_tx_num = int((BLOCK_SIZE * 1024 - 256)/512)  # 交易数量
         N1 = Network()
         N1.create_nodes(NUM_NODES, 200)
         N1.set_basic_info()
-        # N1.set_sybil_nodes(0.3)
+        N1.set_sybil_nodes(gamma)
         N1.find_adjacent_nodes()
         N1.current_time = 0
         cblocks = 0 # 当前共识的次数
@@ -183,7 +194,9 @@ if __name__== '__main__':
             N1.Adversary_event(min_tx_num, signs_threshold)
             N1.transmission_Adversary1(SLOT, TRANSMISSION_RATE, ps)
             N1.current_time += SLOT
-            
-        file_end_time = open("summary_propagation_End_time.txt","a")
-        file_end_time.writelines(["propagation success probability\t", str(ps), "\t Consensus times\t", str(cblocks), "\t Failed times\t", str(fail_times), "\n"])
+        # file_end_time = open("summary_propagation_End_time.txt","a")
+        # file_end_time.writelines(["Propagation success probability\t", str(ps), "\t Consensus times\t", str(cblocks), "\t Failed times\t", str(fail_times), "\n"])
+        # file_end_time.close()    
+        file_end_time = open("summary_faulty_nodes_ratio.txt","a")
+        file_end_time.writelines(["Faulty Nodes ratio\t", str(gamma), "\t Consensus times\t", str(cblocks), "\t Failed times\t", str(fail_times), "\n"])
         file_end_time.close()
