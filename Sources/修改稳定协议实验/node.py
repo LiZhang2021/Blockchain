@@ -466,7 +466,7 @@ class Node(object):
             elif isinstance(data, Block):
                 if not self.current_block and data.leader_id == self.current_leader_id: 
                     self.current_block = data
-                    print("节点接收区块成功", self.node_id)
+                    # print("节点接收区块成功", self.node_id)
             elif isinstance(data, Sign):
                 if not self.signs:
                     self.signs = [data]
