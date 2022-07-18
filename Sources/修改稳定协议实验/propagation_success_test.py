@@ -42,7 +42,7 @@ if __name__== '__main__':
     ALPHA = 0.7
     # p_success = np.arange(0.7, 1, 0.05)
     # p_success = [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.45, 0.4, 0.35]
-    p_success =[0.4]
+    p_success =[0.7]
     F_ratios = np.arange(0, 0.5, 0.03)
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
