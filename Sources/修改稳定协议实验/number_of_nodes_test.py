@@ -78,11 +78,12 @@ if __name__== '__main__':
                 if N1.leader and node.current_block and node.current_block.final_sig:
                     count += 1
             if count >= int(num_nodes/2):
+                cblock = N1.leader.current_block
                 for node in N1.nodes:
                     if not node.blockchain:
-                        node.blockchain = [node.current_block]
+                        node.blockchain = [cblock]
                     else:
-                        node.blockchain.append(node.current_block)
+                        node.blockchain.append(cblock)
                     # 更新交易池中的信息
                     node.update_transactions()
                     node.tx_pool = None
@@ -110,5 +111,5 @@ if __name__== '__main__':
                 print('所有节点完成了一次区块确认', N1.current_time, N1.nodes[0].blockchain[-1].block_id)
                 cblocks +=1
             N1.handle_event(min_tx_num, signs_threshold)
-            N1.transmission(SLOT, TRANSMISSION_RATE,0.6)
+            N1.transmission(SLOT, TRANSMISSION_RATE,0.7)
             N1.current_time += SLOT
