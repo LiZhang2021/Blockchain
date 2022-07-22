@@ -688,8 +688,8 @@ class Network(object):
             for node in self.nodes:
                 if node.sybil == 0 and node.node_id% k == 1:
                     node.sybil = 1
-                    node.lifetime = 15
-                    node.recent_gen_blocks = 10
+                    node.lifetime = 12
+                    node.recent_gen_blocks = 3
                     # print("节点被设置为故障节点", node.node_id, node.sybil, t)
                     t = t + 1
                     if t >= num_adversary:
@@ -843,7 +843,7 @@ class Network(object):
                         self.count_trans += 1
                         self.retrans += node.commpute_trans_time(data, trans_rate)
                         # print("需要重传的节点数",len(node.transmission_node)-count)
-                        if count == int(len(node.transmission_node)) or self.count_trans == 10:
+                        if count >= int(len(node.transmission_node)) or self.count_trans == 10:
                             for rnode in node.transmission_node:
                                 if rnode.packages == 1:
                                     rnode.update_receivenode_info(data, self.current_time,slot, trans_rate)

@@ -116,6 +116,8 @@ class Node(object):
                     self.send_queue.insert(1, block)
                 else:
                     self.send_queue.insert(0, block)
+            # print("首领的发送时间",  self.send_time)
+            # print("当前时间",  current_time)
             # file_begin_time = open("propagation_Begin_time.txt","a")
             # if self.node_id == 0:
             #     file_begin_time.writelines(["LEADER_ID\t", "0", "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(len(tx_arr)), "\n"])
@@ -200,9 +202,9 @@ class Node(object):
         # file_begin_time.close() 
         file_begin_time = open("Adversary_Begin_time.txt","a")
         if self.node_id == 0:
-            file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-20000), "\tNUM_TXS\t", str(0), "\n"])
+            file_begin_time.writelines(["LEADER_ID\t", "0", "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
         else:
-            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time-20000), "\tNUM_TXS\t", str(0), "\n"])
+            file_begin_time.writelines(["LEADER_ID\t", str(self.node_id), "\tLEADER_ID_type\t", str(self.sybil), "\tBLOCK_ID\t", str(block.block_id), "\tBEGIN_TIME\t", str(current_time), "\tNUM_TXS\t", str(0), "\n"])
         file_begin_time.close() 
         # file_begin_time = open("propagation_Begin_time.txt","a")
         # if self.node_id == 0:
@@ -242,7 +244,8 @@ class Node(object):
         
     # 生成部分签名
     def gen_sign(self):
-        self.send_prop = 0.0125
+        # if self.sybil == 0:
+        #     self.send_prop = 0.0125
         if not self.current_sign and self.current_block and self.verify_block():
             tsign = Sign(self.node_id, self.current_block.hash)
             self.current_sign = tsign
@@ -267,7 +270,8 @@ class Node(object):
             # print("节点生成签名",self.node_id)
     # 生成最终签名
     def gen_final_sign(self, sign_threshold):
-        self.send_prop = 0.0125
+        # if self.sybil == 0:
+        #     self.send_prop = 0.0125
         if not self.final_sign:
             if self.current_block and self.current_leader_id == self.current_block.leader_id and self.signs and len(self.signs) >= sign_threshold:
                 fsign = Finalsign(self.node_id, self.current_block.hash, sign_threshold)
@@ -396,8 +400,8 @@ class Node(object):
 
     # 传输消息成功之后更新本地信息
     def update_sendnode_info(self, data, slot, trans_rate, current_time):
-        if self.sybil == 1 and self.current_block:
-            self.send_prop = 0
+        if self.sybil == 1 and isinstance(data, Block):
+            self.send_prop = 0.0025
         # 获取传输消息的信息，并计算传输消息的时间
         t_trans = self.commpute_trans_time(data, trans_rate)
         # t_prop =  t_trans  + self.send_time + slot
@@ -419,7 +423,10 @@ class Node(object):
             if data not in self.signs:
                 self.signs.append(data)
             # print("传输签名成功", self.node_id, self.send_prop, len(self.signs))
-            self.send_prop = 0
+            if self.sybil == 0:
+                self.send_prop = 0
+            else:
+                self.sybil = 0.0025
         # elif isinstance(data, Transaction):
             # print("传输交易成功", self.node_id)
             
@@ -435,7 +442,10 @@ class Node(object):
     def update_receivenode_info(self, data, current_time, slot, trans_rate):      
         # 判定节点是否接收成功
         if isinstance(data, Block):
-            self.send_prop = 0
+            if self.sybil == 0:
+                self.send_prop = 0.002
+            else:
+                self.send_prop = 0.0005
         rdm = random.uniform(0,1)
         snode = self.transmission_node[0]
         self.compute_trans_prob(snode)
@@ -465,6 +475,8 @@ class Node(object):
                 if not self.current_block and data.leader_id == self.current_leader_id: 
                     self.current_block = data
                     # print("节点接收区块成功", self.node_id)
+                    if self.sybil == 1:
+                        self.send_prop = 0.0005
             elif isinstance(data, Sign):
                 if not self.signs:
                     self.signs = [data]

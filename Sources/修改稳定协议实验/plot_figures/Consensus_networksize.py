@@ -45,7 +45,7 @@ Retransis = np.arange(1, 21, 1)
 for retrans in Retransis:
     x.append(retrans)
     p_comm1 = 0
-    p_suc = 1-pow(epsilon,retrans)
+    p_suc = 1-pow(1-epsilon,retrans)
     for f in range(int(N/2+1)-F,N-F):
         p_comm1 += comb(N-F-1, f)* pow(1-p_suc,f)*pow(p_suc, N-F-1-f)
     p_cp1 = 1-pow(p_comm1, int(N-F))

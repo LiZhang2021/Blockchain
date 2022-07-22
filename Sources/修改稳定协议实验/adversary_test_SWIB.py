@@ -19,6 +19,7 @@ Created on Sun Apr 19 2022
 @author: shally, ZHANG
 """
 from random import random
+from flask import copy_current_request_context
 import numpy as np
 import random
 
@@ -39,13 +40,13 @@ if __name__== '__main__':
     print("时隙", SLOT)
     MAX_SIMULATIOND_TIME = 100000000 # 仿真时间
     ALPHA = 0.7
-    gammas = np.arange(0, 0.5, 0.03)
+    gammas = np.arange(0, 0.5, 0.05)
     # gammas = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45]
-    # gammas = [0.4, 0.35, 0.3, 0.25]
+    # gammas = [0.15]
     signs_threshold = int(NUM_NODES/2) + 1  # 确认阈值
     print("所需签名数", signs_threshold)
     block_threshold = 960*(NUM_NODES/4)
-    p_suc = 0.8
+    p_suc = 1
     for gamma in gammas:
         gamma = round(gamma,2)
         print("故障节点占比", str(gamma))
@@ -65,15 +66,15 @@ if __name__== '__main__':
         TIMEOUT = 500000
         fail_times = 0
         cblocks = 0 # 当前共识的次数
-        while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
+        while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 50:
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
                 # prob = random.uniform(0, 1)
-                # prob = cblocks/10.0
-                # N1.leader_election(prob, ALPHA)
+                prob = cblocks/50.0
+                N1.leader_election(prob, ALPHA)
                 # N1.leader_id = random.randint(0, 499)
-                N1.leader_id = cblocks*50 - cblocks
+                # N1.leader_id = cblocks*50 - cblocks
                 print("首领节点是", N1.leader_id)
                 begin_time = N1.current_time
                 for node in N1.nodes:
@@ -83,8 +84,7 @@ if __name__== '__main__':
                 if  N1.leader.sybil == 1:
                     for node in N1.nodes:
                         node.channel_state = 0
-                        node.send_time += 4100
-                        node.send_prop = 0.0125
+                        node.send_time += 4800
                 
             # 计算当前完成区块确认的节点数量
             count = 0
@@ -102,7 +102,7 @@ if __name__== '__main__':
                     # node.update_transactions()
                     node.tx_pool = None
                     node.channel_state = 0
-                    node.send_prop = 0.0125
+                    node.send_prop = 1/len(N1.nodes)
                     node.time_window = 100
                     node.transmission_node = None
                     node.send_queue = None
@@ -139,7 +139,7 @@ if __name__== '__main__':
                     node.channel_state = 0
                     node.transmission_node = None
                     node.send_time = N1.current_time + SLOT
-                    node.send_prop = 0.0125
+                    node.send_prop = 1/len(N1.nodes)
                     node.time_window = 100
                     node.signs = None
                     node.final_sign = None
