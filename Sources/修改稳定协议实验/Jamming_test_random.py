@@ -62,13 +62,13 @@ if __name__== '__main__':
         N1.find_adjacent_nodes()
         N1.current_time = 0
         cblocks = 0 # 当前共识的次数
-        while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 10:
+        while N1.current_time < MAX_SIMULATIOND_TIME and cblocks < 50:
             # print("生成交易")
             # 确定当前是否有首领节点
             if not N1.leader: 
                 # 确定当前的首领   
                 # prob = random.uniform(0, 1)
-                prob = cblocks/10.0
+                prob = cblocks/50.0
                 N1.leader_election(prob, ALPHA)
                 print("首领节点是", N1.leader_id)
                 for node in N1.nodes:
@@ -94,7 +94,7 @@ if __name__== '__main__':
                     node.transmission_node = None
                     node.send_queue = None
                     node.send_time = N1.current_time + SLOT
-                    node.send_prop = 0.0125
+                    node.send_prop = 1/len(N1.nodes)
                     node.time_window = 100
                     node.signs = None
                     node.final_sign = None
