@@ -600,7 +600,7 @@ class Network(object):
                         # 传输完成，更新发送节点信息
                         # print("节点在当前时隙传输完成", node.node_id, (self.current_time + slot))                    
                         for rnode in node.transmission_node:
-                            rnode.update_receivenode_info0(data, self.current_time,slot, trans_rate)
+                            rnode.update_receivenode_info(data, self.current_time,slot, trans_rate)
                             # rnode.update_receivenode_info(data, self.current_time,slot, trans_rate, prob_suc)# print("节点的交易池",rnode.node_id, len(rnode.tx_pool))
                         # print("发送节点", node.node_id, len(node.tx_pool))
                         node.update_sendnode_info(data, slot, trans_rate, self.current_time)
